@@ -15,20 +15,39 @@ contract SNXFlashLoanTool is IFlashLoanReceiver {
     using SafeERC20 for IERC20;
 
     IAddressResolver public immutable synthetixResolver;
-    ISynthetix public immutable synthetix;
+    address public immutable synthetix;
     address public immutable sUSD;
     ILendingPoolAddressesProvider public immutable override ADDRESSES_PROVIDER;
     ILendingPool public immutable override LENDING_POOL;
+    uint16 public constant referralCode = 185;
     bool public lock = false;
 
     constructor(address _snxResolver, address _provider) {
         IAddressResolver snxResolver = IAddressResolver(_snxResolver);
         synthetixResolver = snxResolver;
-        synthetix = ISynthetix(snxResolver.getAddress("Synthetix"));
+        synthetix = snxResolver.getAddress("Synthetix");
         sUSD = snxResolver.getSynth("sUSD");
         ILendingPoolAddressesProvider provider = ILendingPoolAddressesProvider(_provider);
         ADDRESSES_PROVIDER = provider;
         LENDING_POOL = ILendingPool(provider.getLendingPool());
+    }
+
+    function burn(
+        uint256 sUSDAmount,
+        uint256 snxAmount,
+        address exchange,
+        bytes calldata exchangeData
+    ) external {
+        address[] memory assets = new address[](1);
+        assets[0] = sUSD;
+        uint256[] memory amounts = new uint256[](1);
+        amounts[0] = sUSDAmount == type(uint256).max
+            ? ISynthetix(synthetix).debtBalanceOf(msg.sender, "sUSD")
+            : sUSDAmount;
+        uint256[] memory modes = new uint256[](0);
+        modes[0] = 0;
+        bytes memory data = abi.encode(snxAmount, msg.sender, exchange, exchangeData);
+        LENDING_POOL.flashLoan(address(this), assets, amounts, modes, address(this), data, referralCode);
     }
 
     function executeOperation(
@@ -41,6 +60,18 @@ contract SNXFlashLoanTool is IFlashLoanReceiver {
         require(msg.sender == address(LENDING_POOL), "SNXFlashLoanTool: Invalid msg.sender");
         require(initiator == address(this), "SNXFlashLoanTool: Invalid initiator");
         require(!lock, "SNXFlashLoanTool: Must not reenter");
+        (uint256 snxAmount, address user, address exchange, bytes memory exchangeData) = abi.decode(
+            params,
+            (uint256, address, address, bytes)
+        );
+        ISynthetix(synthetix).burnSynthsOnBehalf(user, amounts[0]);
+        IERC20(synthetix).safeTransferFrom(user, address(this), snxAmount);
+        uint256 receivedSUSD = swap(snxAmount, synthetix, sUSD, exchange, exchangeData);
+        uint256 amountOwing = amounts[0].add(premiums[0]);
+        IERC20(sUSD).safeApprove(msg.sender, amountOwing);
+        if (amountOwing < receivedSUSD) {
+            IERC20(sUSD).safeTransfer(user, receivedSUSD.sub(amountOwing));
+        }
         return true;
     }
 
