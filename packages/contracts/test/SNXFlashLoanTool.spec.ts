@@ -64,10 +64,38 @@ describe("unit/SNXFlashLoanTool", () => {
     });
   });
 
+  describe("executeOperation", async () => {
+    it("should revert if not lending pool", async () => {
+      const { snxFlashLoanTool } = await loadFixture(snxFlashLoanToolFixture);
+      await expect(
+        snxFlashLoanTool
+          .connect(impersonateAddressWallet)
+          .executeOperation([], [], [], ethers.constants.AddressZero, "0x"),
+      ).to.be.revertedWith("SNXFlashLoanTool: Invalid msg.sender");
+    });
+
+    // it("should revert if initiator is not contract", async () => {
+    //   const { snxFlashLoanTool, sUSD, sUSDDecimals, lendingPool } = await loadFixture(snxFlashLoanToolFixture);
+    //   const sUSDTransferAmount: BigNumber = ethers.utils.parseUnits("100", sUSDDecimals);
+    //   await expect(
+    //     lendingPool
+    //       .connect(impersonateAddressWallet)
+    //       .flashLoan(
+    //         snxFlashLoanTool.address,
+    //         [sUSD.address],
+    //         [sUSDTransferAmount],
+    //         [0],
+    //         snxFlashLoanTool.address,
+    //         "0x",
+    //         0,
+    //       ),
+    //   ).to.be.revertedWith("SNXFlashLoanTool: Invalid initiator");
+    // });
+  });
+
   describe("transferToken", async () => {
     it("should revert if not owner", async () => {
       const { snxFlashLoanTool } = await loadFixture(snxFlashLoanToolFixture);
-
       await expect(
         snxFlashLoanTool.connect(impersonateAddressWallet).transferToken(ethers.constants.AddressZero),
       ).to.be.revertedWith("Ownable: caller is not the owner");
@@ -75,7 +103,6 @@ describe("unit/SNXFlashLoanTool", () => {
 
     it("should transfer token", async () => {
       const { snxFlashLoanTool, sUSDToken, sUSDDecimals } = await loadFixture(snxFlashLoanToolFixture);
-
       const sUSDTransferAmount: BigNumber = ethers.utils.parseUnits("100", sUSDDecimals);
       await sUSDToken.connect(impersonateAddressWallet).transfer(snxFlashLoanTool.address, sUSDTransferAmount);
 
@@ -93,7 +120,6 @@ describe("unit/SNXFlashLoanTool", () => {
 
     it("should transfer ether", async () => {
       const { snxFlashLoanTool } = await loadFixture(snxFlashLoanToolFixture);
-
       const ethTransferAmount: BigNumber = ethers.utils.parseEther("1");
       await impersonateAddressWallet.sendTransaction({ value: ethTransferAmount, to: snxFlashLoanTool.address });
 
