@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "compound-swaps",
+  "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
+  "scripts": {
+    "clean": "yarn workspaces run clean",
+    "clean:contracts": "yarn workspace @compound-swaps/contracts clean",
+    "build": "yarn run build:contracts && yarn build:interface",
+    "build:contracts": "yarn workspace @compound-swaps/contracts build",
+    "build:interface": "yarn workspace @compound-swaps/interface build",
+    "dev": "yarn workspaces run dev",
+    "dev:interface": "yarn workspace @compound-swaps/interface dev",
+    "test": "yarn workspaces run test",
+    "test:contracts": "yarn workspace @compound-swaps/contracts test",
+    "prettier": "yarn workspaces run prettier",
+    "prettier:contracts": "yarn workspace @compound-swaps/contracts prettier",
+    "prettier:interface": "yarn workspace @compound-swaps/interface prettier",
+    "lint": "yarn workspaces run lint",
+    "lint:contracts": "yarn workspace @compound-swaps/contracts lint",
+    "lint:interface": "yarn workspace @compound-swaps/interface lint"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

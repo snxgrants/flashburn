@@ -1,0 +1,41 @@
+{
+  "name": "@compound-swaps/interface",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "yarn run typechain && next build",
+    "start": "next start",
+    "lint": "next lint --ignore-path ./.eslintignore",
+    "prettier": "prettier --write . --ignore-path .prettierignore",
+    "typechain": "typechain --target ethers-v5 --out-dir ./src/types/typechain './contracts/*.json'"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^1.0.13",
+    "@chakra-ui/react": "^1.6.4",
+    "@compound-swaps/contracts": "*",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@uniswap/v3-core": "^1.0.0",
+    "@walletconnect/web3-provider": "^1.4.1",
+    "axios": "^0.21.1",
+    "ethers": "^5.0.2",
+    "framer-motion": "^4",
+    "next": "11.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "web3modal": "^1.9.3"
+  },
+  "devDependencies": {
+    "@typechain/ethers-v5": "^7.0.1",
+    "@types/react": "17.0.13",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "eslint": "7.29.0",
+    "eslint-config-next": "11.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.3.0",
+    "typechain": "^5.0.0",
+    "typescript": "4.3.5"
+  }
+}
