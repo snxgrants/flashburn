@@ -15,7 +15,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       forking: {
         url: ALCHEMY_MAINNET,
-        blockNumber: 12675043,
+        blockNumber: 12872815,
       },
       chainId: 1337,
     },
