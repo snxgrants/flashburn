@@ -71,6 +71,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         bytes memory data = abi.encode(snxAmount, msg.sender, exchange, exchangeData);
         // Initiate flash loan
         LENDING_POOL.flashLoan(address(this), assets, amounts, modes, address(this), data, referralCode);
+        emit Burn(msg.sender, amounts[0], snxAmount);
     }
 
     /// @dev Aave flash loan callback. Receives the token amounts and gives it back + premiums.
@@ -100,10 +101,10 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         IERC20(synthetix).safeTransferFrom(user, address(this), snxAmount);
         // Swap SNX to sUSD on the specified DEX
         uint256 receivedSUSD = swap(snxAmount, synthetix, sUSD, exchange, exchangeData);
-        uint256 amountOwing = amounts[0].add(premiums[0]);
         // Approve owed sUSD amount to Aave
+        uint256 amountOwing = amounts[0].add(premiums[0]);
         IERC20(sUSD).safeApprove(msg.sender, amountOwing);
-        // If there is leftover sUSD on the contract, transfer it to the user
+        // If there is leftover sUSD on this contract, transfer it to the user
         if (amountOwing < receivedSUSD) {
             IERC20(sUSD).safeTransfer(user, receivedSUSD.sub(amountOwing));
         }
