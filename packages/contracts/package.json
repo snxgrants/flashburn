@@ -1,13 +1,11 @@
 {
-  "name": "@compound-swaps/contracts",
+  "name": "@snx-flash-tool/contracts",
   "version": "1.0.0",
   "main": "hardhat.config.ts",
   "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
   "license": "MIT",
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
-    "@uniswap/v3-core": "^1.0.0",
-    "@uniswap/v3-periphery": "^1.1.0",
     "synthetix": "^2.46.0-ovm"
   },
   "devDependencies": {
