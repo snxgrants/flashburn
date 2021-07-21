@@ -65,7 +65,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         amounts[0] = sUSDAmount == type(uint256).max
             ? ISynthetix(synthetix).debtBalanceOf(msg.sender, "sUSD")
             : sUSDAmount;
-        uint256[] memory modes = new uint256[](0);
+        uint256[] memory modes = new uint256[](1);
         // Mode is set to 0 so the flash loan doesn't incur any debt
         modes[0] = 0;
         bytes memory data = abi.encode(snxAmount, msg.sender, exchange, exchangeData);
