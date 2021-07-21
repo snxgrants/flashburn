@@ -18,6 +18,7 @@ export interface SNXFlashLoanToolSubject {
   synthetix: ISynthetix;
   sUSD: ISynth;
   sUSDToken: ERC20;
+  sUSDDecimals: number;
   addressesProvider: ILendingPoolAddressesProvider;
   lendingPool: ILendingPool;
 }
@@ -43,6 +44,7 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
     "@openzeppelin/contracts/token/ERC20/ERC20.sol:ERC20",
     sUSDAddress,
   )) as ERC20;
+  const sUSDDecimals: number = await sUSDToken.decimals();
   const addressesProvider: ILendingPoolAddressesProvider = (await ethers.getContractAt(
     "contracts/interfaces/ILendingPoolAddressesProvider.sol:ILendingPoolAddressesProvider",
     lendingPoolAddressesProviderAddress,
@@ -55,5 +57,14 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
 
   const { snxFlashLoanTool } = await migrate(owner);
 
-  return { snxFlashLoanTool, synthetixResolver, synthetix, sUSD, sUSDToken, addressesProvider, lendingPool };
+  return {
+    snxFlashLoanTool,
+    synthetixResolver,
+    synthetix,
+    sUSD,
+    sUSDToken,
+    sUSDDecimals,
+    addressesProvider,
+    lendingPool,
+  };
 }

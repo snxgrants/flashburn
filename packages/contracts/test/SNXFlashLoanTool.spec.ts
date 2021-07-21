@@ -73,6 +73,24 @@ describe("unit/SNXFlashLoanTool", () => {
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
+    it("should transfer token", async () => {
+      const { snxFlashLoanTool, sUSDToken, sUSDDecimals } = await loadFixture(snxFlashLoanToolFixture);
+
+      const sUSDTransferAmount: BigNumber = ethers.utils.parseUnits("100", sUSDDecimals);
+      await sUSDToken.connect(impersonateAddressWallet).transfer(snxFlashLoanTool.address, sUSDTransferAmount);
+
+      const sUSDBalanceCTokenSwap0: BigNumber = await sUSDToken.balanceOf(snxFlashLoanTool.address);
+      expect(sUSDBalanceCTokenSwap0).to.equal(sUSDTransferAmount);
+      const sUSDBalanceOwner0: BigNumber = await sUSDToken.balanceOf(owner.address);
+
+      await snxFlashLoanTool.connect(owner).transferToken(sUSDToken.address);
+
+      const sUSDBalanceCTokenSwap1: BigNumber = await sUSDToken.balanceOf(snxFlashLoanTool.address);
+      expect(sUSDBalanceCTokenSwap1).to.equal(BigNumber.from("0"));
+      const sUSDBalanceOwner1: BigNumber = await sUSDToken.balanceOf(owner.address);
+      expect(sUSDBalanceOwner1).to.equal(sUSDBalanceOwner0.add(sUSDTransferAmount));
+    });
+
     it("should transfer ether", async () => {
       const { snxFlashLoanTool } = await loadFixture(snxFlashLoanToolFixture);
 
