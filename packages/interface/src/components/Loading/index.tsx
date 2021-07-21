@@ -9,13 +9,16 @@ function Loading({ children }: { children?: ReactNode }): JSX.Element {
   return (
     <Box>
       {chainId in addresses ? (
+        /* eslint-disable  no-constant-condition */
         true ? (
+          /* eslint-disable  no-constant-condition */
           false ? (
             <Text>Failed to load data.</Text>
           ) : (
             children
           )
-        ) : false ? (
+        ) : /* eslint-disable  no-constant-condition */
+        false ? (
           provider !== undefined ? (
             <Text>Failed to load data.</Text>
           ) : (

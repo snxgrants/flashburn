@@ -1,10 +1,16 @@
 import { ethers } from "hardhat";
 import { Signer, Wallet } from "ethers";
+import { SNXFlashLoanTool } from "../types";
+import { migrate as migrateSNXFlashLoanTool } from "./SNXFlashLoanTool";
 
-export interface Migration {}
+export interface Migration {
+  snxFlashLoanTool: SNXFlashLoanTool;
+}
 
 export async function migrate(owner: Wallet, isTest: boolean = true): Promise<Migration> {
-  return {};
+  const snxFlashLoanTool: SNXFlashLoanTool = await migrateSNXFlashLoanTool(owner);
+  if (!isTest) console.log("SNXFlashLoanTool address:", snxFlashLoanTool.address);
+  return { snxFlashLoanTool };
 }
 
 async function main() {

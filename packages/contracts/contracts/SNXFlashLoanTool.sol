@@ -46,6 +46,9 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         LENDING_POOL = ILendingPool(provider.getLendingPool());
     }
 
+    /// @dev Fallback for reciving Ether
+    receive() external payable {}
+
     /// @notice Burn sUSD debt with SNX using a flash loan
     /// @dev To burn all sUSD debt, pass in type(uint256).max for sUSDAmount
     /// @param sUSDAmount Amount of sUSD debt to burn (set to type(uint256).max to burn all debt)
