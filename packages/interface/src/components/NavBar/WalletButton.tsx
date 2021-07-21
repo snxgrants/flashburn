@@ -1,6 +1,6 @@
 import { Button, useDisclosure } from "@chakra-ui/react";
 import WalletModal from "./WalletModal";
-import useWeb3React, { Web3ReactData } from "../../hooks/useWeb3React";
+import useWeb3React from "../../hooks/useWeb3React";
 import useLookupAddress from "../../hooks/useLookupAddress";
 import { formatAddress } from "../../utils";
 
@@ -14,7 +14,7 @@ function WalletButton(): JSX.Element {
     onOpen: () => void;
     onClose: () => void;
   } = useDisclosure();
-  const { provider, address, loadWeb3Modal, logoutOfWeb3Modal }: Web3ReactData =
+  const { provider, address, loadWeb3Modal, logoutOfWeb3Modal } =
     useWeb3React();
   const { name } = useLookupAddress(address, provider);
 
