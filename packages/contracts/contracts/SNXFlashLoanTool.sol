@@ -5,15 +5,12 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IAddressResolver } from "synthetix/contracts/interfaces/IAddressResolver.sol";
 import { ISynthetix } from "synthetix/contracts/interfaces/ISynthetix.sol";
-import { ISynth } from "synthetix/contracts/interfaces/ISynth.sol";
 import { ISNXFlashLoanTool } from "./interfaces/ISNXFlashLoanTool.sol";
 import { IFlashLoanReceiver } from "./interfaces/IFlashLoanReceiver.sol";
 import { ILendingPoolAddressesProvider } from "./interfaces/ILendingPoolAddressesProvider.sol";
 import { ILendingPool } from "./interfaces/ILendingPool.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
-
-import "hardhat/console.sol";
 
 /// @author Ganesh Gautham Elango
 /// @title Burn sUSD debt with SNX using a flash loan
@@ -98,8 +95,6 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         );
         // Burn sUSD with flash loaned amount
         ISynthetix(synthetix).burnSynthsOnBehalf(user, amounts[0]);
-        console.log(synthetix.debtBalanceOf(msg.sender, "sUSD"));
-        console.log(synthetix.transferableSynthetix(user));
         // Transfer specified SNX amount from user
         SNX.safeTransferFrom(user, address(this), snxAmount);
         // Swap SNX to sUSD on the specified DEX
