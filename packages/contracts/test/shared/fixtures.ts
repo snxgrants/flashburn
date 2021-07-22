@@ -5,7 +5,6 @@ import {
   SNXFlashLoanTool,
   IAddressResolver,
   ISynthetix,
-  ISynth,
   ILendingPoolAddressesProvider,
   ILendingPool,
   IDelegateApprovals,
@@ -19,8 +18,7 @@ export interface SNXFlashLoanToolSubject {
   synthetix: ISynthetix;
   synthetixToken: ERC20;
   delegateApprovals: IDelegateApprovals;
-  sUSD: ISynth;
-  sUSDToken: ERC20;
+  sUSD: ERC20;
   sUSDDecimals: number;
   addressesProvider: ILendingPoolAddressesProvider;
   lendingPool: ILendingPool;
@@ -49,16 +47,12 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
     "synthetix/contracts/interfaces/IDelegateApprovals.sol:IDelegateApprovals",
     delegateApprovalsAddress,
   )) as IDelegateApprovals;
-  const sUSDAddress: string = await synthetixResolver.getSynth(ethers.utils.formatBytes32String("sUSD"));
-  const sUSD: ISynth = (await ethers.getContractAt(
-    "synthetix/contracts/interfaces/ISynth.sol:ISynth",
-    sUSDAddress,
-  )) as ISynth;
-  const sUSDToken: ERC20 = (await ethers.getContractAt(
+  const sUSDAddress: string = await synthetixResolver.getAddress(ethers.utils.formatBytes32String("ProxyERC20sUSD"));
+  const sUSD: ERC20 = (await ethers.getContractAt(
     "@openzeppelin/contracts/token/ERC20/ERC20.sol:ERC20",
     sUSDAddress,
   )) as ERC20;
-  const sUSDDecimals: number = await sUSDToken.decimals();
+  const sUSDDecimals: number = await sUSD.decimals();
   const addressesProvider: ILendingPoolAddressesProvider = (await ethers.getContractAt(
     "contracts/interfaces/ILendingPoolAddressesProvider.sol:ILendingPoolAddressesProvider",
     lendingPoolAddressesProviderAddress,
@@ -78,7 +72,6 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
     synthetixToken,
     delegateApprovals,
     sUSD,
-    sUSDToken,
     sUSDDecimals,
     addressesProvider,
     lendingPool,

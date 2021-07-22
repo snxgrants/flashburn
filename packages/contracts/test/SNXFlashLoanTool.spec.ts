@@ -45,10 +45,10 @@ describe("unit/SNXFlashLoanTool", () => {
     });
 
     it("should set sUSD", async () => {
-      const { snxFlashLoanTool, sUSD, sUSDToken } = await loadFixture(snxFlashLoanToolFixture);
+      const { snxFlashLoanTool, sUSD } = await loadFixture(snxFlashLoanToolFixture);
       const getSUSD: string = await snxFlashLoanTool.sUSD();
       expect(getSUSD).to.equal(sUSD.address);
-      expect(getSUSD).to.equal(sUSDToken.address);
+      expect(getSUSD).to.equal(sUSD.address);
     });
 
     it("should set ADDRESSES_PROVIDER", async () => {
@@ -90,23 +90,23 @@ describe("unit/SNXFlashLoanTool", () => {
       ).to.be.revertedWith("SNXFlashLoanTool: Invalid msg.sender");
     });
 
-    // it("should revert if initiator is not contract", async () => {
-    //   const { snxFlashLoanTool, sUSD, sUSDDecimals, lendingPool } = await loadFixture(snxFlashLoanToolFixture);
-    //   const sUSDTransferAmount: BigNumber = ethers.utils.parseUnits("100", sUSDDecimals);
-    //   await expect(
-    //     lendingPool
-    //       .connect(impersonateAddressWallet)
-    //       .flashLoan(
-    //         snxFlashLoanTool.address,
-    //         [sUSD.address],
-    //         [sUSDTransferAmount],
-    //         [0],
-    //         snxFlashLoanTool.address,
-    //         "0x",
-    //         0,
-    //       ),
-    //   ).to.be.revertedWith("SNXFlashLoanTool: Invalid initiator");
-    // });
+    it("should revert if initiator is not contract", async () => {
+      const { snxFlashLoanTool, sUSD, sUSDDecimals, lendingPool } = await loadFixture(snxFlashLoanToolFixture);
+      const sUSDTransferAmount: BigNumber = ethers.utils.parseUnits("100", sUSDDecimals);
+      await expect(
+        lendingPool
+          .connect(owner)
+          .flashLoan(
+            snxFlashLoanTool.address,
+            [sUSD.address],
+            [sUSDTransferAmount],
+            [0],
+            snxFlashLoanTool.address,
+            "0x",
+            0,
+          ),
+      ).to.be.revertedWith("SNXFlashLoanTool: Invalid initiator");
+    });
   });
 
   describe("transferToken", async () => {
@@ -118,19 +118,19 @@ describe("unit/SNXFlashLoanTool", () => {
     });
 
     it("should transfer token", async () => {
-      const { snxFlashLoanTool, sUSDToken, sUSDDecimals } = await loadFixture(snxFlashLoanToolFixture);
+      const { snxFlashLoanTool, sUSD, sUSDDecimals } = await loadFixture(snxFlashLoanToolFixture);
       const sUSDTransferAmount: BigNumber = ethers.utils.parseUnits("100", sUSDDecimals);
-      await sUSDToken.connect(impersonateAddressWallet).transfer(snxFlashLoanTool.address, sUSDTransferAmount);
+      await sUSD.connect(impersonateAddressWallet).transfer(snxFlashLoanTool.address, sUSDTransferAmount);
 
-      const sUSDBalanceCTokenSwap0: BigNumber = await sUSDToken.balanceOf(snxFlashLoanTool.address);
+      const sUSDBalanceCTokenSwap0: BigNumber = await sUSD.balanceOf(snxFlashLoanTool.address);
       expect(sUSDBalanceCTokenSwap0).to.equal(sUSDTransferAmount);
-      const sUSDBalanceOwner0: BigNumber = await sUSDToken.balanceOf(owner.address);
+      const sUSDBalanceOwner0: BigNumber = await sUSD.balanceOf(owner.address);
 
-      await snxFlashLoanTool.connect(owner).transferToken(sUSDToken.address);
+      await snxFlashLoanTool.connect(owner).transferToken(sUSD.address);
 
-      const sUSDBalanceCTokenSwap1: BigNumber = await sUSDToken.balanceOf(snxFlashLoanTool.address);
+      const sUSDBalanceCTokenSwap1: BigNumber = await sUSD.balanceOf(snxFlashLoanTool.address);
       expect(sUSDBalanceCTokenSwap1).to.equal(BigNumber.from("0"));
-      const sUSDBalanceOwner1: BigNumber = await sUSDToken.balanceOf(owner.address);
+      const sUSDBalanceOwner1: BigNumber = await sUSD.balanceOf(owner.address);
       expect(sUSDBalanceOwner1).to.equal(sUSDBalanceOwner0.add(sUSDTransferAmount));
     });
   });

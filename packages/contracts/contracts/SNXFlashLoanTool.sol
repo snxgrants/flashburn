@@ -5,6 +5,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IAddressResolver } from "synthetix/contracts/interfaces/IAddressResolver.sol";
 import { ISynthetix } from "synthetix/contracts/interfaces/ISynthetix.sol";
+import { ISynth } from "synthetix/contracts/interfaces/ISynth.sol";
 import { ISNXFlashLoanTool } from "./interfaces/ISNXFlashLoanTool.sol";
 import { IFlashLoanReceiver } from "./interfaces/IFlashLoanReceiver.sol";
 import { ILendingPoolAddressesProvider } from "./interfaces/ILendingPoolAddressesProvider.sol";
@@ -40,7 +41,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         IAddressResolver snxResolver = IAddressResolver(_snxResolver);
         synthetixResolver = snxResolver;
         synthetix = snxResolver.getAddress("Synthetix");
-        sUSD = snxResolver.getSynth("sUSD");
+        sUSD = snxResolver.getAddress("ProxyERC20sUSD");
         ILendingPoolAddressesProvider provider = ILendingPoolAddressesProvider(_provider);
         ADDRESSES_PROVIDER = provider;
         LENDING_POOL = ILendingPool(provider.getLendingPool());
