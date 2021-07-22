@@ -13,18 +13,20 @@ import { ILendingPool } from "./interfaces/ILendingPool.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 
+import "hardhat/console.sol";
+
 /// @author Ganesh Gautham Elango
 /// @title Burn sUSD debt with SNX using a flash loan
 contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    /// @dev Synthetix AddressResolver contract
-    IAddressResolver public immutable synthetixResolver;
     /// @dev Synthetix address
-    address public immutable synthetix;
-    /// @dev sUSD address
-    address public immutable sUSD;
+    ISynthetix public immutable synthetix;
+    /// @dev SNX token contract
+    IERC20 public immutable SNX;
+    /// @dev sUSD token contract
+    IERC20 public immutable sUSD;
     /// @dev Aave LendingPoolAddressesProvider contract
     ILendingPoolAddressesProvider public immutable override ADDRESSES_PROVIDER;
     /// @dev Aave LendingPool contract
@@ -38,10 +40,10 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     /// @param _snxResolver Synthetix AddressResolver address
     /// @param _provider Aave LendingPoolAddressesProvider address
     constructor(address _snxResolver, address _provider) {
-        IAddressResolver snxResolver = IAddressResolver(_snxResolver);
-        synthetixResolver = snxResolver;
-        synthetix = snxResolver.getAddress("Synthetix");
-        sUSD = snxResolver.getAddress("ProxyERC20sUSD");
+        IAddressResolver synthetixResolver = IAddressResolver(_snxResolver);
+        synthetix = ISynthetix(synthetixResolver.getAddress("Synthetix"));
+        SNX = IERC20(synthetixResolver.getAddress("ProxyERC20"));
+        sUSD = IERC20(synthetixResolver.getAddress("ProxyERC20sUSD"));
         ILendingPoolAddressesProvider provider = ILendingPoolAddressesProvider(_provider);
         ADDRESSES_PROVIDER = provider;
         LENDING_POOL = ILendingPool(provider.getLendingPool());
@@ -60,12 +62,10 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         bytes calldata exchangeData
     ) external override {
         address[] memory assets = new address[](1);
-        assets[0] = sUSD;
+        assets[0] = address(sUSD);
         uint256[] memory amounts = new uint256[](1);
         // If sUSDAmount is max, get the sUSD debt of the user, otherwise just use sUSDAmount
-        amounts[0] = sUSDAmount == type(uint256).max
-            ? ISynthetix(synthetix).debtBalanceOf(msg.sender, "sUSD")
-            : sUSDAmount;
+        amounts[0] = sUSDAmount == type(uint256).max ? synthetix.debtBalanceOf(msg.sender, "sUSD") : sUSDAmount;
         uint256[] memory modes = new uint256[](1);
         // Mode is set to 0 so the flash loan doesn't incur any debt
         modes[0] = 0;
@@ -98,16 +98,18 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         );
         // Burn sUSD with flash loaned amount
         ISynthetix(synthetix).burnSynthsOnBehalf(user, amounts[0]);
+        console.log(synthetix.debtBalanceOf(msg.sender, "sUSD"));
+        console.log(synthetix.transferableSynthetix(user));
         // Transfer specified SNX amount from user
-        IERC20(synthetix).safeTransferFrom(user, address(this), snxAmount);
+        SNX.safeTransferFrom(user, address(this), snxAmount);
         // Swap SNX to sUSD on the specified DEX
-        uint256 receivedSUSD = swap(snxAmount, synthetix, sUSD, exchange, exchangeData);
+        uint256 receivedSUSD = swap(snxAmount, address(SNX), address(sUSD), exchange, exchangeData);
         // Approve owed sUSD amount to Aave
         uint256 amountOwing = amounts[0].add(premiums[0]);
-        IERC20(sUSD).safeApprove(msg.sender, amountOwing);
+        sUSD.safeApprove(msg.sender, amountOwing);
         // If there is leftover sUSD on this contract, transfer it to the user
         if (amountOwing < receivedSUSD) {
-            IERC20(sUSD).safeTransfer(user, receivedSUSD.sub(amountOwing));
+            sUSD.safeTransfer(user, receivedSUSD.sub(amountOwing));
         }
         return true;
     }
