@@ -46,9 +46,6 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         LENDING_POOL = ILendingPool(provider.getLendingPool());
     }
 
-    /// @dev Fallback for reciving Ether
-    receive() external payable {}
-
     /// @notice Burn sUSD debt with SNX using a flash loan
     /// @dev To burn all sUSD debt, pass in type(uint256).max for sUSDAmount
     /// @param sUSDAmount Amount of sUSD debt to burn (set to type(uint256).max to burn all debt)
@@ -116,13 +113,9 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
 
     /// @notice Transfer a tokens balance left on this contract to the owner
     /// @dev Can only be called by owner
-    /// @param token Address of token to transfer the balance of (if Ether, pass in address(0))
+    /// @param token Address of token to transfer the balance of
     function transferToken(address token) external onlyOwner {
-        if (token == address(0)) {
-            msg.sender.transfer(address(this).balance);
-        } else {
-            IERC20(token).safeTransfer(msg.sender, IERC20(token).balanceOf(address(this)));
-        }
+        IERC20(token).safeTransfer(msg.sender, IERC20(token).balanceOf(address(this)));
     }
 
     /// @dev Swap token for token

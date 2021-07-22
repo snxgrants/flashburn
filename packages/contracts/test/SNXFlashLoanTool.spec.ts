@@ -117,22 +117,5 @@ describe("unit/SNXFlashLoanTool", () => {
       const sUSDBalanceOwner1: BigNumber = await sUSDToken.balanceOf(owner.address);
       expect(sUSDBalanceOwner1).to.equal(sUSDBalanceOwner0.add(sUSDTransferAmount));
     });
-
-    it("should transfer ether", async () => {
-      const { snxFlashLoanTool } = await loadFixture(snxFlashLoanToolFixture);
-      const ethTransferAmount: BigNumber = ethers.utils.parseEther("1");
-      await impersonateAddressWallet.sendTransaction({ value: ethTransferAmount, to: snxFlashLoanTool.address });
-
-      const ethBalanceSNXFlashLoanTool0: BigNumber = await ethers.provider.getBalance(snxFlashLoanTool.address);
-      expect(ethBalanceSNXFlashLoanTool0).to.equal(ethTransferAmount);
-      const ethBalanceOwner0: BigNumber = await ethers.provider.getBalance(owner.address);
-
-      await snxFlashLoanTool.connect(owner).transferToken(ethers.constants.AddressZero);
-
-      const ethBalanceSNXFlashLoanTool1: BigNumber = await ethers.provider.getBalance(snxFlashLoanTool.address);
-      expect(ethBalanceSNXFlashLoanTool1).to.equal(BigNumber.from("0"));
-      const ethBalanceOwner1: BigNumber = await ethers.provider.getBalance(owner.address);
-      expect(ethBalanceOwner1).to.be.gt(ethBalanceOwner0);
-    });
   });
 });
