@@ -48,7 +48,7 @@ if (process.env.PRIVATE_KEY && config.networks && config.networks.mainnet) {
 if (process.env.COINMARKETCAP) {
   config.gasReporter = {
     currency: "USD",
-    gasPrice: 100,
+    gasPrice: 20,
     coinmarketcap: process.env.COINMARKETCAP,
   };
 }
