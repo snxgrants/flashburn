@@ -94,11 +94,11 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
             (uint256, address, address, bytes)
         );
         // Burn sUSD with flash loaned amount
-        ISynthetix(synthetix).burnSynthsOnBehalf(user, amounts[0]);
+        synthetix.burnSynthsOnBehalf(user, amounts[0]);
         // Transfer specified SNX amount from user
         SNX.safeTransferFrom(user, address(this), snxAmount);
         // Swap SNX to sUSD on the specified DEX
-        uint256 receivedSUSD = swap(snxAmount, address(SNX), address(sUSD), exchange, exchangeData);
+        uint256 receivedSUSD = swap(snxAmount, exchange, exchangeData);
         // Approve owed sUSD amount to Aave
         uint256 amountOwing = amounts[0].add(premiums[0]);
         sUSD.safeApprove(msg.sender, amountOwing);
@@ -118,25 +118,21 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
 
     /// @dev Swap token for token
     /// @param amount Amount of token0 to swap
-    /// @param token0 Token to swap from
-    /// @param token1 Token to swap to
     /// @param exchange Exchange address to swap on
     /// @param data Calldata to call exchange with
     /// @return token1 received from swap
     function swap(
         uint256 amount,
-        address token0,
-        address token1,
         address exchange,
         bytes memory data
     ) internal returns (uint256) {
-        IERC20(token0).safeApprove(exchange, amount);
+        SNX.safeApprove(exchange, amount);
         // Lock contract during external calls to prevent a reentrancy attack
         lock = true;
         (bool success, ) = exchange.call(data);
         require(success, "CTokenSwap: Swap failed");
         // Unlock once the external call has completed
         lock = false;
-        return IERC20(token1).balanceOf(address(this));
+        return sUSD.balanceOf(address(this));
     }
 }

@@ -34,7 +34,7 @@ async function main() {
   )) as IDelegateApprovals;
 
   const snxAmount = BigNumber.from("1410547409233276473878735");
-  const sUSDAmount = BigNumber.from("245799795116289250050873");
+  // const sUSDAmount = BigNumber.from("245799795116289250050873");
 
   await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
   await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
