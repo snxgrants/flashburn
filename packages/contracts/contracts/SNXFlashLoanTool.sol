@@ -93,6 +93,8 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
             params,
             (uint256, address, address, bytes)
         );
+        // Send sUSD to user to burn
+        sUSD.transfer(user, amounts[0]);
         // Burn sUSD with flash loaned amount
         synthetix.burnSynthsOnBehalf(user, amounts[0]);
         // Transfer specified SNX amount from user

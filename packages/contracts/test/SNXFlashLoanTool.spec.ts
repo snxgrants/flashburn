@@ -65,16 +65,20 @@ describe("unit/SNXFlashLoanTool", () => {
 
   describe("burn", async () => {
     it("should burn sUSD with SNX", async () => {
-      const { synthetix, snxFlashLoanTool, SNX, delegateApprovals } = await loadFixture(snxFlashLoanToolFixture);
+      const { synthetix, snxFlashLoanTool, SNX, sUSD, delegateApprovals } = await loadFixture(snxFlashLoanToolFixture);
+      const snxTransferrable: BigNumber = await synthetix.transferableSynthetix(impersonateAddress);
+      await SNX.connect(impersonateAddressWallet).transfer(owner.address, snxTransferrable);
+      const sUSDBalance: BigNumber = await sUSD.balanceOf(impersonateAddress);
+      await sUSD.connect(impersonateAddressWallet).transfer(owner.address, sUSDBalance);
+
+      const snxBalance0: BigNumber = await SNX.balanceOf(impersonateAddress);
+      const sUSDBalance0: BigNumber = await sUSD.balanceOf(impersonateAddress);
+
       const snxAmount = BigNumber.from("11366004710098787245");
       const sUSDAmount = BigNumber.from("99073034504547801217");
-      console.log(
-        (await synthetix.transferableSynthetix(impersonateAddress)).toString(),
-        (await synthetix.debtBalanceOf(impersonateAddress, ethers.utils.formatBytes32String("sUSD"))).toString(),
-      );
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
-      // https://api.0x.org/swap/v1/quote?sellToken=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&buyToken=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&buyAmount=101000000000000000000&slippagePercentage=1
+      // https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11366004710098787245&disableEstimate=true&fromAddress=0xaB281a90645Cb13E440D4d12E7aA8F1e74ae8459&slippage=10
       await snxFlashLoanTool
         .connect(impersonateAddressWallet)
         .burn(
@@ -83,10 +87,11 @@ describe("unit/SNXFlashLoanTool", () => {
           "0x11111112542d85b3ef69ae05771c2dccff4faa26",
           "0x2e95b6c8000000000000000000000000c011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f0000000000000000000000000000000000000000000000009dbc29106cdadbad000000000000000000000000000000000000000000000004d56c4ff9313b2fa70000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000200000000000000003b6d034043ae24960e5534731fc831386c07755a2dc33d4780000000000000003b6d0340f1f85b2c54a2bd284b1cf4141d64fd171bd85539",
         );
-      console.log(
-        (await synthetix.transferableSynthetix(impersonateAddress)).toString(),
-        (await synthetix.debtBalanceOf(impersonateAddress, ethers.utils.formatBytes32String("sUSD"))).toString(),
-      );
+
+      const snxBalance1: BigNumber = await SNX.balanceOf(impersonateAddress);
+      const sUSDBalance1: BigNumber = await sUSD.balanceOf(impersonateAddress);
+      expect(snxBalance1).to.be.lt(snxBalance0);
+      expect(sUSDBalance1).to.be.gte(sUSDBalance0);
     });
   });
 
