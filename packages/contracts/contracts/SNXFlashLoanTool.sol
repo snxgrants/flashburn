@@ -130,7 +130,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         // Lock contract during external calls to prevent a reentrancy attack
         lock = true;
         (bool success, ) = exchange.call(data);
-        require(success, "CTokenSwap: Swap failed");
+        require(success, "SNXFlashLoanTool: Swap failed");
         // Unlock once the external call has completed
         lock = false;
         return sUSD.balanceOf(address(this));
