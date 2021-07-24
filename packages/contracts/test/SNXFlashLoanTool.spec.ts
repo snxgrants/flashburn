@@ -122,6 +122,33 @@ describe("unit/SNXFlashLoanTool", () => {
           ),
       ).to.be.revertedWith("SNXFlashLoanTool: Invalid initiator");
     });
+
+    it("should revert if flash loan is reentrant", async () => {
+      const { lendingPool, snxFlashLoanTool, SNX, snxDecimals, sUSD, sUSDDecimals, delegateApprovals } =
+        await loadFixture(snxFlashLoanToolFixture);
+      const snxAmount = ethers.utils.parseUnits("1", snxDecimals);
+      const sUSDAmount = ethers.utils.parseUnits("1", sUSDDecimals);
+      await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
+      await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
+      await expect(
+        snxFlashLoanTool
+          .connect(impersonateAddressWallet)
+          .burn(
+            sUSDAmount,
+            snxAmount,
+            lendingPool.address,
+            lendingPool.interface.encodeFunctionData("flashLoan", [
+              snxFlashLoanTool.address,
+              [sUSD.address],
+              [sUSDAmount],
+              [0],
+              snxFlashLoanTool.address,
+              "0x",
+              0,
+            ]),
+          ),
+      ).to.be.revertedWith("SNXFlashLoanTool: Swap failed");
+    });
   });
 
   describe("transferToken", async () => {

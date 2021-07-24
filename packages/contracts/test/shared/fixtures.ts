@@ -16,8 +16,9 @@ export interface SNXFlashLoanToolSubject {
   snxFlashLoanTool: SNXFlashLoanTool;
   synthetixResolver: IAddressResolver;
   synthetix: ISynthetix;
-  SNX: ERC20;
   delegateApprovals: IDelegateApprovals;
+  SNX: ERC20;
+  snxDecimals: number;
   sUSD: ERC20;
   sUSDDecimals: number;
   addressesProvider: ILendingPoolAddressesProvider;
@@ -41,6 +42,7 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
     "@openzeppelin/contracts/token/ERC20/ERC20.sol:ERC20",
     snxAddress,
   )) as ERC20;
+  const snxDecimals: number = await SNX.decimals();
   const delegateApprovalsAddress: string = await synthetixResolver.getAddress(
     ethers.utils.formatBytes32String("DelegateApprovals"),
   );
@@ -71,6 +73,7 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
     synthetixResolver,
     synthetix,
     SNX,
+    snxDecimals,
     delegateApprovals,
     sUSD,
     sUSDDecimals,
