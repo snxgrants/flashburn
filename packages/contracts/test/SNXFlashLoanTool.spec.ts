@@ -2,7 +2,7 @@ import { ethers, network, waffle } from "hardhat";
 import { BigNumber, Signer, Wallet } from "ethers";
 import { expect, use } from "chai";
 import { snxFlashLoanToolFixture } from "./shared";
-import { impersonateAddress, oneInchAddress, oneInchTrade0, oneInchTrade1 } from "../constants";
+import { impersonateAddress, tradeData0, tradeData1 } from "../constants";
 
 const { solidity, createFixtureLoader } = waffle;
 use(solidity);
@@ -81,12 +81,14 @@ describe("unit/SNXFlashLoanTool", () => {
         ethers.utils.formatBytes32String("sUSD"),
       );
 
-      const sUSDAmount = BigNumber.from("100000000000000000000");
-      const snxAmount = BigNumber.from("11980809705297140381");
+      const sUSDAmount: BigNumber = BigNumber.from("100000000000000000000");
+      const snxAmount: BigNumber = tradeData0.amount;
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
       await expect(
-        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, oneInchAddress, oneInchTrade0),
+        snxFlashLoanTool
+          .connect(impersonateAddressWallet)
+          .burn(sUSDAmount, snxAmount, tradeData0.address, tradeData0.data),
       )
         .to.emit(snxFlashLoanTool, "Burn")
         .withArgs(impersonateAddress, sUSDAmount, snxAmount);
@@ -117,12 +119,14 @@ describe("unit/SNXFlashLoanTool", () => {
         ethers.utils.formatBytes32String("sUSD"),
       );
 
-      const sUSDAmount = ethers.constants.MaxUint256;
-      const snxAmount = BigNumber.from("18048646982183153765");
+      const sUSDAmount: BigNumber = ethers.constants.MaxUint256;
+      const snxAmount: BigNumber = tradeData1.amount;
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
       await expect(
-        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, oneInchAddress, oneInchTrade1),
+        snxFlashLoanTool
+          .connect(impersonateAddressWallet)
+          .burn(sUSDAmount, snxAmount, tradeData1.address, tradeData1.data),
       )
         .to.emit(snxFlashLoanTool, "Burn")
         .withArgs(impersonateAddress, sUSDDebtBalance0, snxAmount);
@@ -170,8 +174,8 @@ describe("unit/SNXFlashLoanTool", () => {
     it("should revert if flash loan is reentrant", async () => {
       const { lendingPool, snxFlashLoanTool, SNX, snxDecimals, sUSD, sUSDDecimals, delegateApprovals } =
         await loadFixture(snxFlashLoanToolFixture);
-      const snxAmount = ethers.utils.parseUnits("1", snxDecimals);
-      const sUSDAmount = ethers.utils.parseUnits("1", sUSDDecimals);
+      const snxAmount: BigNumber = ethers.utils.parseUnits("1", snxDecimals);
+      const sUSDAmount: BigNumber = ethers.utils.parseUnits("1", sUSDDecimals);
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
       await expect(
