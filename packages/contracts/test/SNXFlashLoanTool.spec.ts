@@ -1,10 +1,11 @@
 import { ethers, network, waffle } from "hardhat";
 import { BigNumber, Signer, Wallet } from "ethers";
-import { expect } from "chai";
+import { expect, use } from "chai";
 import { snxFlashLoanToolFixture } from "./shared";
 import { impersonateAddress } from "../constants";
 
-const { createFixtureLoader } = waffle;
+const { createFixtureLoader, solidity } = waffle;
+use(solidity);
 let loadFixture: ReturnType<typeof createFixtureLoader>;
 
 describe("unit/SNXFlashLoanTool", () => {
