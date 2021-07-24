@@ -81,13 +81,15 @@ describe("unit/SNXFlashLoanTool", () => {
         ethers.utils.formatBytes32String("sUSD"),
       );
 
-      const snxAmount = BigNumber.from("11980809705297140381");
       const sUSDAmount = BigNumber.from("100000000000000000000");
+      const snxAmount = BigNumber.from("11980809705297140381");
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
-      await snxFlashLoanTool
-        .connect(impersonateAddressWallet)
-        .burn(sUSDAmount, snxAmount, oneInchAddress, oneInchTrade0);
+      await expect(
+        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, oneInchAddress, oneInchTrade0),
+      )
+        .to.emit(snxFlashLoanTool, "Burn")
+        .withArgs(impersonateAddress, sUSDAmount, snxAmount);
 
       const snxBalance1: BigNumber = await SNX.balanceOf(impersonateAddress);
       const sUSDBalance1: BigNumber = await sUSD.balanceOf(impersonateAddress);
@@ -110,14 +112,20 @@ describe("unit/SNXFlashLoanTool", () => {
 
       const snxBalance0: BigNumber = await SNX.balanceOf(impersonateAddress);
       const sUSDBalance0: BigNumber = await sUSD.balanceOf(impersonateAddress);
+      const sUSDDebtBalance0: BigNumber = await synthetix.debtBalanceOf(
+        impersonateAddress,
+        ethers.utils.formatBytes32String("sUSD"),
+      );
 
-      const snxAmount = BigNumber.from("18048646982183153765");
       const sUSDAmount = ethers.constants.MaxUint256;
+      const snxAmount = BigNumber.from("18048646982183153765");
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
-      await snxFlashLoanTool
-        .connect(impersonateAddressWallet)
-        .burn(sUSDAmount, snxAmount, oneInchAddress, oneInchTrade1);
+      await expect(
+        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, oneInchAddress, oneInchTrade1),
+      )
+        .to.emit(snxFlashLoanTool, "Burn")
+        .withArgs(impersonateAddress, sUSDDebtBalance0, snxAmount);
 
       const snxBalance1: BigNumber = await SNX.balanceOf(impersonateAddress);
       const sUSDBalance1: BigNumber = await sUSD.balanceOf(impersonateAddress);
