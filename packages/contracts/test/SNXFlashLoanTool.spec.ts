@@ -4,7 +4,7 @@ import { expect, use } from "chai";
 import { snxFlashLoanToolFixture } from "./shared";
 import { impersonateAddress } from "../constants";
 
-const { createFixtureLoader, solidity } = waffle;
+const { solidity, createFixtureLoader } = waffle;
 use(solidity);
 let loadFixture: ReturnType<typeof createFixtureLoader>;
 
