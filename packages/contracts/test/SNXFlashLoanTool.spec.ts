@@ -66,7 +66,9 @@ describe("unit/SNXFlashLoanTool", () => {
 
   describe("burn", async () => {
     it("should burn sUSD with SNX via 1inch", async () => {
-      const { synthetix, snxFlashLoanTool, SNX, sUSD, delegateApprovals } = await loadFixture(snxFlashLoanToolFixture);
+      const { synthetix, snxFlashLoanTool, SNX, sUSD, sUSDDecimals, delegateApprovals } = await loadFixture(
+        snxFlashLoanToolFixture,
+      );
       const snxTransferrable: BigNumber = await synthetix.transferableSynthetix(impersonateAddress);
       await SNX.connect(impersonateAddressWallet).transfer(owner.address, snxTransferrable);
       const sUSDBalance: BigNumber = await sUSD.balanceOf(impersonateAddress);
@@ -95,7 +97,8 @@ describe("unit/SNXFlashLoanTool", () => {
       );
       expect(snxBalance1).to.be.lt(snxBalance0);
       expect(sUSDBalance1).to.be.gte(sUSDBalance0);
-      expect(sUSDDebtBalance1).to.lt(sUSDDebtBalance0);
+      const delta: BigNumber = ethers.utils.parseUnits("0.0001", sUSDDecimals);
+      expect(sUSDDebtBalance0.sub(sUSDDebtBalance1)).to.be.closeTo(sUSDAmount, delta.toNumber());
     });
 
     it("should burn max sUSD with SNX via 1inch", async () => {
