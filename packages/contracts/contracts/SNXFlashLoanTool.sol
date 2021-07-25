@@ -52,13 +52,12 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     /// @param snxAmount Amount of SNX to sell in order to burn sUSD debt
     /// @param exchange Exchange address to swap on
     /// @param exchangeData Calldata to call exchange with
-    /// @return The final amount burnt
     function burn(
         uint256 sUSDAmount,
         uint256 snxAmount,
         address exchange,
         bytes calldata exchangeData
-    ) external override returns (uint256) {
+    ) external override {
         address[] memory assets = new address[](1);
         assets[0] = address(sUSD);
         uint256[] memory amounts = new uint256[](1);
@@ -78,7 +77,6 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
             referralCode
         );
         emit Burn(msg.sender, amounts[0], snxAmount);
-        return amounts[0];
     }
 
     /// @dev Aave flash loan callback. Receives the token amounts and gives it back + premiums.
