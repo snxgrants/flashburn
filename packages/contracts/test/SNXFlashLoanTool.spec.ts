@@ -80,6 +80,8 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
+      const lock0: boolean = await snxFlashLoanTool.lock();
+      expect(lock0).to.be.false;
 
       const sUSDAmount: BigNumber = BigNumber.from("100000000000000000000");
       const snxAmount: BigNumber = tradeData0.amount;
@@ -99,10 +101,12 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
+      const lock1: boolean = await snxFlashLoanTool.lock();
       expect(snxBalance1).to.be.lt(snxBalance0);
       expect(sUSDBalance1).to.be.gte(sUSDBalance0);
       const delta: BigNumber = ethers.utils.parseUnits("0.0001", sUSDDecimals);
       expect(sUSDDebtBalance0.sub(sUSDDebtBalance1)).to.be.closeTo(sUSDAmount, delta.toNumber());
+      expect(lock1).to.be.false;
     });
 
     it("should burn max sUSD with SNX via 1inch", async () => {
@@ -118,6 +122,8 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
+      const lock0: boolean = await snxFlashLoanTool.lock();
+      expect(lock0).to.be.false;
 
       const sUSDAmount: BigNumber = ethers.constants.MaxUint256;
       const snxAmount: BigNumber = tradeData1.amount;
@@ -137,9 +143,11 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
+      const lock1: boolean = await snxFlashLoanTool.lock();
       expect(snxBalance1).to.be.lt(snxBalance0);
       expect(sUSDBalance1).to.be.gte(sUSDBalance0);
       expect(sUSDDebtBalance1).to.equal(BigNumber.from("0"));
+      expect(lock1).to.be.false;
     });
   });
 
