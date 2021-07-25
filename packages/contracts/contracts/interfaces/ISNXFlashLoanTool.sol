@@ -16,10 +16,11 @@ interface ISNXFlashLoanTool {
     /// @param snxAmount Amount of SNX to sell in order to burn sUSD debt
     /// @param exchange Exchange address to swap on
     /// @param exchangeData Calldata to call exchange with
+    /// @return The final amount burnt
     function burn(
         uint256 sUSDAmount,
         uint256 snxAmount,
         address exchange,
         bytes calldata exchangeData
-    ) external;
+    ) external returns (uint256);
 }
