@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "compound-swaps",
+  "name": "snx-flash-tool",
   "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
   "scripts": {
     "clean": "yarn workspaces run clean",
