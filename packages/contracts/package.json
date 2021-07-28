@@ -1,9 +1,17 @@
 {
   "name": "@snx-flash-tool/contracts",
   "version": "1.0.0",
-  "main": "hardhat.config.ts",
   "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
   "license": "MIT",
+  "files": [
+    "constants",
+    "types",
+    "contracts",
+    "artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.json",
+    "artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.dbg.json",
+    "artifacts/contracts/interfaces/**/*.json",
+    "!artifacts/contracts/interfaces/**/*.dbg.json"
+  ],
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
     "synthetix": "^2.46.0-ovm"
