@@ -19,11 +19,13 @@
     "lint:contracts": "yarn workspace @snx-flash-tool/contracts lint",
     "lint:interface": "yarn workspace @snx-flash-tool/interface lint"
   },
-  "workspaces": [
-    "packages/*"
-  ],
-  "nohoist": [
-    "**/hardhat",
-    "**/hardhat/**"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/hardhat",
+      "**/hardhat/**"
+    ]
+  }
 }
