@@ -28,12 +28,12 @@ jobs:
           echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
           # enable workflow command processing
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
-      - uses: borales/actions-yarn@v2.0.2
+      - uses: borales/actions-yarn@v2.3.0
         with:
           cmd: install --ignore-engines # will run `yarn install` command
-      - uses: borales/actions-yarn@v2.0.2
+      - uses: borales/actions-yarn@v2.3.0
         with:
           cmd: build:contracts # will run `yarn build` command
-      - uses: borales/actions-yarn@v2.0.2
+      - uses: borales/actions-yarn@v2.3.0
         with:
           cmd: test:contracts # will run `yarn test` command
