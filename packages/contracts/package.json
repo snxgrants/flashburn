@@ -7,10 +7,12 @@
     "constants",
     "types",
     "contracts",
-    "artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.json",
-    "artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.dbg.json",
+    "artifacts/contracts/**/*.json",
+    "!artifacts/contracts/**/*.dbg.json",
     "artifacts/contracts/interfaces/**/*.json",
-    "!artifacts/contracts/interfaces/**/*.dbg.json"
+    "!artifacts/contracts/interfaces/**/*.dbg.json",
+    "artifacts/contracts/libraries/**/*.json",
+    "!artifacts/contracts/libraries/**/*.dbg.json"
   ],
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
