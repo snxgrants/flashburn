@@ -7,17 +7,19 @@ export interface Migration {
   snxFlashLoanTool: SNXFlashLoanTool;
 }
 
-export async function migrate(owner: Wallet, isTest: boolean = true): Promise<Migration> {
-  const snxFlashLoanTool: SNXFlashLoanTool = await migrateSNXFlashLoanTool(owner);
-  if (!isTest) console.log("SNXFlashLoanTool address:", snxFlashLoanTool.address);
+export async function migrate(owner: Wallet, chainId: number): Promise<Migration> {
+  const snxFlashLoanTool: SNXFlashLoanTool = await migrateSNXFlashLoanTool(owner, chainId);
   return { snxFlashLoanTool };
 }
 
 async function main() {
   const accounts: Signer[] = await ethers.getSigners();
   const owner: Wallet = <Wallet>accounts[0];
+  const chainId: number = await owner.getChainId();
+  console.log("Chain ID:", chainId);
   console.log("Owner address:", owner.address);
-  await migrate(owner, false);
+  const { snxFlashLoanTool } = await migrate(owner, chainId);
+  console.log("SNXFlashLoanTool address:", snxFlashLoanTool.address);
 }
 
 if (require.main === module) {

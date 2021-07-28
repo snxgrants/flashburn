@@ -10,7 +10,7 @@ import {
   IDelegateApprovals,
 } from "../../types";
 import { migrate } from "../../scripts/migrate";
-import { addressResolverAddress, lendingPoolAddressesProviderAddress } from "../../constants";
+import { addresses } from "../../constants";
 
 export interface SNXFlashLoanToolSubject {
   snxFlashLoanTool: SNXFlashLoanTool;
@@ -27,10 +27,11 @@ export interface SNXFlashLoanToolSubject {
 
 export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlashLoanToolSubject> {
   const owner: Wallet = wallet[0];
+  const chainId: number = await owner.getChainId();
 
   const synthetixResolver: IAddressResolver = (await ethers.getContractAt(
     "synthetix/contracts/interfaces/IAddressResolver.sol:IAddressResolver",
-    addressResolverAddress,
+    addresses[chainId].addressResolver,
   )) as IAddressResolver;
   const synthetixAddress: string = await synthetixResolver.getAddress(ethers.utils.formatBytes32String("Synthetix"));
   const synthetix: ISynthetix = (await ethers.getContractAt(
@@ -58,7 +59,7 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
   const sUSDDecimals: number = await sUSD.decimals();
   const addressesProvider: ILendingPoolAddressesProvider = (await ethers.getContractAt(
     "contracts/interfaces/ILendingPoolAddressesProvider.sol:ILendingPoolAddressesProvider",
-    lendingPoolAddressesProviderAddress,
+    addresses[chainId].lendingPoolAddressesProvider,
   )) as ILendingPoolAddressesProvider;
   const lendingPoolAddress: string = await addressesProvider.getLendingPool();
   const lendingPool: ILendingPool = (await ethers.getContractAt(
@@ -66,7 +67,7 @@ export async function snxFlashLoanToolFixture(wallet: Wallet[]): Promise<SNXFlas
     lendingPoolAddress,
   )) as ILendingPool;
 
-  const { snxFlashLoanTool } = await migrate(owner);
+  const { snxFlashLoanTool } = await migrate(owner, chainId);
 
   return {
     snxFlashLoanTool,

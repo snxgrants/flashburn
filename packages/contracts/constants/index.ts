@@ -1,6 +1,24 @@
 import { BigNumber } from "ethers";
-export const lendingPoolAddressesProviderAddress: string = "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5";
-export const addressResolverAddress: string = "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83";
+
+export const addresses: {
+  [chainId: number]: {
+    multicall: string;
+    lendingPoolAddressesProvider: string;
+    addressResolver: string;
+  };
+} = {
+  1: {
+    multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
+    lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
+    addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
+  },
+  1337: {
+    multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
+    lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
+    addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
+  },
+};
+
 export const impersonateAddress: string = "0xaB281a90645Cb13E440D4d12E7aA8F1e74ae8459";
 export const oneInchAddress: string = "0x11111112542d85b3ef69ae05771c2dccff4faa26";
 
