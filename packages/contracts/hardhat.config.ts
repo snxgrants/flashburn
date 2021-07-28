@@ -40,8 +40,19 @@ const config: HardhatUserConfig = {
   },
 };
 
-if (process.env.PRIVATE_KEY && config.networks && config.networks.mainnet) {
-  config.networks.mainnet.accounts = [`0x${process.env.PRIVATE_KEY}`];
+if (process.env.INFURA_ID && config.networks) {
+  config.networks.kovan = {
+    url: `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
+  };
+}
+
+if (process.env.PRIVATE_KEY && config.networks) {
+  if (config.networks.mainnet) {
+    config.networks.mainnet.accounts = [`0x${process.env.PRIVATE_KEY}`];
+  }
+  if (config.networks.kovan) {
+    config.networks.kovan.accounts = [`0x${process.env.PRIVATE_KEY}`];
+  }
 }
 
 if (process.env.COINMARKETCAP) {

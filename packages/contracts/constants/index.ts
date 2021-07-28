@@ -17,6 +17,11 @@ export const addresses: {
     lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
   },
+  42: {
+    multicall: "0x2cc8688c5f75e365aaeeb4ea8d6a480405a48d2a",
+    lendingPoolAddressesProvider: "0x88757f2f99175387ab4c6a4b3067c77a695b0349",
+    addressResolver: "0x84f87E3636Aa9cC1080c07E6C61aDfDCc23c0db6",
+  },
 };
 
 export const impersonateAddress: string = "0xaB281a90645Cb13E440D4d12E7aA8F1e74ae8459";
