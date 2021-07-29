@@ -7,5 +7,5 @@
     "outDir": "dist"
   },
   "include": ["./scripts", "./test", "./utils", "./types", "./constants", "./tasks"],
-  "files": ["./hardhat.config.ts"]
+  "files": ["./hardhat.config.ts", "./.eslintrc.js"]
 }

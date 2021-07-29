@@ -56,7 +56,7 @@
     "console": "hardhat console --network localhost",
     "lint": "yarn run lint:sol && yarn run lint:ts",
     "lint:sol": "solhint --config ./.solhint.json --max-warnings 100 \"contracts/**/*.sol\"",
-    "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts .",
+    "lint:ts": "eslint --config ./.eslintrc.js --ignore-path ./.eslintignore --ext .js,.ts .",
     "prettier": "prettier --plugin prettier-plugin-solidity --config .prettierrc --write \"**/*.{js,json,md,sol,ts}\"",
     "prettier:list-different": "prettier --config .prettierrc --list-different \"**/*.{js,json,md,sol,ts}\"",
     "typechain": "hardhat typechain",
