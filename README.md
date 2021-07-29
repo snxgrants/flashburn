@@ -1,4 +1,4 @@
-# SNX Flash Tool
+# SNX Flash Tool - Burn sUSD Debt with Staked SNX
 
 ![CI](https://github.com/gg2001/snx-flash-tool/workflows/CI/badge.svg)
 
