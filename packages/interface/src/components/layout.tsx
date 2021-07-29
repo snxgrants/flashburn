@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import { siteURL } from "../constants";
 
 const siteTwitter: string = "@GauthamGE";
-const siteImageAlt: string = "Compound Logo";
+const siteImageAlt: string = "Synthetix Logo";
 const siteLogo: string = `${siteURL}logo.png`;
 
 function Layout({ children }: { children: ReactNode }): JSX.Element {

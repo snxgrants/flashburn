@@ -5,7 +5,8 @@ function Footer(): JSX.Element {
     <Container
       as={Stack}
       maxW={"6xl"}
-      py={4}
+      paddingBottom={4}
+      paddingTop={{ base: 0, md: 4 }}
       direction={{ base: "column", md: "row" }}
       spacing={4}
       justify={{ base: "center", md: "space-between" }}
@@ -13,7 +14,7 @@ function Footer(): JSX.Element {
     >
       <Box></Box>
       <Box>
-        <Link href="https://github.com/gg2001/compound-swaps" isExternal>
+        <Link href="https://github.com/gg2001/snx-flash-tool" isExternal>
           <Text as="u">GitHub</Text>
         </Link>{" "}
         •{" "}

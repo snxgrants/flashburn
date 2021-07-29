@@ -2,4 +2,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://compound.gcubed.io/sitemap.xml
+Sitemap: https://snx-flash-tool.vercel.app/sitemap.xml

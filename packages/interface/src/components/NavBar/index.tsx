@@ -22,17 +22,16 @@ const Links: {
   external: boolean;
   isRoute: boolean;
 }[] = [
-  { link: "Swap", url: "/", external: false, isRoute: true },
-  { link: "Swap & Repay", url: "/repay", external: false, isRoute: true },
+  { link: "Home", url: "/", external: false, isRoute: true },
   {
     link: "Docs ↗",
-    url: "https://github.com/gg2001/compound-swaps",
+    url: "https://github.com/gg2001/snx-flash-tool",
     external: true,
     isRoute: false,
   },
   {
-    link: "Compound ↗",
-    url: "https://app.compound.finance/",
+    link: "Staking ↗",
+    url: "https://staking.synthetix.io/",
     external: true,
     isRoute: false,
   },
@@ -86,13 +85,13 @@ function NavBar(): JSX.Element {
                 <HStack spacing={4} alignItems={"center"}>
                   <Image
                     src="/logo.svg"
-                    alt="Compound Logo"
+                    alt="Synthetix Logo"
                     width={48}
                     height={48}
                   />
                   <Box>
                     <Text as="b" fontSize={{ base: "14px", lg: "16px" }}>
-                      Compound Swaps
+                      SNX Flash Tool
                     </Text>
                   </Box>
                 </HStack>
