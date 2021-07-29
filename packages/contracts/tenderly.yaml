@@ -1,7 +1,7 @@
 account_id: ""
 exports:
   localhost:
-    project_slug: gg2001/snx-flash-tool
+    project_slug: gg2001/solidity-playground
     rpc_address: 127.0.0.1:8545
     protocol: ""
     forked_network: Mainnet
