@@ -21,7 +21,7 @@ Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 
 ## Documentation
 
-### [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol) contract
+### [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 
 - [Contract](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 - [Interface](./packages/contracts/contracts/interfaces/ISNXFlashLoanTool.sol)
