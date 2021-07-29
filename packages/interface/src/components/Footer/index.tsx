@@ -1,6 +1,14 @@
 import { Container, Stack, Text, Box, Link } from "@chakra-ui/react";
+import { addresses } from "@snx-flash-tool/contracts/constants";
+import useWeb3React from "../../hooks/useWeb3React";
 
 function Footer(): JSX.Element {
+  const { chainId } = useWeb3React();
+  const etherscanContractAddress: string =
+    chainId in addresses
+      ? `${addresses[chainId].explorer}address/${addresses[chainId].snxFlashTool}`
+      : `${addresses[1].explorer}address/${addresses[1].snxFlashTool}`;
+
   return (
     <Container
       as={Stack}
@@ -18,10 +26,7 @@ function Footer(): JSX.Element {
           <Text as="u">GitHub</Text>
         </Link>{" "}
         •{" "}
-        <Link
-          href="https://etherscan.io/address/0x231e7959852509E4872C3374554784a46EB8d680"
-          isExternal
-        >
+        <Link href={etherscanContractAddress} isExternal>
           <Text as="u">Etherscan</Text>
         </Link>{" "}
         • By{" "}

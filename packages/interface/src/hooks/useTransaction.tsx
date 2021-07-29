@@ -1,11 +1,16 @@
 import { useCallback } from "react";
 import { ContractTransaction } from "ethers";
 import { Box, Link, Spinner, useToast, ToastId, Text } from "@chakra-ui/react";
+import { addresses } from "@snx-flash-tool/contracts/constants";
+import useWeb3React from "./useWeb3React";
 
 function useTransaction(): {
   sendTransaction: (transaction: Promise<ContractTransaction>) => Promise<void>;
 } {
   const toast = useToast();
+  const { chainId } = useWeb3React();
+  const explorer: string =
+    chainId in addresses ? addresses[chainId].explorer : addresses[1].explorer;
 
   const sendTransaction = useCallback(
     async (transaction: Promise<ContractTransaction>) => {
@@ -25,7 +30,7 @@ function useTransaction(): {
           toast.update(toastId, {
             description: (
               <Box>
-                <Link href={`https://etherscan.io/tx/${tx.hash}`} isExternal>
+                <Link href={`${explorer}tx/${tx.hash}`} isExternal>
                   <Text
                     as="u"
                     fontWeight={"bold"}
@@ -43,7 +48,7 @@ function useTransaction(): {
           toast.update(toastId, {
             description: (
               <Box>
-                <Link href={`https://etherscan.io/tx/${tx.hash}`} isExternal>
+                <Link href={`${explorer}tx/${tx.hash}`} isExternal>
                   <Text
                     as="u"
                     fontWeight={"bold"}
@@ -57,7 +62,7 @@ function useTransaction(): {
           toast.update(toastId, {
             description: (
               <Box>
-                <Link href={`https://etherscan.io/tx/${tx.hash}`} isExternal>
+                <Link href={`${explorer}tx/${tx.hash}`} isExternal>
                   <Text
                     as="u"
                     fontWeight={"bold"}

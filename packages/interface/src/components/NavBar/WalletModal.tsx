@@ -12,6 +12,8 @@ import {
   Link,
   useClipboard,
 } from "@chakra-ui/react";
+import { addresses } from "@snx-flash-tool/contracts/constants";
+import useWeb3React from "../../hooks/useWeb3React";
 
 function WalletModal({
   address,
@@ -26,6 +28,9 @@ function WalletModal({
 }): JSX.Element {
   const { hasCopied, onCopy }: { hasCopied: boolean; onCopy: () => void } =
     useClipboard(address);
+  const { chainId } = useWeb3React();
+  const explorer: string =
+    chainId in addresses ? addresses[chainId].explorer : addresses[1].explorer;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -52,7 +57,7 @@ function WalletModal({
               {hasCopied ? "Copied" : "Copy"}
             </Button>
             <Link
-              href={`https://etherscan.io/address/${address}`}
+              href={`${explorer}address/${address}`}
               isExternal
               color="black"
             >
