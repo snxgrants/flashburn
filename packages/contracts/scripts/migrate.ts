@@ -1,7 +1,8 @@
-import { ethers } from "hardhat";
+import { run, ethers } from "hardhat";
 import { Signer, Wallet } from "ethers";
 import { SNXFlashLoanTool } from "../types";
 import { migrate as migrateSNXFlashLoanTool } from "./SNXFlashLoanTool";
+import { addresses } from "../constants";
 
 export interface Migration {
   snxFlashLoanTool: SNXFlashLoanTool;
@@ -20,6 +21,18 @@ async function main() {
   console.log("Owner address:", owner.address);
   const { snxFlashLoanTool } = await migrate(owner, chainId);
   console.log("SNXFlashLoanTool address:", snxFlashLoanTool.address);
+  if (process.env.ETHERSCAN && chainId !== 1337) {
+    console.log("Verifying...");
+    await new Promise(r => setTimeout(r, 60000));
+    try {
+      await run("verify:verify", {
+        address: snxFlashLoanTool.address,
+        constructorArguments: [addresses[chainId].addressResolver, addresses[chainId].lendingPoolAddressesProvider],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 if (require.main === module) {
