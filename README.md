@@ -14,10 +14,10 @@ The smart contract works by taking a sUSD flash loan from Aave V2 to burn a spec
 
 Latest deployment at tag [v1.0.0](https://github.com/gg2001/snx-flash-tool/releases/tag/v1.0.0):
 
-| Network | Explorer                                                                      |
-| ------- | ----------------------------------------------------------------------------- |
-| Mainnet | -                                                                             |
-| Kovan   | https://kovan.etherscan.io/address/0x3735Be391814ADf23A7C46a02B4A2B4259af30bF |
+| Network | Explorer                                                                                                                     |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Mainnet | -                                                                                                                            |
+| Kovan   | [0x3735Be391814ADf23A7C46a02B4A2B4259af30bF] (https://kovan.etherscan.io/address/0x3735Be391814ADf23A7C46a02B4A2B4259af30bF) |
 
 ## Documentation
 

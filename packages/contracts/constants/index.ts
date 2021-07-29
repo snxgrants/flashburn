@@ -3,24 +3,24 @@ import { BigNumber } from "ethers";
 export const addresses: {
   [chainId: number]: {
     multicall: string;
-    lendingPoolAddressesProvider: string;
     addressResolver: string;
+    lendingPoolAddressesProvider: string;
   };
 } = {
   1: {
     multicall: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
-    lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
+    lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
   },
   1337: {
     multicall: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
-    lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
+    lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
   },
   42: {
     multicall: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
-    lendingPoolAddressesProvider: "0x88757f2f99175387ab4c6a4b3067c77a695b0349",
     addressResolver: "0x84f87E3636Aa9cC1080c07E6C61aDfDCc23c0db6",
+    lendingPoolAddressesProvider: "0x88757f2f99175387ab4c6a4b3067c77a695b0349",
   },
 };
 
