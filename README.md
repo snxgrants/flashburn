@@ -51,9 +51,9 @@ The caller of the `burn` function must approve the contract to burn sUSD on the 
   await delegateApprovals.approveBurnOnBehalf(snxFlashLoanTool.address);
   await snx.approve(snxFlashLoanTool.address, snxAmount);
   // If burning specified amount of sUSD debt
-  snxFlashLoanTool.burn(sUSDAmount, snxAmount, data.tx.to, data.tx.data);
+  await snxFlashLoanTool.burn(sUSDAmount, snxAmount, data.tx.to, data.tx.data);
   // If burning all sUSD debt
-  snxFlashLoanTool.burn(
+  await snxFlashLoanTool.burn(
     ethers.constants.MaxUint256,
     snxAmount,
     data.tx.to,
