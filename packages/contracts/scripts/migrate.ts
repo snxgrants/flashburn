@@ -23,7 +23,7 @@ async function main() {
   console.log("SNXFlashLoanTool address:", snxFlashLoanTool.address);
   if (process.env.ETHERSCAN && chainId !== 1337) {
     console.log("Verifying...");
-    await new Promise(r => setTimeout(r, 60000));
+    await new Promise(r => setTimeout(r, 67500));
     try {
       await run("verify:verify", {
         address: snxFlashLoanTool.address,

@@ -19,7 +19,7 @@ function Footer(): JSX.Element {
         </Link>{" "}
         •{" "}
         <Link
-          href="https://etherscan.io/address/0x6B33DF549823f6e9dE7b86485BC1567A97F57f8d"
+          href="https://etherscan.io/address/0x231e7959852509E4872C3374554784a46EB8d680"
           isExternal
         >
           <Text as="u">Etherscan</Text>
