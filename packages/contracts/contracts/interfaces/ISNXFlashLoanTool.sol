@@ -8,7 +8,7 @@ interface ISNXFlashLoanTool {
     /// @param sender msg.sender
     /// @param sUSDAmount Amount of sUSD debt burnt
     /// @param snxAmount Amount of SNX to sell in order to burn sUSD debt
-    event Burn(address indexed sender, uint256 sUSDAmount, uint256 snxAmount);
+    event Burn(address sender, uint256 sUSDAmount, uint256 snxAmount);
 
     /// @notice Burn sUSD debt with SNX using a flash loan
     /// @dev To burn all sUSD debt, pass in type(uint256).max for sUSDAmount
