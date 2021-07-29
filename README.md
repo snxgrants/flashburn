@@ -74,12 +74,29 @@ Note that the fee to flash loan on Aave V2 is 0.09%, so you must specify an `snx
 ### Dependencies
 
 - [Git](https://git-scm.com/downloads)
-- [NodeJS](https://nodejs.org/en/download/)
+- [Node.js](https://nodejs.org/en/download/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
+
+### Environment variables
+
+The environment variable `ALCHEMY_API_KEY` must be set to an [Alchemy](https://www.alchemy.com/) mainnet key before development. For example:
+
+```bash
+export ALCHEMY_API_KEY=En1...
+```
+
+Optionally, to enable non-mainnet deployments of the contracts and Alchemy/Infura support on the interface, set `INFURA_ID`, `NEXT_PUBLIC_INFURA_ID` and `NEXT_PUBLIC_ALCHEMY_API_KEY`. `INFURA_ID` is for the contracts, `NEXT_PUBLIC_INFURA_ID` and `NEXT_PUBLIC_ALCHEMY_API_KEY` are for the interface. `INFURA_ID` and `NEXT_PUBLIC_INFURA_ID` can use the same value, so can `ALCHEMY_API_KEY` and `NEXT_PUBLIC_ALCHEMY_API_KEY`.
+
+Optional environment variables:
+
+- `PRIVATE_KEY` Private key (with the `0x` in the beginning removed) to deploy contracts
+- `COINMARKETCAP` [CoinMarketCap](https://coinmarketcap.com/api/) API key to view gas costs in USD
+- `ETHERSCAN` [Etherscan](https://etherscan.io/apis) API key to verify deployed contracts on Etherscan
+- `GA_TRACKING_ID` to enable Google Analytics on the interface.
 
 ### Setup
 
-Clone the repository, open it, and install nodejs packages with `yarn`:
+Clone the repository, open it, and install Node.js packages with `yarn`:
 
 ```bash
 git clone https://github.com/gg2001/snx-flash-tool.git
@@ -144,3 +161,27 @@ To clean the compiled [contracts](./packages/contracts), run:
 ```bash
 yarn clean:contracts
 ```
+
+### Local deployment
+
+A Hardhat node must be started before deploying locally:
+
+```bash
+yarn evm:contracts
+```
+
+Then you can deploy the contracts:
+
+```bash
+yarn migrate:contracts --network localhost
+```
+
+## Deployment
+
+Before deploying contracts to mainnet you must set the `ALCHEMY_API_KEY` and `PRIVATE_KEY` environment variable. To deploy on other networks you must set an `INFURA_ID` and replace mainnet with the network name:
+
+```
+yarn migrate:contracts --network mainnet
+```
+
+To deploy the interface you must use `yarn build` as the build command, and the output directory will be `packages/interface/.next`. The environment variables `ALCHEMY_API_KEY`, `NEXT_PUBLIC_ALCHEMY_API_KEY`, `NEXT_PUBLIC_INFURA_ID` and `GA_TRACKING_ID` can be set for enabling support for things like WalletConnect and Google Analytics.

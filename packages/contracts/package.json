@@ -60,6 +60,6 @@
     "prettier": "prettier --plugin prettier-plugin-solidity --config .prettierrc --write \"**/*.{js,json,md,sol,ts}\"",
     "prettier:list-different": "prettier --config .prettierrc --list-different \"**/*.{js,json,md,sol,ts}\"",
     "typechain": "hardhat typechain",
-    "migrate": "hardhat run --network localhost scripts/migrate.ts"
+    "migrate": "hardhat run scripts/migrate.ts"
   }
 }

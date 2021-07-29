@@ -2,6 +2,12 @@
   "private": true,
   "name": "snx-flash-tool",
   "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gg2001/snx-flash-tool.git"
+  },
   "scripts": {
     "clean": "yarn workspaces run clean",
     "clean:contracts": "yarn workspace @snx-flash-tool/contracts clean",
@@ -17,7 +23,9 @@
     "prettier:interface": "yarn workspace @snx-flash-tool/interface prettier",
     "lint": "yarn workspaces run lint",
     "lint:contracts": "yarn workspace @snx-flash-tool/contracts lint",
-    "lint:interface": "yarn workspace @snx-flash-tool/interface lint"
+    "lint:interface": "yarn workspace @snx-flash-tool/interface lint",
+    "evm:contracts": "yarn workspace @snx-flash-tool/contracts evm",
+    "migrate:contracts": "yarn workspace @snx-flash-tool/contracts migrate"
   },
   "workspaces": {
     "packages": [
