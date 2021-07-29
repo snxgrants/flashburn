@@ -4,7 +4,7 @@ pragma solidity ^0.7.6;
 /// @author Ganesh Gautham Elango
 /// @title SNX Flash Loan Tool interface
 interface ISNXFlashLoanTool {
-    /// @notice Emitted on each collateral swap
+    /// @notice Emitted on each burn
     /// @param sender msg.sender
     /// @param sUSDAmount Amount of sUSD debt burnt
     /// @param snxAmount Amount of SNX to sell in order to burn sUSD debt
