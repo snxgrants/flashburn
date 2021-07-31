@@ -1,6 +1,6 @@
 {
   "name": "@snx-flash-tool/contracts",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
   "license": "GPL-3.0",
   "homepage": "https://snx-flash-tool.vercel.app/",
