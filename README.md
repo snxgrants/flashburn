@@ -10,7 +10,7 @@ SNX Flash Tool allows you to burn your sUSD debt using staked SNX. Stakers who a
 
 The smart contract works by taking a sUSD flash loan from Aave V2 to burn a specified amount of the users sUSD debt. In doing so, the users SNX unstakes and becomes transferrable. The contract transfers the SNX from the user, then sells it on a specified DEX (e.g. 1inch) for sUSD to pay back the flash loan.
 
-## Deployments
+## Contract Addresses
 
 Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol) deployment at tag [v1.0.1](https://github.com/gg2001/snx-flash-tool/releases/tag/v1.0.1):
 
@@ -19,53 +19,9 @@ Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 | Mainnet | [0x231e7959852509E4872C3374554784a46EB8d680](https://etherscan.io/address/0x231e7959852509E4872C3374554784a46EB8d680)       |
 | Kovan   | [0xE33F708DF2cB0deD9dfc18Ad9a08Ec7C09F6cec3](https://kovan.etherscan.io/address/0xE33F708DF2cB0deD9dfc18Ad9a08Ec7C09F6cec3) |
 
-## Documentation
-
-### [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
-
-- [Contract](./packages/contracts/contracts/SNXFlashLoanTool.sol)
-- [Interface](./packages/contracts/contracts/interfaces/ISNXFlashLoanTool.sol)
-
-The `burn` function allows SNX to be swapped for sUSD on any DEX. This works by passing in the `exchange` (contract address to call for swap) and `exchangeData` (calldata to call contract with, for swap) parameters. The simplest way to handle this is to use a DEX aggregator like 1inch. For example, before calling the `burn` function you can fetch the [swap data from the 1inch API](https://docs.1inch.io/api/quote-swap#swap): [`https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x231e7959852509E4872C3374554784a46EB8d680&slippage=1`](https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x231e7959852509E4872C3374554784a46EB8d680&slippage=1) (swap 11.9 SNX to sUSD with a slippage of 1%). This will return an object `data` containing the swap data. You can then call `burn` with `data.tx.to` for `exchange` and `data.tx.data` for `exchangeData`.
-
-To burn all sUSD debt, call `burn` with the `sUSDAmount` parameter set to the maximum value representable by the `uint256` type. In Solidity this is `type(uint256).max`, in ethers.js this is `ethers.constants.MaxUint256`.
-
-The caller of the `burn` function must approve the contract to burn sUSD on the callers behalf. This can be done by calling [`approveBurnOnBehalf`](https://docs.synthetix.io/contracts/source/contracts/DelegateApprovals/#approveburnonbehalf) on the [`DelegateApprovals`](https://docs.synthetix.io/contracts/source/contracts/DelegateApprovals/) contract. The caller must also approve `snxAmount` of SNX to be spent by the contract. Both of these must be done before calling the contract.
-
-- Solidity
-  ```solidity
-  IDelegateApprovals(delegateApprovals).approveBurnOnBehalf(snxFlashLoanTool);
-  IERC20(snx).approve(snxFlashLoanTool, snxAmount);
-  // If burning specified amount of sUSD debt
-  ISNXFlashLoanTool(snxFlashLoanTool).burn(sUSDAmount, snxAmount, exchange, exchangeData);
-  // If burning all sUSD debt
-  ISNXFlashLoanTool(snxFlashLoanTool).burn(type(uint256).max, snxAmount, exchange, exchangeData);
-  ```
-- JavaScript
-  ```javascript
-  const data = await fetch(
-    `https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=${snxAmount.toString()}&disableEstimate=true&fromAddress=${
-      snxFlashLoanTool.address
-    }&slippage=${slippage}`
-  ).then((r) => r.json());
-  await delegateApprovals.approveBurnOnBehalf(snxFlashLoanTool.address);
-  await snx.approve(snxFlashLoanTool.address, snxAmount);
-  // If burning specified amount of sUSD debt
-  await snxFlashLoanTool.burn(sUSDAmount, snxAmount, data.tx.to, data.tx.data);
-  // If burning all sUSD debt
-  await snxFlashLoanTool.burn(
-    ethers.constants.MaxUint256,
-    snxAmount,
-    data.tx.to,
-    data.tx.data
-  );
-  ```
-
-Note that the fee to flash loan on Aave V2 is 0.09%, so you must specify an `snxAmount` high enough to swap to `sUSDAmount * 1.0009`.
-
 ## Installation
 
-The [contracts package](https://www.npmjs.com/package/@snx-flash-tool/contracts) can be installed via `yarn` or `npm` for use in Solidity or JavaScript repos:
+The [contracts package](./packages/contracts) can be installed via `yarn` or `npm` for use in Solidity or JavaScript repos [npm link](https://www.npmjs.com/package/@snx-flash-tool/contracts):
 
 ```bash
 # Yarn
@@ -117,6 +73,50 @@ import SNXFlashLoanTool from "@snx-flash-tool/contracts/artifacts/contracts/SNXF
 const abi = SNXFlashLoanTool.abi;
 const bytecode = SNXFlashLoanTool.bytecode;
 ```
+
+## Documentation
+
+### [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
+
+- [Contract](./packages/contracts/contracts/SNXFlashLoanTool.sol)
+- [Interface](./packages/contracts/contracts/interfaces/ISNXFlashLoanTool.sol)
+
+The `burn` function allows SNX to be swapped for sUSD on any DEX. This works by passing in the `exchange` (contract address to call for swap) and `exchangeData` (calldata to call contract with, for swap) parameters. The simplest way to handle this is to use a DEX aggregator like 1inch. For example, before calling the `burn` function you can fetch the [swap data from the 1inch API](https://docs.1inch.io/api/quote-swap#swap): [`https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x231e7959852509E4872C3374554784a46EB8d680&slippage=1`](https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x231e7959852509E4872C3374554784a46EB8d680&slippage=1) (swap 11.9 SNX to sUSD with a slippage of 1%). This will return an object `data` containing the swap data. You can then call `burn` with `data.tx.to` for `exchange` and `data.tx.data` for `exchangeData`.
+
+To burn all sUSD debt, call `burn` with the `sUSDAmount` parameter set to the maximum value representable by the `uint256` type. In Solidity this is `type(uint256).max`, in ethers.js this is `ethers.constants.MaxUint256`.
+
+The caller of the `burn` function must approve the contract to burn sUSD on the callers behalf. This can be done by calling [`approveBurnOnBehalf`](https://docs.synthetix.io/contracts/source/contracts/DelegateApprovals/#approveburnonbehalf) on the [`DelegateApprovals`](https://docs.synthetix.io/contracts/source/contracts/DelegateApprovals/) contract. The caller must also approve `snxAmount` of SNX to be spent by the contract. Both of these must be done before calling the contract.
+
+- Solidity
+  ```solidity
+  IDelegateApprovals(delegateApprovals).approveBurnOnBehalf(snxFlashLoanTool);
+  IERC20(snx).approve(snxFlashLoanTool, snxAmount);
+  // If burning specified amount of sUSD debt
+  ISNXFlashLoanTool(snxFlashLoanTool).burn(sUSDAmount, snxAmount, exchange, exchangeData);
+  // If burning all sUSD debt
+  ISNXFlashLoanTool(snxFlashLoanTool).burn(type(uint256).max, snxAmount, exchange, exchangeData);
+  ```
+- JavaScript
+  ```javascript
+  const data = await fetch(
+    `https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=${snxAmount.toString()}&disableEstimate=true&fromAddress=${
+      snxFlashLoanTool.address
+    }&slippage=${slippage}`
+  ).then((r) => r.json());
+  await delegateApprovals.approveBurnOnBehalf(snxFlashLoanTool.address);
+  await snx.approve(snxFlashLoanTool.address, snxAmount);
+  // If burning specified amount of sUSD debt
+  await snxFlashLoanTool.burn(sUSDAmount, snxAmount, data.tx.to, data.tx.data);
+  // If burning all sUSD debt
+  await snxFlashLoanTool.burn(
+    ethers.constants.MaxUint256,
+    snxAmount,
+    data.tx.to,
+    data.tx.data
+  );
+  ```
+
+Note that the fee to flash loan on Aave V2 is 0.09%, so you must specify an `snxAmount` high enough to swap to `sUSDAmount * 1.0009`.
 
 ## Development
 
