@@ -63,6 +63,61 @@ The caller of the `burn` function must approve the contract to burn sUSD on the 
 
 Note that the fee to flash loan on Aave V2 is 0.09%, so you must specify an `snxAmount` high enough to swap to `sUSDAmount * 1.0009`.
 
+## Installation
+
+The [contracts package](https://www.npmjs.com/package/@snx-flash-tool/contracts) can be installed via `yarn` or `npm` for use in Solidity or JavaScript repos:
+
+```bash
+# Yarn
+yarn add @snx-flash-tool/contracts
+# NPM
+npm install @snx-flash-tool/contracts
+```
+
+### Solidity
+
+You can import the Solidity contract and interfaces from `@snx-flash-tool/contracts/contracts`:
+
+```solidity
+import { SNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/SNXFlashLoanTool.sol";
+import { ISNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/interfaces/ISNXFlashLoanTool.sol";
+
+```
+
+### JavaScript
+
+You can import the contract address from `@snx-flash-tool/contracts/constants` and the Typechain contract interfaces from `@snx-flash-tool/contracts/types`:
+
+```typescript
+import { addresses } from "@snx-flash-tool/contracts/constants";
+import {
+  SNXFlashLoanTool,
+  SNXFlashLoanTool__factory,
+  ISNXFlashLoanTool,
+  ISNXFlashLoanTool__factory,
+} from "@snx-flash-tool/contracts/types";
+const chainId = 1;
+const address = addresses[chainId].snxFlashTool;
+// JavaScript
+const snxFlashLoanTool = SNXFlashLoanTool__factory.connect(
+  address,
+  provider /* ethers.js provider */
+);
+// TypeScript
+const snxFlashLoanTool: SNXFlashLoanTool = SNXFlashLoanTool__factory.connect(
+  address,
+  provider /* ethers.js provider */
+);
+```
+
+You can import the contract artifacts from `@snx-flash-tool/contracts/artifacts/contracts`:
+
+```javascript
+import SNXFlashLoanTool from "@snx-flash-tool/contracts/artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.json";
+const abi = SNXFlashLoanTool.abi;
+const bytecode = SNXFlashLoanTool.bytecode;
+```
+
 ## Development
 
 ### Directory Structure
@@ -185,58 +240,3 @@ yarn migrate:contracts --network mainnet
 ```
 
 To deploy the interface you must use `yarn build` as the build command, and the output directory will be `packages/interface/.next`. The environment variables `ALCHEMY_API_KEY`, `NEXT_PUBLIC_ALCHEMY_API_KEY`, `NEXT_PUBLIC_INFURA_ID` and `GA_TRACKING_ID` can be set for enabling support for things like WalletConnect and Google Analytics.
-
-## Installation
-
-The [contracts package](https://www.npmjs.com/package/@snx-flash-tool/contracts) can be installed via `yarn` or `npm` for use in Solidity or JavaScript repos:
-
-```bash
-# Yarn
-yarn add @snx-flash-tool/contracts
-# NPM
-npm install @snx-flash-tool/contracts
-```
-
-### Solidity
-
-You can import the Solidity contract and interfaces from `@snx-flash-tool/contracts/contracts`:
-
-```solidity
-import { SNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/SNXFlashLoanTool.sol";
-import { ISNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/interfaces/ISNXFlashLoanTool.sol";
-
-```
-
-### JavaScript
-
-You can import the contract address from `@snx-flash-tool/contracts/constants` and the Typechain contract interfaces from `@snx-flash-tool/contracts/types`:
-
-```typescript
-import { addresses } from "@snx-flash-tool/contracts/constants";
-import {
-  SNXFlashLoanTool,
-  SNXFlashLoanTool__factory,
-  ISNXFlashLoanTool,
-  ISNXFlashLoanTool__factory,
-} from "@snx-flash-tool/contracts/types";
-const chainId = 1;
-const address = addresses[chainId].snxFlashTool;
-// JavaScript
-const snxFlashLoanTool = SNXFlashLoanTool__factory.connect(
-  address,
-  provider /* ethers.js provider */
-);
-// TypeScript
-const snxFlashLoanTool: SNXFlashLoanTool = SNXFlashLoanTool__factory.connect(
-  address,
-  provider /* ethers.js provider */
-);
-```
-
-You can import the contract artifacts from `@snx-flash-tool/contracts/artifacts/contracts`:
-
-```javascript
-import SNXFlashLoanTool from "@snx-flash-tool/contracts/artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.json";
-const abi = SNXFlashLoanTool.abi;
-const bytecode = SNXFlashLoanTool.bytecode;
-```
