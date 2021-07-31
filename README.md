@@ -21,7 +21,7 @@ Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 
 ## Installation
 
-The [contracts package](./packages/contracts) can be installed via `yarn` or `npm` for use in Solidity or JavaScript repos [npm link](https://www.npmjs.com/package/@snx-flash-tool/contracts):
+The [contracts package](./packages/contracts) can be installed via `yarn` or `npm` for use in Solidity or JavaScript repos ([npm link](https://www.npmjs.com/package/@snx-flash-tool/contracts)):
 
 ```bash
 # Yarn
