@@ -32,7 +32,7 @@ npm install @snx-flash-tool/contracts
 
 ### Solidity
 
-You can import the Solidity contract and interfaces from `@snx-flash-tool/contracts/contracts`:
+You can import the Solidity contracts from `@snx-flash-tool/contracts/contracts` and the interfaces from `@snx-flash-tool/contracts/contracts/interfaces`:
 
 ```solidity
 import { SNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/SNXFlashLoanTool.sol";
@@ -42,7 +42,7 @@ import { ISNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/interface
 
 ### JavaScript
 
-You can import the contract address from `@snx-flash-tool/contracts/constants` and the Typechain contract interfaces from `@snx-flash-tool/contracts/types`:
+You can import the contract addresses from `@snx-flash-tool/contracts/constants` and the Typechain contract interfaces from `@snx-flash-tool/contracts/types`:
 
 ```typescript
 import { addresses } from "@snx-flash-tool/contracts/constants";
