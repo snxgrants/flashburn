@@ -1,6 +1,6 @@
 {
   "name": "@snx-flash-tool/contracts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
   "license": "MIT",
   "files": [
@@ -13,6 +13,7 @@
   ],
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
+    "ethers": "^5.4.2",
     "synthetix": "^2.46.0-ovm"
   },
   "devDependencies": {
@@ -31,7 +32,6 @@
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.4.2",
     "fs-extra": "^10.0.0",
     "hardhat": "^2.5.0",
     "hardhat-gas-reporter": "^1.0.4",
