@@ -188,42 +188,13 @@ To deploy the interface you must use `yarn build` as the build command, and the 
 
 ## Installation
 
-The [contracts package](https://www.npmjs.com/package/@snx-flash-tool/contracts) can be installed via `yarn` or `npm` for use in JavaScript or Solidity repos:
+The [contracts package](https://www.npmjs.com/package/@snx-flash-tool/contracts) can be installed via `yarn` or `npm` for use in Solidity or JavaScript repos:
 
 ```bash
 # Yarn
 yarn add @snx-flash-tool/contracts
 # NPM
 npm install @snx-flash-tool/contracts
-```
-
-### JavaScript
-
-You can import the Typechain contract interfaces from `@snx-flash-tool/contracts/types`:
-
-```javascript
-import {
-  SNXFlashLoanTool,
-  SNXFlashLoanTool__factory,
-  ISNXFlashLoanTool,
-  ISNXFlashLoanTool__factory,
-} from "@snx-flash-tool/contracts/types";
-```
-
-You can import the contract addresses for the available chainIds from `@snx-flash-tool/contracts/contants`:
-
-```javascript
-import { addresses } from "@snx-flash-tool/contracts/constants";
-const chainId = 1;
-const address = addresses[chainId].snxFlashTool;
-```
-
-You can import the contract artifacts from `@snx-flash-tool/contracts/artifacts/contracts`:
-
-```javascript
-import SNXFlashLoanTool from "@snx-flash-tool/contracts/artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.json";
-const abi = SNXFlashLoanTool.abi;
-const bytecode = SNXFlashLoanTool.bytecode;
 ```
 
 ### Solidity
@@ -234,4 +205,38 @@ You can import the Solidity contract and interfaces from `@snx-flash-tool/contra
 import { SNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/SNXFlashLoanTool.sol";
 import { ISNXFlashLoanTool } from "@snx-flash-tool/contracts/contracts/interfaces/ISNXFlashLoanTool.sol";
 
+```
+
+### JavaScript
+
+You can import the contract address from `@snx-flash-tool/contracts/contants` and the Typechain contract interfaces from `@snx-flash-tool/contracts/types`:
+
+```typescript
+import { addresses } from "@snx-flash-tool/contracts/constants";
+import {
+  SNXFlashLoanTool,
+  SNXFlashLoanTool__factory,
+  ISNXFlashLoanTool,
+  ISNXFlashLoanTool__factory,
+} from "@snx-flash-tool/contracts/types";
+const chainId = 1;
+const address = addresses[chainId].snxFlashTool;
+// JavaScript
+const snxFlashLoanTool = SNXFlashLoanTool__factory.connect(
+  address,
+  provider /* ethers.js provider */
+);
+// TypeScript
+const snxFlashLoanTool: SNXFlashLoanTool = SNXFlashLoanTool__factory.connect(
+  address,
+  provider /* ethers.js provider */
+);
+```
+
+You can import the contract artifacts from `@snx-flash-tool/contracts/artifacts/contracts`:
+
+```javascript
+import SNXFlashLoanTool from "@snx-flash-tool/contracts/artifacts/contracts/SNXFlashLoanTool.sol/SNXFlashLoanTool.json";
+const abi = SNXFlashLoanTool.abi;
+const bytecode = SNXFlashLoanTool.bytecode;
 ```
