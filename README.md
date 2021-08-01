@@ -76,7 +76,7 @@ const bytecode = SNXFlashLoanTool.bytecode;
 
 ## Documentation
 
-### [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
+### `SNXFlashLoanTool`
 
 - [Contract](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 - [Interface](./packages/contracts/contracts/interfaces/ISNXFlashLoanTool.sol)
