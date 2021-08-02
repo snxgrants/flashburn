@@ -7,7 +7,7 @@ import Loading from "../components/Loading";
 
 const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
 const pageDescription: string =
-  "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
+  "Burn sUSD Debt with Staked SNX";
 const pageURL: string = siteURL;
 
 function Home(): JSX.Element {

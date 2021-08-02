@@ -5,7 +5,7 @@ import Layout from "../components/layout";
 import { siteURL } from "../constants";
 
 const pageTitle: string = "SNX Flash Tool - 404 Page Not Found";
-const pageDescription: string = "SNX Flash Tool - 404 Page Not Found";
+const pageDescription: string = "404 Page Not Found";
 const pageURL: string = siteURL;
 
 function Custom404(): JSX.Element {
