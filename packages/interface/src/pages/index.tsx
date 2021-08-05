@@ -26,9 +26,7 @@ function Home(): JSX.Element {
       <Box p={2}>
         <Header>Burn sUSD Debt with Staked SNX</Header>
         <Loading>
-          <Center>
-            <Top />
-          </Center>
+          <Top props={{ justifyContent: "center" }} />
         </Loading>
       </Box>
     </Layout>

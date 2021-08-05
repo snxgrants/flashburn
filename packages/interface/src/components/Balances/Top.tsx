@@ -1,4 +1,4 @@
-import { Box, Text, HStack } from "@chakra-ui/react";
+import { Box, Text, HStack, StackProps } from "@chakra-ui/react";
 import { ethers, BigNumber } from "ethers";
 import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
@@ -28,7 +28,7 @@ function InfoBox({
   );
 }
 
-function Top(): JSX.Element {
+function Top({ props }: { props?: StackProps }): JSX.Element {
   const { provider } = useWeb3React();
   const { balances } = useSynthetix();
   const {
@@ -49,7 +49,7 @@ function Top(): JSX.Element {
     .div(ethers.utils.parseUnits("1", sUSDDecimals));
 
   return (
-    <HStack>
+    <HStack spacing="24px" {...props}>
       {[
         {
           title: "Staked Value",
