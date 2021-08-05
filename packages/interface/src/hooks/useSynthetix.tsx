@@ -22,6 +22,7 @@ export type State = {
   error: boolean;
   synthetixAddresses: { loaded: boolean } & SynthetixAddresses;
   balances: SynthetixBalances;
+  fetchBalances?: () => Promise<void>;
 };
 
 enum ActionType {
@@ -37,13 +38,13 @@ type Action =
     }
   | {
       type: ActionType.FETCHED_BALANCES_PROVIDER;
-      payload: Omit<State, "loaded" | "error" | "synthetixAddresses">;
+      payload: { balances: SynthetixBalances };
     }
   | {
       type: ActionType.SET_ERROR;
     };
 
-const initialState: State = {
+const initialState: Omit<State, "fetchBalances"> = {
   loaded: false,
   error: false,
   synthetixAddresses: {
@@ -73,7 +74,10 @@ function useSynthetix(): State {
   return useContext(SynthetixContext);
 }
 
-function reducer(state: State, action: Action): State {
+function reducer(
+  state: Omit<State, "fetchBalances">,
+  action: Action
+): Omit<State, "fetchBalances"> {
   switch (action.type) {
     case ActionType.FETCHED_ADDRESSES_PROVIDER: {
       const { synthetixAddresses } = action.payload;
@@ -113,10 +117,12 @@ export function SynthetixProvider({
 }): JSX.Element {
   const mounted = useRef<boolean>(false);
   const { provider, chainId, address } = useWeb3React();
-  const [state, dispatch] = useReducer<(state: State, action: Action) => State>(
-    reducer,
-    initialState
-  );
+  const [state, dispatch] = useReducer<
+    (
+      state: Omit<State, "fetchBalances">,
+      action: Action
+    ) => Omit<State, "fetchBalances">
+  >(reducer, initialState);
   const { synthetixAddresses } = state;
 
   useEffect(() => {
@@ -146,7 +152,7 @@ export function SynthetixProvider({
     };
   }, [provider, chainId]);
 
-  const fetchBalances = useCallback(async () => {
+  const fetchBalances: () => Promise<void> = useCallback(async () => {
     if (
       synthetixAddresses.loaded &&
       provider !== undefined &&
@@ -183,7 +189,7 @@ export function SynthetixProvider({
   }, [provider, fetchBalances]);
 
   return (
-    <SynthetixContext.Provider value={state}>
+    <SynthetixContext.Provider value={{ ...state, fetchBalances }}>
       {children}
     </SynthetixContext.Provider>
   );
