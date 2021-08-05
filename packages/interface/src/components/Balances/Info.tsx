@@ -28,7 +28,7 @@ function InfoBox({
   );
 }
 
-function Top({ props }: { props?: StackProps }): JSX.Element {
+function Info({ props }: { props?: StackProps }): JSX.Element {
   const { provider } = useWeb3React();
   const { balances } = useSynthetix();
   const {
@@ -88,4 +88,4 @@ function Top({ props }: { props?: StackProps }): JSX.Element {
   );
 }
 
-export default Top;
+export default Info;

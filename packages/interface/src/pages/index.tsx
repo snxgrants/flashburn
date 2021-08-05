@@ -1,10 +1,10 @@
 import Head from "next/head";
-import { Box, Center } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import Loading from "../components/Loading";
-import { Top } from "../components/Balances";
+import { Info } from "../components/Balances";
 
 const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
 const pageDescription: string = "Burn sUSD Debt with Staked SNX";
@@ -26,7 +26,7 @@ function Home(): JSX.Element {
       <Box p={2}>
         <Header>Burn sUSD Debt with Staked SNX</Header>
         <Loading>
-          <Top props={{ justifyContent: "center" }} />
+          <Info props={{ justifyContent: "center" }} />
         </Loading>
       </Box>
     </Layout>
