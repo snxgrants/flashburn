@@ -5,8 +5,7 @@ import Layout from "../components/layout";
 import { siteURL } from "../constants";
 
 const pageTitle: string = "SNX Flash Tool - 500 Server-side error occurred";
-const pageDescription: string =
-  "500 Server-side error occurred";
+const pageDescription: string = "500 Server-side error occurred";
 const pageURL: string = siteURL;
 
 function Custom500(): JSX.Element {

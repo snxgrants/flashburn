@@ -1,16 +1,33 @@
+import { useEffect } from "react";
 import Head from "next/head";
 import { Box } from "@chakra-ui/react";
 import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import Loading from "../components/Loading";
+import useWeb3React from "../hooks/useWeb3React";
+import { getSynthetixAddresses } from "../utils";
 
 const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
-const pageDescription: string =
-  "Burn sUSD Debt with Staked SNX";
+const pageDescription: string = "Burn sUSD Debt with Staked SNX";
 const pageURL: string = siteURL;
 
 function Home(): JSX.Element {
+  const { provider, chainId } = useWeb3React();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (provider !== undefined) {
+        const synthetixAddresses = await getSynthetixAddresses(
+          provider,
+          chainId
+        );
+        console.log(synthetixAddresses);
+      }
+    };
+    fetchData();
+  }, [provider, chainId]);
+
   return (
     <Layout>
       <Head>

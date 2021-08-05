@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Box, Text, Center, Spinner } from "@chakra-ui/react";
+import { addresses } from "@snx-flash-tool/contracts/constants";
 import useWeb3React from "../../hooks/useWeb3React";
-import { addresses } from "../../constants";
 
 function Loading({ children }: { children?: ReactNode }): JSX.Element {
   const { provider, chainId } = useWeb3React();
