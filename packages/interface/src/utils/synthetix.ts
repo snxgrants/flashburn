@@ -33,6 +33,7 @@ export interface SynthetixBalances {
   allowance: BigNumber;
   snxDecimals: number;
   sUSDDecimals: number;
+  sUSDbalanceOf: BigNumber;
 }
 
 const snxKey: string = ethers.utils.formatBytes32String("SNX");
@@ -170,6 +171,13 @@ export async function getSynthetixBalances(
       target: synthetixAddresses.sUSD,
       callData: ERC20__factory.createInterface().encodeFunctionData("decimals"),
     },
+    {
+      target: synthetixAddresses.sUSD,
+      callData: ERC20__factory.createInterface().encodeFunctionData(
+        "balanceOf",
+        [account]
+      ),
+    },
   ];
 
   const balancesReturnData: ReturnData[] =
@@ -242,23 +250,30 @@ export async function getSynthetixBalances(
           balancesReturnData[10].returnData
         )[0] as number)
       : 18,
+    sUSDbalanceOf: balancesReturnData[11].success
+      ? (ERC20__factory.createInterface().decodeFunctionResult(
+          "balanceOf",
+          balancesReturnData[11].returnData
+        )[0] as BigNumber)
+      : BigNumber.from("0"),
   };
 }
 
 export function stakedCollateral(
   collateral: BigNumber,
   collateralisationRatio: BigNumber,
-  issuanceRatio: BigNumber
+  issuanceRatio: BigNumber,
+  snxDecimals: number
 ): BigNumber {
   return issuanceRatio.isZero()
     ? BigNumber.from("0")
     : collateral
         .mul(
           collateralisationRatio
-            .mul(ethers.utils.parseEther("1"))
+            .mul(ethers.utils.parseUnits("1", snxDecimals))
             .div(issuanceRatio)
         )
-        .div(ethers.utils.parseEther("1"));
+        .div(ethers.utils.parseUnits("1", snxDecimals));
 }
 
 export function percentageCRatio(cRatio: BigNumber): BigNumber {

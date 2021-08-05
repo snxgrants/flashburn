@@ -3,12 +3,14 @@ import { Box, Flex, Spacer, Text, Progress } from "@chakra-ui/react";
 function DataBox({
   title,
   info,
+  progress,
 }: {
   title: string;
   info: string;
+  progress?: number;
 }): JSX.Element {
   return (
-    <Box width="full" sx={{ "--my-color": "#53c8c4" }}>
+    <Box width="full">
       <Flex>
         <Text fontWeight="bold">{title}</Text>
         <Spacer />
@@ -16,12 +18,17 @@ function DataBox({
           {info}
         </Text>
       </Flex>
-      <Progress
-        colorScheme="synthetix"
-        backgroundColor="white"
-        size="sm"
-        value={50}
-      />
+      {progress !== undefined && (
+        <Progress
+          marginTop={1}
+          marginBottom={1}
+          colorScheme="synthetix"
+          backgroundColor="white"
+          size="sm"
+          value={progress}
+          border="1px"
+        />
+      )}
     </Box>
   );
 }

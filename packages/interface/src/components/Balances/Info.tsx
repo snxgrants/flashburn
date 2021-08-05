@@ -15,12 +15,14 @@ function Info({ props }: { props?: StackProps }): JSX.Element {
     rateForCurrency,
     sUSDDecimals,
     debtBalanceOf,
+    snxDecimals,
   } = balances;
 
   const stakedValue: BigNumber = stakedCollateral(
     collateral,
     collateralisationRatio,
-    issuanceRatio
+    issuanceRatio,
+    snxDecimals
   )
     .mul(rateForCurrency)
     .div(ethers.utils.parseUnits("1", sUSDDecimals));

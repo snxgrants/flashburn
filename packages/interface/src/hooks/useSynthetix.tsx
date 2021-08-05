@@ -68,6 +68,7 @@ const initialState: Omit<State, "fetchBalances"> = {
     allowance: BigNumber.from("0"),
     snxDecimals: 18,
     sUSDDecimals: 18,
+    sUSDbalanceOf: BigNumber.from("0"),
   },
 };
 

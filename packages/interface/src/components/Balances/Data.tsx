@@ -12,31 +12,60 @@ function Data({ props }: { props?: StackProps }): JSX.Element {
     collateral,
     collateralisationRatio,
     issuanceRatio,
-    rateForCurrency,
+    transferableSynthetix,
+    sUSDbalanceOf,
     sUSDDecimals,
+    snxDecimals,
     debtBalanceOf,
   } = balances;
 
-  const stakedValue: BigNumber = stakedCollateral(
+  const stakedAmount: BigNumber = stakedCollateral(
     collateral,
     collateralisationRatio,
-    issuanceRatio
-  )
-    .mul(rateForCurrency)
-    .div(ethers.utils.parseUnits("1", sUSDDecimals));
+    issuanceRatio,
+    snxDecimals
+  );
 
   return (
-    <VStack width="60" divider={<StackDivider borderColor="gray.200" />} {...props}>
+    <VStack
+      width={{ base: "72", sm: "80" }}
+      divider={<StackDivider borderColor="gray.200" />}
+      {...props}
+    >
       {[
         {
-          title: "Staked Value",
-          info: `$${
+          title: "Total",
+          info: `${
+            provider !== undefined
+              ? formatAmount(ethers.utils.formatUnits(collateral, snxDecimals))
+              : "-"
+          } SNX`,
+        },
+        {
+          title: "Staked",
+          info: `${
             provider !== undefined
               ? formatAmount(
-                  ethers.utils.formatUnits(stakedValue, sUSDDecimals)
+                  ethers.utils.formatUnits(stakedAmount, snxDecimals)
                 )
               : "-"
-          }`,
+          } SNX`,
+          progess: collateral.isZero()
+            ? 0
+            : stakedAmount.mul(100).div(collateral).toNumber(),
+        },
+        {
+          title: "Transferrable",
+          info: `${
+            provider !== undefined
+              ? formatAmount(
+                  ethers.utils.formatUnits(transferableSynthetix, snxDecimals)
+                )
+              : "-"
+          } SNX`,
+          progess: collateral.isZero()
+            ? 0
+            : transferableSynthetix.mul(100).div(collateral).toNumber(),
         },
         {
           title: "C-Ratio",
@@ -49,17 +78,32 @@ function Data({ props }: { props?: StackProps }): JSX.Element {
           }%`,
         },
         {
-          title: "Active Debt",
-          info: `$${
+          title: "sUSD Balance",
+          info: `${
+            provider !== undefined
+              ? formatAmount(
+                  ethers.utils.formatUnits(sUSDbalanceOf, sUSDDecimals)
+                )
+              : "-"
+          } sUSD`,
+        },
+        {
+          title: "Total Debt",
+          info: `${
             provider !== undefined
               ? formatAmount(
                   ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals)
                 )
               : "-"
-          }`,
+          } sUSD`,
         },
       ].map((value) => (
-        <DataBox key={value.title} {...value} />
+        <DataBox
+          key={value.title}
+          title={value.title}
+          info={value.info}
+          progress={value.progess}
+        />
       ))}
     </VStack>
   );
