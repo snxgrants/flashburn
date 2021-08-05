@@ -244,3 +244,25 @@ export async function getSynthetixBalances(
       : 18,
   };
 }
+
+export function stakedCollateral(
+  collateral: BigNumber,
+  collateralisationRatio: BigNumber,
+  issuanceRatio: BigNumber
+): BigNumber {
+  return issuanceRatio.isZero()
+    ? BigNumber.from("0")
+    : collateral
+        .mul(
+          collateralisationRatio
+            .mul(ethers.utils.parseEther("1"))
+            .div(issuanceRatio)
+        )
+        .div(ethers.utils.parseEther("1"));
+}
+
+export function percentageCRatio(cRatio: BigNumber): BigNumber {
+  return cRatio.isZero()
+    ? BigNumber.from("0")
+    : ethers.utils.parseEther("10000").div(cRatio);
+}

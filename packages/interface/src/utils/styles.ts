@@ -14,7 +14,7 @@ export function formatAddress(address: string): string {
 
 export function formatAmount(
   price: string | number = 0,
-  decimalPoints: number = 5
+  decimalPoints: number = 2
 ): string {
   const typecastedPrice = Number(price);
   return Number(typecastedPrice.toFixed(decimalPoints)).toLocaleString();
