@@ -1,6 +1,8 @@
 import {
   useEffect,
   useReducer,
+  useRef,
+  useCallback,
   createContext,
   useContext,
   Context,
@@ -109,6 +111,7 @@ export function SynthetixProvider({
 }: {
   children: ReactNode;
 }): JSX.Element {
+  const mounted = useRef<boolean>(false);
   const { provider, chainId, address } = useWeb3React();
   const [state, dispatch] = useReducer<(state: State, action: Action) => State>(
     reducer,
@@ -117,20 +120,20 @@ export function SynthetixProvider({
   const { synthetixAddresses } = state;
 
   useEffect(() => {
-    let isMounted: boolean = true;
+    mounted.current = true;
     const fetchData = async () => {
       if (provider !== undefined) {
         try {
           const synthetixAddresses: SynthetixAddresses =
             await getSynthetixAddresses(provider, chainId);
-          if (isMounted)
+          if (mounted.current)
             dispatch({
               type: ActionType.FETCHED_ADDRESSES_PROVIDER,
               payload: { synthetixAddresses },
             });
         } catch (error) {
           console.log(error.message);
-          if (isMounted)
+          if (mounted.current)
             dispatch({
               type: ActionType.SET_ERROR,
             });
@@ -139,45 +142,45 @@ export function SynthetixProvider({
     };
     fetchData();
     return () => {
-      isMounted = false;
+      mounted.current = false;
     };
   }, [provider, chainId]);
 
-  useEffect(() => {
-    let isMounted: boolean = true;
-    const fetchData = async () => {
-      if (
-        synthetixAddresses.loaded &&
-        provider !== undefined &&
-        address !== ethers.constants.AddressZero
-      ) {
-        try {
-          const synthetixBalances: SynthetixBalances =
-            await getSynthetixBalances(
-              provider,
-              chainId,
-              address,
-              synthetixAddresses
-            );
-          if (isMounted)
-            dispatch({
-              type: ActionType.FETCHED_BALANCES_PROVIDER,
-              payload: { balances: synthetixBalances },
-            });
-        } catch (error) {
-          console.log(error.message);
-          if (isMounted)
-            dispatch({
-              type: ActionType.SET_ERROR,
-            });
-        }
+  const fetchBalances = useCallback(async () => {
+    if (
+      synthetixAddresses.loaded &&
+      provider !== undefined &&
+      address !== ethers.constants.AddressZero
+    ) {
+      try {
+        const synthetixBalances: SynthetixBalances = await getSynthetixBalances(
+          provider,
+          chainId,
+          address,
+          synthetixAddresses
+        );
+        if (mounted.current)
+          dispatch({
+            type: ActionType.FETCHED_BALANCES_PROVIDER,
+            payload: { balances: synthetixBalances },
+          });
+      } catch (error) {
+        console.log(error.message);
+        if (mounted.current)
+          dispatch({
+            type: ActionType.SET_ERROR,
+          });
       }
-    };
-    fetchData();
+    }
+  }, [synthetixAddresses, chainId, provider, address, dispatch]);
+
+  useEffect(() => {
+    fetchBalances();
+    if (provider !== undefined) provider.on("block", fetchBalances);
     return () => {
-      isMounted = false;
+      if (provider !== undefined) provider.off("block", fetchBalances);
     };
-  }, [provider, chainId, address, synthetixAddresses]);
+  }, [provider, fetchBalances]);
 
   return (
     <SynthetixContext.Provider value={state}>
