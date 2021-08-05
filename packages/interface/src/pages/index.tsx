@@ -5,35 +5,18 @@ import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import Loading from "../components/Loading";
-import useWeb3React from "../hooks/useWeb3React";
-import { getSynthetixAddresses, getSynthetixBalances } from "../utils";
+import useSynthetix from "../hooks/useSynthetix";
 
 const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
 const pageDescription: string = "Burn sUSD Debt with Staked SNX";
 const pageURL: string = siteURL;
 
 function Home(): JSX.Element {
-  const { provider, chainId, address } = useWeb3React();
+  const { balances } = useSynthetix();
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (provider !== undefined) {
-        const synthetixAddresses = await getSynthetixAddresses(
-          provider,
-          chainId
-        );
-        console.log(synthetixAddresses);
-        const synthetixBalances = await getSynthetixBalances(
-          provider,
-          chainId,
-          address,
-          synthetixAddresses
-        );
-        console.log(synthetixBalances);
-      }
-    };
-    fetchData();
-  }, [provider, chainId, address]);
+    console.log(balances);
+  }, [balances]);
 
   return (
     <Layout>

@@ -12,7 +12,7 @@ import {
   ReturnData,
 } from "../types";
 
-interface SynthetixAddresses {
+export interface SynthetixAddresses {
   synthetix: string;
   snx: string;
   delegateApprovals: string;
@@ -21,7 +21,7 @@ interface SynthetixAddresses {
   exchangeRates: string;
 }
 
-interface SynthetixBalances {
+export interface SynthetixBalances {
   balanceOf: BigNumber;
   collateralisationRatio: BigNumber;
   transferableSynthetix: BigNumber;
