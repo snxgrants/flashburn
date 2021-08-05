@@ -31,6 +31,8 @@ export interface SynthetixBalances {
   targetThreshold: BigNumber;
   rateForCurrency: BigNumber;
   allowance: BigNumber;
+  snxDecimals: number;
+  sUSDDecimals: number;
 }
 
 const snxKey: string = ethers.utils.formatBytes32String("SNX");
@@ -160,6 +162,14 @@ export async function getSynthetixBalances(
         [account, addresses[chainId].snxFlashTool]
       ),
     },
+    {
+      target: synthetixAddresses.snx,
+      callData: ERC20__factory.createInterface().encodeFunctionData("decimals"),
+    },
+    {
+      target: synthetixAddresses.sUSD,
+      callData: ERC20__factory.createInterface().encodeFunctionData("decimals"),
+    },
   ];
 
   const balancesReturnData: ReturnData[] =
@@ -220,5 +230,17 @@ export async function getSynthetixBalances(
           balancesReturnData[8].returnData
         )[0] as BigNumber)
       : BigNumber.from("0"),
+    snxDecimals: balancesReturnData[9].success
+      ? (ERC20__factory.createInterface().decodeFunctionResult(
+          "decimals",
+          balancesReturnData[9].returnData
+        )[0] as number)
+      : 18,
+    sUSDDecimals: balancesReturnData[10].success
+      ? (ERC20__factory.createInterface().decodeFunctionResult(
+          "decimals",
+          balancesReturnData[10].returnData
+        )[0] as number)
+      : 18,
   };
 }

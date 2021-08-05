@@ -1,23 +1,16 @@
-import { useEffect } from "react";
 import Head from "next/head";
 import { Box } from "@chakra-ui/react";
 import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import Loading from "../components/Loading";
-import useSynthetix from "../hooks/useSynthetix";
+import { Top } from "../components/Balances";
 
 const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
 const pageDescription: string = "Burn sUSD Debt with Staked SNX";
 const pageURL: string = siteURL;
 
 function Home(): JSX.Element {
-  const { balances } = useSynthetix();
-
-  useEffect(() => {
-    console.log(balances);
-  }, [balances]);
-
   return (
     <Layout>
       <Head>
@@ -32,7 +25,9 @@ function Home(): JSX.Element {
       </Head>
       <Box p={2}>
         <Header>Burn sUSD Debt with Staked SNX</Header>
-        <Loading></Loading>
+        <Loading>
+          <Top />
+        </Loading>
       </Box>
     </Layout>
   );

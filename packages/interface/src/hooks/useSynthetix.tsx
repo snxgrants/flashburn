@@ -66,6 +66,8 @@ const initialState: Omit<State, "fetchBalances"> = {
     targetThreshold: BigNumber.from("0"),
     rateForCurrency: BigNumber.from("0"),
     allowance: BigNumber.from("0"),
+    snxDecimals: 18,
+    sUSDDecimals: 18,
   },
 };
 
