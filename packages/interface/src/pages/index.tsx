@@ -5,6 +5,7 @@ import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import Loading from "../components/Loading";
 import { Info } from "../components/Balances";
+import Burn from "../components/Burn";
 
 const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
 const pageDescription: string = "Burn sUSD Debt with Staked SNX";
@@ -27,6 +28,9 @@ function Home(): JSX.Element {
         <Header>Burn sUSD Debt with Staked SNX</Header>
         <Loading>
           <Info props={{ justifyContent: "center" }} />
+          <Burn
+            props={{ display: "flex", justifyContent: "center", margin: 1 }}
+          />
         </Loading>
       </Box>
     </Layout>
