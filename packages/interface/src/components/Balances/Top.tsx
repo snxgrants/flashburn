@@ -1,5 +1,6 @@
 import { Box, Text, HStack } from "@chakra-ui/react";
 import { ethers, BigNumber } from "ethers";
+import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
 import { stakedCollateral, percentageCRatio, formatAmount } from "../../utils";
 
@@ -28,6 +29,7 @@ function InfoBox({
 }
 
 function Top(): JSX.Element {
+  const { provider } = useWeb3React();
   const { balances } = useSynthetix();
   const {
     collateral,
@@ -51,21 +53,33 @@ function Top(): JSX.Element {
       {[
         {
           title: "Staked Value",
-          info: `$${formatAmount(
-            ethers.utils.formatUnits(stakedValue, sUSDDecimals)
-          )}`,
+          info: `$${
+            provider !== undefined
+              ? formatAmount(
+                  ethers.utils.formatUnits(stakedValue, sUSDDecimals)
+                )
+              : "-"
+          }`,
         },
         {
           title: "C-Ratio",
-          info: `${formatAmount(
-            percentageCRatio(collateralisationRatio).toNumber() / 100
-          )}%`,
+          info: `${
+            provider !== undefined
+              ? formatAmount(
+                  percentageCRatio(collateralisationRatio).toNumber() / 100
+                )
+              : "-"
+          }%`,
         },
         {
           title: "Active Debt",
-          info: `$${formatAmount(
-            ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals)
-          )}`,
+          info: `$${
+            provider !== undefined
+              ? formatAmount(
+                  ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals)
+                )
+              : "-"
+          }`,
         },
       ].map((value) => (
         <InfoBox key={value.title} {...value} />

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Box } from "@chakra-ui/react";
+import { Box, Center } from "@chakra-ui/react";
 import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
@@ -26,7 +26,9 @@ function Home(): JSX.Element {
       <Box p={2}>
         <Header>Burn sUSD Debt with Staked SNX</Header>
         <Loading>
-          <Top />
+          <Center>
+            <Top />
+          </Center>
         </Loading>
       </Box>
     </Layout>
