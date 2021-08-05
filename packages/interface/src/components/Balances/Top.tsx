@@ -1,4 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
+import { ethers } from "ethers";
 import useSynthetix from "../../hooks/useSynthetix";
 
 function Top(): JSX.Element {
@@ -6,7 +7,12 @@ function Top(): JSX.Element {
 
   return (
     <Box>
-      <Text>{balances.rateForCurrency.toString()}</Text>
+      <Text>
+        {ethers.utils.formatUnits(
+          balances.rateForCurrency,
+          balances.sUSDDecimals
+        )}
+      </Text>
     </Box>
   );
 }
