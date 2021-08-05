@@ -49,7 +49,7 @@ function Info({ props }: { props?: StackProps }): JSX.Element {
     .div(ethers.utils.parseUnits("1", sUSDDecimals));
 
   return (
-    <HStack spacing="24px" {...props}>
+    <HStack spacing={{ base: "12px", sm: "24px" }} {...props}>
       {[
         {
           title: "Staked Value",
