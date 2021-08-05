@@ -1,32 +1,9 @@
-import { Box, Text, HStack, StackProps } from "@chakra-ui/react";
+import { HStack, StackProps } from "@chakra-ui/react";
 import { ethers, BigNumber } from "ethers";
 import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
 import { stakedCollateral, percentageCRatio, formatAmount } from "../../utils";
-
-function InfoBox({
-  title,
-  info,
-}: {
-  title: string;
-  info: string;
-}): JSX.Element {
-  return (
-    <Box>
-      <Text fontWeight="bold" textAlign="center">
-        {title}
-      </Text>
-      <Text
-        fontWeight="bold"
-        fontSize="2xl"
-        textColor="white"
-        textAlign="center"
-      >
-        {info}
-      </Text>
-    </Box>
-  );
-}
+import InfoBox from "./InfoBox";
 
 function Info({ props }: { props?: StackProps }): JSX.Element {
   const { provider } = useWeb3React();
