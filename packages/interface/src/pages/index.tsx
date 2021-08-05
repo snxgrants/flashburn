@@ -29,7 +29,7 @@ function Home(): JSX.Element {
         <Loading>
           <Info props={{ justifyContent: "center" }} />
           <Burn
-            props={{ display: "flex", justifyContent: "center", margin: 1 }}
+            props={{ display: "flex", justifyContent: "center", margin: 5 }}
           />
         </Loading>
       </Box>
