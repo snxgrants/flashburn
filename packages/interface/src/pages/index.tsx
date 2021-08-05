@@ -4,7 +4,7 @@ import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import Loading from "../components/Loading";
-import { Info } from "../components/Balances";
+import { Info, Data } from "../components/Balances";
 import Burn from "../components/Burn";
 
 const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
@@ -31,6 +31,7 @@ function Home(): JSX.Element {
           <Burn
             props={{ display: "flex", justifyContent: "center", margin: 5 }}
           />
+          <Data />
         </Loading>
       </Box>
     </Layout>

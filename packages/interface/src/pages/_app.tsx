@@ -4,6 +4,20 @@ import { Web3ReactProvider } from "../hooks/useWeb3React";
 import { SynthetixProvider } from "../hooks/useSynthetix";
 
 const theme = extendTheme({
+  colors: {
+    synthetix: {
+      50: "#00D1FF",
+      100: "#00D1FF",
+      200: "#00D1FF",
+      300: "#00D1FF",
+      400: "#00D1FF",
+      500: "#00D1FF",
+      600: "#00D1FF",
+      700: "#00D1FF",
+      800: "#00D1FF",
+      900: "#00D1FF",
+    },
+  },
   styles: {
     global: {
       body: {
