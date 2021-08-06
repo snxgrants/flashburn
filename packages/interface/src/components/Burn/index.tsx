@@ -6,6 +6,7 @@ import {
   Stat,
   StatLabel,
   StatNumber,
+  Spinner,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import useWeb3React from "../../hooks/useWeb3React";
@@ -15,20 +16,29 @@ import { formatAmount } from "../../utils";
 
 function Burn({ props }: { props?: BoxProps }): JSX.Element {
   const { provider } = useWeb3React();
-  const { balances } = useSynthetix();
+  const { balances, loaded } = useSynthetix();
   const { rateForCurrency, sUSDDecimals } = balances;
 
   return (
     <Box {...props}>
       <Stat>
         <StatLabel>SNX Price</StatLabel>
-        <StatNumber>{`$${
-          provider !== undefined
-            ? formatAmount(
+        <StatNumber>
+          {provider !== undefined ? (
+            loaded ? (
+              `$${formatAmount(
                 ethers.utils.formatUnits(rateForCurrency, sUSDDecimals)
-              )
-            : "-"
-        }`}</StatNumber>
+              )}`
+            ) : (
+              <>
+                {"$ "}
+                <Spinner size="sm" />
+              </>
+            )
+          ) : (
+            "$-"
+          )}
+        </StatNumber>
       </Stat>
       <Center marginTop="10">
         {provider !== undefined ? (
