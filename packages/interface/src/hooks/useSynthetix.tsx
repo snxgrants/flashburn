@@ -120,6 +120,7 @@ export function SynthetixProvider({
   children: ReactNode;
 }): JSX.Element {
   const mounted = useRef<boolean>(false);
+  const updating = useRef<boolean>(false);
   const { provider, chainId, address } = useWeb3React();
   const [state, dispatch] = useReducer<
     (
@@ -160,8 +161,10 @@ export function SynthetixProvider({
     if (
       synthetixAddresses.loaded &&
       provider !== undefined &&
-      address !== ethers.constants.AddressZero
+      address !== ethers.constants.AddressZero &&
+      !updating.current
     ) {
+      updating.current = true;
       try {
         const synthetixBalances: SynthetixBalances = await getSynthetixBalances(
           provider,
@@ -181,14 +184,18 @@ export function SynthetixProvider({
             type: ActionType.SET_ERROR,
           });
       }
+      updating.current = false;
     }
   }, [synthetixAddresses, chainId, provider, address, dispatch]);
 
   useEffect(() => {
     fetchBalances();
-    if (provider !== undefined) provider.on("block", fetchBalances);
+    const listener: ethers.providers.Listener = () => {
+      fetchBalances();
+    };
+    if (provider !== undefined) provider.on("block", listener);
     return () => {
-      if (provider !== undefined) provider.off("block", fetchBalances);
+      if (provider !== undefined) provider.off("block", listener);
     };
   }, [provider, fetchBalances]);
 
