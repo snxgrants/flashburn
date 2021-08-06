@@ -1,4 +1,4 @@
-import { Box, BoxProps, Button } from "@chakra-ui/react";
+import { Box, BoxProps, Button, Center } from "@chakra-ui/react";
 import useWeb3React from "../../hooks/useWeb3React";
 import WalletButton from "../NavBar/WalletButton";
 
@@ -7,13 +7,15 @@ function Burn({ props }: { props?: BoxProps }): JSX.Element {
 
   return (
     <Box {...props}>
-      {provider !== undefined ? (
-        <Button color="black" disabled>
-          Burn
-        </Button>
-      ) : (
-        <WalletButton />
-      )}
+      <Center>
+        {provider !== undefined ? (
+          <Button color="black" disabled>
+            Burn
+          </Button>
+        ) : (
+          <WalletButton />
+        )}
+      </Center>
     </Box>
   );
 }

@@ -28,9 +28,7 @@ function Home(): JSX.Element {
         <Header>Burn sUSD Debt with Staked SNX</Header>
         <Loading>
           <Info props={{ justifyContent: "center" }} />
-          <Burn
-            props={{ display: "flex", justifyContent: "center", margin: 5 }}
-          />
+          <Burn props={{ padding: 5 }} />
           <Data />
         </Loading>
       </Box>
