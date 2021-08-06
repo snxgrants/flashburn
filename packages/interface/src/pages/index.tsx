@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Box } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Center } from "@chakra-ui/react";
 import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
@@ -28,8 +28,22 @@ function Home(): JSX.Element {
         <Header>Burn sUSD Debt with Staked SNX</Header>
         <Loading>
           <Info props={{ justifyContent: "center" }} />
-          <Burn props={{ padding: 5 }} />
-          <Data />
+          <Box display={{ base: "none", md: "flex" }} margin="10">
+            <Grid width="full" templateColumns="repeat(3, 1fr)">
+              <GridItem colSpan={2}>
+                <Burn />
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Data />
+              </GridItem>
+            </Grid>
+          </Box>
+          <Box display={{ base: "flex-col", md: "none" }} margin="10">
+            <Burn />
+            <Center>
+              <Data props={{ justifyContent: "center", marginTop: "10" }} />
+            </Center>
+          </Box>
         </Loading>
       </Box>
     </Layout>
