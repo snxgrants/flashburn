@@ -8,6 +8,9 @@ export interface Burn {
   snxAmount: string;
   sUSDAmount: string;
   isSUSDMax: boolean;
+  snxAmountBN: BigNumber;
+  sUSDAmountBN: BigNumber;
+  snxUSDAmountBN: BigNumber;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
@@ -16,7 +19,8 @@ export interface Burn {
 function useBurn(): Burn {
   const { provider, chainId } = useWeb3React();
   const { balances } = useSynthetix();
-  const { snxDecimals, sUSDDecimals, debtBalanceOf } = balances;
+  const { snxDecimals, sUSDDecimals, debtBalanceOf, rateForCurrency } =
+    balances;
   const [snxAmount, setSnxAmount] = useState<string>("0");
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
 
@@ -27,6 +31,14 @@ function useBurn(): Burn {
   const sUSDAmountBN: BigNumber = useMemo(
     () => tryParseUnits(stripInputValue(sUSDAmount), sUSDDecimals),
     [sUSDAmount, sUSDDecimals]
+  );
+
+  const snxUSDAmountBN: BigNumber = useMemo(
+    () =>
+      snxAmountBN
+        .mul(rateForCurrency)
+        .div(ethers.utils.parseUnits("1", snxDecimals)),
+    [snxAmountBN, rateForCurrency, snxDecimals]
   );
 
   const isSUSDMax: boolean = useMemo(
@@ -45,6 +57,9 @@ function useBurn(): Burn {
     snxAmount,
     sUSDAmount,
     isSUSDMax,
+    snxAmountBN,
+    sUSDAmountBN,
+    snxUSDAmountBN,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,

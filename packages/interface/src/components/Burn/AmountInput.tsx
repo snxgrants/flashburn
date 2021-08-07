@@ -11,6 +11,7 @@ import {
   InputRightElement,
   Button,
 } from "@chakra-ui/react";
+import { formatAmount } from "../../utils";
 
 function AmountInput({
   src,
@@ -22,6 +23,7 @@ function AmountInput({
   badgeText,
   badgeAmount,
   isSUSDMax,
+  usdAmount,
   props,
 }: {
   src: string;
@@ -33,6 +35,7 @@ function AmountInput({
   badgeText: string;
   badgeAmount: string;
   isSUSDMax: boolean;
+  usdAmount: string;
   props?: BoxProps;
 }): JSX.Element {
   return (
@@ -75,7 +78,7 @@ function AmountInput({
             </InputGroup>
           </Flex>
           <Text marginLeft="auto" fontSize="sm" marginRight="4" color="#11849e">
-            $0
+            ${formatAmount(usdAmount)}
           </Text>
         </Flex>
       </Center>

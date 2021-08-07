@@ -31,6 +31,8 @@ import { formatAmount } from "../../utils";
 function Burn({
   snxAmount,
   sUSDAmount,
+  sUSDAmountBN,
+  snxUSDAmountBN,
   setSnxAmount,
   setSUSDAmount,
   setMaxSUSD,
@@ -108,6 +110,7 @@ function Burn({
         amount={snxAmount}
         setAmount={setSnxAmount}
         isSUSDMax={isSUSDMax}
+        usdAmount={ethers.utils.formatUnits(snxUSDAmountBN, snxDecimals)}
         badgeAmount={
           provider !== undefined
             ? formatAmount(ethers.utils.formatUnits(balanceOf, snxDecimals))
@@ -126,6 +129,7 @@ function Burn({
         amount={sUSDAmount}
         setAmount={setSUSDAmount}
         isSUSDMax={isSUSDMax}
+        usdAmount={ethers.utils.formatUnits(sUSDAmountBN, sUSDDecimals)}
         badgeAmount={
           provider !== undefined
             ? formatAmount(
