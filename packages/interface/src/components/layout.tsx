@@ -33,8 +33,8 @@ function Layout({ children }: { children: ReactNode }): JSX.Element {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-        <meta name="msapplication-TileColor" content="#00d1ff" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00d1ff" />
+        <meta name="msapplication-TileColor" content="#06061b" />
         <meta name="theme-color" content="#ffffff" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={siteLogo} />
