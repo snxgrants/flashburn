@@ -16,6 +16,8 @@ import {
   PopoverBody,
   PopoverArrow,
   PopoverCloseButton,
+  Input,
+  Text,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, SettingsIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
@@ -71,11 +73,22 @@ function Burn({ props }: { props?: BoxProps }): JSX.Element {
               }}
             />
           </PopoverTrigger>
-          <PopoverContent bg="#06061B">
+          <PopoverContent maxWidth="60" bg="#06061B">
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverHeader>Settings</PopoverHeader>
-            <PopoverBody>Coming soon...</PopoverBody>
+            <PopoverBody>
+              <Flex justifyContent="space-between">
+                <Text marginTop="1">Slippage (%)</Text>
+                <Input
+                  disabled
+                  width="20"
+                  height="8"
+                  type="number"
+                  value={0.5}
+                />
+              </Flex>
+            </PopoverBody>
           </PopoverContent>
         </Popover>
       </Flex>
