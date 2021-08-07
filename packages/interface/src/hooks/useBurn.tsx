@@ -77,13 +77,27 @@ function useBurn(): Burn {
           fetchQuoteURL(chainId, snx, sUSD, sUSDSNXAmountBN.toString()),
           false
         );
-        console.log(oneInchTrade);
+        if (oneInchTrade) {
+          setSnxAmount(
+            ethers.utils.formatUnits(oneInchTrade.fromTokenAmount, snxDecimals)
+          );
+        }
       } catch (error) {
         console.log(error.message);
         setSnxAmount("0");
       }
+    } else {
+      setSnxAmount("0");
     }
-  }, [chainId, snx, sUSD, sUSDSNXAmountBN, cancellableRequest, setSnxAmount]);
+  }, [
+    chainId,
+    snx,
+    sUSD,
+    sUSDSNXAmountBN,
+    snxDecimals,
+    cancellableRequest,
+    setSnxAmount,
+  ]);
 
   useEffect(() => {
     fetchTrade();
