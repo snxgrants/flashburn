@@ -7,6 +7,7 @@ import { stripInputValue, tryParseUnits } from "../utils";
 export interface Burn {
   snxAmount: string;
   sUSDAmount: string;
+  isSUSDMax: boolean;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
@@ -15,7 +16,7 @@ export interface Burn {
 function useBurn(): Burn {
   const { provider, chainId } = useWeb3React();
   const { balances } = useSynthetix();
-  const { snxDecimals, sUSDDecimals, sUSDbalanceOf } = balances;
+  const { snxDecimals, sUSDDecimals, debtBalanceOf } = balances;
   const [snxAmount, setSnxAmount] = useState<string>("0");
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
 
@@ -28,14 +29,22 @@ function useBurn(): Burn {
     [sUSDAmount, sUSDDecimals]
   );
 
+  const isSUSDMax: boolean = useMemo(
+    () =>
+      ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals).toString() ===
+      sUSDAmount,
+    [debtBalanceOf, sUSDDecimals, sUSDAmount]
+  );
+
   const setMaxSUSD: () => void = useCallback(() => {
-    const value: string = ethers.utils.formatUnits(sUSDbalanceOf, sUSDDecimals);
+    const value: string = ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals);
     setSUSDAmount(value);
-  }, [sUSDbalanceOf, sUSDDecimals]);
+  }, [debtBalanceOf, sUSDDecimals]);
 
   return {
     snxAmount,
     sUSDAmount,
+    isSUSDMax,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,

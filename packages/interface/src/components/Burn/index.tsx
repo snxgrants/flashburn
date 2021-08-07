@@ -34,6 +34,7 @@ function Burn({
   setSnxAmount,
   setSUSDAmount,
   setMaxSUSD,
+  isSUSDMax,
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider } = useWeb3React();
@@ -103,8 +104,10 @@ function Burn({
       <AmountInput
         badgeText="SNX Balance"
         disabled={true}
+        setMaxSUSD={setMaxSUSD}
         amount={snxAmount}
         setAmount={setSnxAmount}
+        isSUSDMax={isSUSDMax}
         badgeAmount={
           provider !== undefined
             ? formatAmount(ethers.utils.formatUnits(balanceOf, snxDecimals))
@@ -119,8 +122,10 @@ function Burn({
       <AmountInput
         badgeText="sUSD Debt"
         disabled={false}
+        setMaxSUSD={setMaxSUSD}
         amount={sUSDAmount}
         setAmount={setSUSDAmount}
+        isSUSDMax={isSUSDMax}
         badgeAmount={
           provider !== undefined
             ? formatAmount(

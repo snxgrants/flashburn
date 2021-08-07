@@ -8,6 +8,8 @@ import {
   Center,
   Badge,
   Text,
+  InputRightElement,
+  Button,
 } from "@chakra-ui/react";
 
 function AmountInput({
@@ -16,8 +18,10 @@ function AmountInput({
   disabled,
   amount,
   setAmount,
+  setMaxSUSD,
   badgeText,
   badgeAmount,
+  isSUSDMax,
   props,
 }: {
   src: string;
@@ -25,15 +29,16 @@ function AmountInput({
   amount: string;
   disabled: boolean;
   setAmount: (value: string) => void;
+  setMaxSUSD: () => void;
   badgeText: string;
-  badgeAmount: string | number;
+  badgeAmount: string;
+  isSUSDMax: boolean;
   props?: BoxProps;
 }): JSX.Element {
   return (
     <Box {...props}>
       <Center marginBottom="1">
         <Badge
-          color="synthetix"
           colorScheme="black"
           border="1px"
         >{`${badgeText}: ${badgeAmount}`}</Badge>
@@ -50,7 +55,23 @@ function AmountInput({
                 isReadOnly={disabled}
                 onChange={(e) => setAmount(e.target.value)}
                 value={amount}
+                isInvalid={false}
+                errorBorderColor="crimson"
+                focusBorderColor={"#00D1FF"}
               />
+              {!disabled && (
+                <InputRightElement width="4rem">
+                  <Button
+                    marginRight="3"
+                    h="1.75rem"
+                    size="sm"
+                    onClick={setMaxSUSD}
+                    color={isSUSDMax ? "#00D1FF" : "#06061B"}
+                  >
+                    Max
+                  </Button>
+                </InputRightElement>
+              )}
             </InputGroup>
           </Flex>
           <Text marginLeft="auto" fontSize="sm" marginRight="4" color="#11849e">
