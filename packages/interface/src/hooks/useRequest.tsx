@@ -8,8 +8,9 @@ import axios, {
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export type Request = (
   url: string,
+  enableCache?: boolean,
   config?: AxiosRequestConfig
-) => Promise<any>;
+) => Promise<any | undefined>;
 
 function useRequest(throwError: boolean = true): {
   request: Request;
@@ -19,11 +20,15 @@ function useRequest(throwError: boolean = true): {
   const cache = useRef<{ [url: string]: any }>({});
 
   const request: Request = useCallback(
-    async (url: string, config: AxiosRequestConfig = {}) => {
+    async (
+      url: string,
+      enableCache: boolean = true,
+      config: AxiosRequestConfig = {}
+    ) => {
       const configString: string = JSON.stringify(config);
       const cacheKey: string = configString === "{}" ? url : url + configString;
       try {
-        if (cache.current[cacheKey]) {
+        if (enableCache && cache.current[cacheKey]) {
           return cache.current[cacheKey];
         }
         /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -32,7 +37,9 @@ function useRequest(throwError: boolean = true): {
         });
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         const result: any = res.data;
-        cache.current[cacheKey] = result;
+        if (enableCache) {
+          cache.current[cacheKey] = result;
+        }
         return result;
       } catch (error) {
         if (throwError) {
@@ -47,7 +54,11 @@ function useRequest(throwError: boolean = true): {
   );
 
   const cancellableRequest: Request = useCallback(
-    async (url: string, config: AxiosRequestConfig = {}) => {
+    async (
+      url: string,
+      enableCache: boolean = true,
+      config: AxiosRequestConfig = {}
+    ) => {
       if (cancel.current) {
         cancel.current.cancel();
       }
@@ -55,7 +66,7 @@ function useRequest(throwError: boolean = true): {
       const configString: string = JSON.stringify(config);
       const cacheKey: string = configString === "{}" ? url : url + configString;
       try {
-        if (cache.current[cacheKey]) {
+        if (enableCache && cache.current[cacheKey]) {
           return cache.current[cacheKey];
         }
         /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -65,7 +76,9 @@ function useRequest(throwError: boolean = true): {
         });
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         const result: any = res.data;
-        cache.current[cacheKey] = result;
+        if (enableCache) {
+          cache.current[cacheKey] = result;
+        }
         return result;
       } catch (error) {
         if (!axios.isCancel(error)) {

@@ -2,7 +2,13 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 import useSynthetix from "./useSynthetix";
 import useWeb3React from "./useWeb3React";
-import { stripInputValue, tryParseUnits } from "../utils";
+import useRequest from "./useRequest";
+import {
+  stripInputValue,
+  tryParseUnits,
+  fetchQuoteURL,
+  OneInchQuote,
+} from "../utils";
 
 export interface Burn {
   snxAmount: string;
@@ -18,9 +24,11 @@ export interface Burn {
 
 function useBurn(): Burn {
   const { provider, chainId } = useWeb3React();
-  const { balances } = useSynthetix();
+  const { balances, synthetixAddresses } = useSynthetix();
+  const { cancellableRequest } = useRequest(false);
   const { snxDecimals, sUSDDecimals, debtBalanceOf, rateForCurrency } =
     balances;
+  const { snx, sUSD } = synthetixAddresses;
   const [snxAmount, setSnxAmount] = useState<string>("0");
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
 
@@ -40,6 +48,15 @@ function useBurn(): Burn {
         .div(ethers.utils.parseUnits("1", snxDecimals)),
     [snxAmountBN, rateForCurrency, snxDecimals]
   );
+  const sUSDSNXAmountBN: BigNumber = useMemo(
+    () =>
+      rateForCurrency.isZero()
+        ? BigNumber.from("0")
+        : sUSDAmountBN
+            .mul(ethers.utils.parseUnits("1", sUSDDecimals))
+            .div(rateForCurrency),
+    [sUSDAmountBN, rateForCurrency, sUSDDecimals]
+  );
 
   const isSUSDMax: boolean = useMemo(
     () =>
@@ -52,6 +69,25 @@ function useBurn(): Burn {
     const value: string = ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals);
     setSUSDAmount(value);
   }, [debtBalanceOf, sUSDDecimals]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!sUSDSNXAmountBN.isZero()) {
+        try {
+          const oneInchTrade: OneInchQuote | undefined =
+            await cancellableRequest(
+              fetchQuoteURL(chainId, snx, sUSD, sUSDSNXAmountBN.toString()),
+              false
+            );
+          console.log(oneInchTrade);
+        } catch (error) {
+          console.log(error.message);
+          setSnxAmount("0");
+        }
+      }
+    };
+    fetchData();
+  }, [sUSDSNXAmountBN]);
 
   return {
     snxAmount,
