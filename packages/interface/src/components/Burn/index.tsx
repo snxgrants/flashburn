@@ -8,8 +8,16 @@ import {
   StatNumber,
   Spinner,
   Flex,
+  IconButton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverArrow,
+  PopoverCloseButton,
 } from "@chakra-ui/react";
-import { ArrowDownIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, SettingsIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
 import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
@@ -50,6 +58,26 @@ function Burn({ props }: { props?: BoxProps }): JSX.Element {
             )}
           </StatNumber>
         </Stat>
+        <Popover id={"popover"}>
+          <PopoverTrigger>
+            <IconButton
+              bg="#06061B"
+              marginTop="2"
+              border="2px"
+              aria-label="Search database"
+              icon={<SettingsIcon color="#00D1FF" w={6} h={6} />}
+              _hover={{
+                bg: "white",
+              }}
+            />
+          </PopoverTrigger>
+          <PopoverContent bg="#06061B">
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader>Settings</PopoverHeader>
+            <PopoverBody>Coming soon...</PopoverBody>
+          </PopoverContent>
+        </Popover>
       </Flex>
       <AmountInput
         badgeText="SNX Balance"

@@ -36,7 +36,7 @@ function Home(): JSX.Element {
           >
             <Grid width="full" templateColumns="repeat(3, 1fr)">
               <GridItem colSpan={2}>
-                <Burn />
+                <Burn props={{ marginRight: 10 }} />
               </GridItem>
               <GridItem colSpan={1}>
                 <Data />
@@ -44,7 +44,9 @@ function Home(): JSX.Element {
             </Grid>
           </Box>
           <Box display={{ base: "flex-col", md: "none" }} margin="2">
-            <Burn />
+            <Center>
+              <Burn />
+            </Center>
             <Center>
               <Data props={{ justifyContent: "center", marginTop: "5" }} />
             </Center>
