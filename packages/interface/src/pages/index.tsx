@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { Box, Grid, GridItem, Center } from "@chakra-ui/react";
+import useBurn, { Burn as BurnInterface } from "../hooks/useBurn";
 import { siteURL } from "../constants";
 import { Header } from "../components/Header";
 import Layout from "../components/layout";
@@ -12,6 +13,8 @@ const pageDescription: string = "Burn sUSD Debt with Staked SNX";
 const pageURL: string = siteURL;
 
 function Home(): JSX.Element {
+  const burn: BurnInterface = useBurn();
+
   return (
     <Layout>
       <Head>
@@ -36,7 +39,7 @@ function Home(): JSX.Element {
           >
             <Grid width="full" templateColumns="repeat(3, 1fr)">
               <GridItem colSpan={2}>
-                <Burn props={{ marginRight: 10 }} />
+                <Burn props={{ marginRight: 10 }} {...burn} />
               </GridItem>
               <GridItem colSpan={1}>
                 <Data />
@@ -45,7 +48,7 @@ function Home(): JSX.Element {
           </Box>
           <Box display={{ base: "flex-col", md: "none" }} margin="2">
             <Center>
-              <Burn />
+              <Burn {...burn} />
             </Center>
             <Center>
               <Data props={{ justifyContent: "center", marginTop: "5" }} />

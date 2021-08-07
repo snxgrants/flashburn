@@ -21,13 +21,21 @@ import {
 } from "@chakra-ui/react";
 import { ArrowDownIcon, SettingsIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
+import { Burn as BurnInterface } from "../../hooks/useBurn";
 import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
 import WalletButton from "../NavBar/WalletButton";
 import AmountInput from "./AmountInput";
 import { formatAmount } from "../../utils";
 
-function Burn({ props }: { props?: BoxProps }): JSX.Element {
+function Burn({
+  snxAmount,
+  sUSDAmount,
+  setSnxAmount,
+  setSUSDAmount,
+  setMaxSUSD,
+  props,
+}: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider } = useWeb3React();
   const { balances, loaded } = useSynthetix();
   const {
@@ -94,6 +102,9 @@ function Burn({ props }: { props?: BoxProps }): JSX.Element {
       </Flex>
       <AmountInput
         badgeText="SNX Balance"
+        disabled={true}
+        amount={snxAmount}
+        setAmount={setSnxAmount}
         badgeAmount={
           provider !== undefined
             ? formatAmount(ethers.utils.formatUnits(balanceOf, snxDecimals))
@@ -107,6 +118,9 @@ function Burn({ props }: { props?: BoxProps }): JSX.Element {
       </Center>
       <AmountInput
         badgeText="sUSD Debt"
+        disabled={false}
+        amount={sUSDAmount}
+        setAmount={setSUSDAmount}
         badgeAmount={
           provider !== undefined
             ? formatAmount(

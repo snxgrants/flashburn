@@ -25,15 +25,12 @@ export function formatBalance(balance: BigNumber, decimals: number): string {
 }
 
 export function stripInputValue(value: string): string {
-  if (
-    value === "" ||
-    value === "0" ||
-    value === "0.0" ||
-    value.startsWith(".") ||
-    value.endsWith(".")
-  ) {
+  if (value === "" || value === "0" || value === "0.0" || value.endsWith(".")) {
     return "0";
-  } else {
+  } else if (value.startsWith(".")) {
+    return "0" + value;
+  }
+  {
     return value;
   }
 }

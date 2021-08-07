@@ -1,6 +1,11 @@
-import { ethers } from "ethers";
-import { ALCHEMY_API } from "../constants";
+import { ethers, BigNumber } from "ethers";
 
-export function getDefaultProvider(): ethers.providers.BaseProvider {
-  return ethers.getDefaultProvider(ALCHEMY_API);
+export function tryParseUnits(value: string, decimals: number): BigNumber {
+  let parsedValue: BigNumber = BigNumber.from("0");
+  try {
+    parsedValue = ethers.utils.parseUnits(value, decimals);
+  } catch (error) {
+    console.log(error.message);
+  }
+  return parsedValue;
 }
