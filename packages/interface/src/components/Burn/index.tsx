@@ -102,7 +102,7 @@ function Burn({ props }: { props?: BoxProps }): JSX.Element {
         src="/snx.svg"
         alt="snx"
       />
-      <Center margin="2">
+      <Center marginBottom="2" marginTop={-3}>
         <ArrowDownIcon w={5} h={5} border="1px" rounded="sm" />
       </Center>
       <AmountInput
