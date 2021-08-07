@@ -68,26 +68,26 @@ function useBurn(): Burn {
   const setMaxSUSD: () => void = useCallback(() => {
     const value: string = ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals);
     setSUSDAmount(value);
-  }, [debtBalanceOf, sUSDDecimals]);
+  }, [debtBalanceOf, sUSDDecimals, setSUSDAmount]);
+
+  const fetchTrade: () => Promise<void> = useCallback(async () => {
+    if (!sUSDSNXAmountBN.isZero()) {
+      try {
+        const oneInchTrade: OneInchQuote | undefined = await cancellableRequest(
+          fetchQuoteURL(chainId, snx, sUSD, sUSDSNXAmountBN.toString()),
+          false
+        );
+        console.log(oneInchTrade);
+      } catch (error) {
+        console.log(error.message);
+        setSnxAmount("0");
+      }
+    }
+  }, [chainId, snx, sUSD, sUSDSNXAmountBN, cancellableRequest, setSnxAmount]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!sUSDSNXAmountBN.isZero()) {
-        try {
-          const oneInchTrade: OneInchQuote | undefined =
-            await cancellableRequest(
-              fetchQuoteURL(chainId, snx, sUSD, sUSDSNXAmountBN.toString()),
-              false
-            );
-          console.log(oneInchTrade);
-        } catch (error) {
-          console.log(error.message);
-          setSnxAmount("0");
-        }
-      }
-    };
-    fetchData();
-  }, [sUSDSNXAmountBN]);
+    fetchTrade();
+  }, [fetchTrade]);
 
   return {
     snxAmount,
