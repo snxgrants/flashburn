@@ -1,12 +1,11 @@
 import { Box, Text } from "@chakra-ui/react";
 
-function InfoBox({
-  title,
-  info,
-}: {
+export interface InfoInterface {
   title: string;
   info: string;
-}): JSX.Element {
+}
+
+function InfoBox({ title, info }: InfoInterface): JSX.Element {
   return (
     <Box>
       <Text fontWeight="bold" textAlign="center">

@@ -27,8 +27,13 @@ function Home(): JSX.Element {
       <Box p={2}>
         <Header>Burn sUSD Debt with Staked SNX</Header>
         <Loading>
-          <Info props={{ justifyContent: "center" }} />
-          <Box display={{ base: "none", md: "flex" }} margin="10">
+          <Info />
+          <Box
+            display={{ base: "none", md: "flex" }}
+            marginRight="10"
+            marginLeft="10"
+            marginTop="5"
+          >
             <Grid width="full" templateColumns="repeat(3, 1fr)">
               <GridItem colSpan={2}>
                 <Burn />
@@ -38,10 +43,10 @@ function Home(): JSX.Element {
               </GridItem>
             </Grid>
           </Box>
-          <Box display={{ base: "flex-col", md: "none" }} margin="10">
+          <Box display={{ base: "flex-col", md: "none" }} margin="2">
             <Burn />
             <Center>
-              <Data props={{ justifyContent: "center", marginTop: "10" }} />
+              <Data props={{ justifyContent: "center", marginTop: "5" }} />
             </Center>
           </Box>
         </Loading>

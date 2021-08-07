@@ -48,7 +48,7 @@ function Layout({ children }: { children: ReactNode }): JSX.Element {
       </Head>
       <Center>
         <Box w={1000} position="relative" minHeight="100vh" overflow="hidden">
-          <Box marginBottom={40}>
+          <Box marginBottom="20">
             <NavBar />
             {children}
           </Box>

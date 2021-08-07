@@ -11,7 +11,7 @@ function Header({
   return (
     <Heading
       as="h1"
-      size="lg"
+      fontSize={{ base: "xl", md: "3xl" }}
       margin={1}
       marginBottom={5}
       textAlign="center"

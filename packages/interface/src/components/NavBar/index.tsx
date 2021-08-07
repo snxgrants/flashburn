@@ -90,7 +90,11 @@ function NavBar(): JSX.Element {
                     height={48}
                   />
                   <Box>
-                    <Text as="b" fontSize={{ base: "14px", lg: "16px" }}>
+                    <Text
+                      as="b"
+                      fontSize={{ base: "14px", lg: "16px" }}
+                      paddingRight="1"
+                    >
                       SNX Flash Tool
                     </Text>
                   </Box>

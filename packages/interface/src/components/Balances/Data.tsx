@@ -26,83 +26,83 @@ function Data({ props }: { props?: StackProps }): JSX.Element {
     snxDecimals
   );
 
+  const data: {
+    title: string;
+    info: string;
+    progress?: number | undefined;
+  }[] = [
+    {
+      title: "Total",
+      info: `${
+        provider !== undefined
+          ? formatAmount(ethers.utils.formatUnits(collateral, snxDecimals))
+          : "-"
+      } SNX`,
+    },
+    {
+      title: "Staked",
+      info: `${
+        provider !== undefined
+          ? formatAmount(ethers.utils.formatUnits(stakedAmount, snxDecimals))
+          : "-"
+      } SNX`,
+      progress: collateral.isZero()
+        ? 0
+        : stakedAmount.mul(100).div(collateral).toNumber(),
+    },
+    {
+      title: "Transferrable",
+      info: `${
+        provider !== undefined
+          ? formatAmount(
+              ethers.utils.formatUnits(transferableSynthetix, snxDecimals)
+            )
+          : "-"
+      } SNX`,
+      progress: collateral.isZero()
+        ? 0
+        : transferableSynthetix.mul(100).div(collateral).toNumber(),
+    },
+    {
+      title: "C-Ratio",
+      info: `${
+        provider !== undefined
+          ? formatAmount(
+              percentageCRatio(collateralisationRatio).toNumber() / 100
+            )
+          : "-"
+      }%`,
+    },
+    {
+      title: "sUSD Balance",
+      info: `${
+        provider !== undefined
+          ? formatAmount(ethers.utils.formatUnits(sUSDbalanceOf, sUSDDecimals))
+          : "-"
+      } sUSD`,
+    },
+    {
+      title: "Total Debt",
+      info: `${
+        provider !== undefined
+          ? formatAmount(ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals))
+          : "-"
+      } sUSD`,
+    },
+  ];
+
   return (
     <VStack
       width={{ base: "72", sm: "80" }}
       divider={<StackDivider borderColor="gray.200" />}
       {...props}
     >
-      {[
-        {
-          title: "Total",
-          info: `${
-            provider !== undefined
-              ? formatAmount(ethers.utils.formatUnits(collateral, snxDecimals))
-              : "-"
-          } SNX`,
-        },
-        {
-          title: "Staked",
-          info: `${
-            provider !== undefined
-              ? formatAmount(
-                  ethers.utils.formatUnits(stakedAmount, snxDecimals)
-                )
-              : "-"
-          } SNX`,
-          progess: collateral.isZero()
-            ? 0
-            : stakedAmount.mul(100).div(collateral).toNumber(),
-        },
-        {
-          title: "Transferrable",
-          info: `${
-            provider !== undefined
-              ? formatAmount(
-                  ethers.utils.formatUnits(transferableSynthetix, snxDecimals)
-                )
-              : "-"
-          } SNX`,
-          progess: collateral.isZero()
-            ? 0
-            : transferableSynthetix.mul(100).div(collateral).toNumber(),
-        },
-        {
-          title: "C-Ratio",
-          info: `${
-            provider !== undefined
-              ? formatAmount(
-                  percentageCRatio(collateralisationRatio).toNumber() / 100
-                )
-              : "-"
-          }%`,
-        },
-        {
-          title: "sUSD Balance",
-          info: `${
-            provider !== undefined
-              ? formatAmount(
-                  ethers.utils.formatUnits(sUSDbalanceOf, sUSDDecimals)
-                )
-              : "-"
-          } sUSD`,
-        },
-        {
-          title: "Total Debt",
-          info: `${
-            provider !== undefined
-              ? formatAmount(
-                  ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals)
-                )
-              : "-"
-          } sUSD`,
-        },
-      ].map((value) => (
+      {data.map((value) => (
         <DataBox
           key={value.title}
           title={value.title}
           info={value.info}
-          progress={value.progess}
+          progress={value.progress}
         />
       ))}
     </VStack>
