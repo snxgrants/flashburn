@@ -85,7 +85,7 @@ function useBurn(): Burn {
   }, [debtBalanceOf, sUSDDecimals, setSUSDAmount]);
 
   const fetchTrade: () => Promise<void> = useCallback(async () => {
-    if (!sUSDSNXAmountBN.lte(BigNumber.from("0"))) {
+    if (sUSDSNXAmountBN.gt(BigNumber.from("0"))) {
       setLoading(true);
       try {
         let searching: boolean = true;
