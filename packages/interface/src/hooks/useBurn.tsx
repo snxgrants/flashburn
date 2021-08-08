@@ -54,21 +54,22 @@ function useBurn(): Burn {
     [slippage]
   );
 
+  const rateForCurrencyString: string = rateForCurrency.toString();
   const snxUSDAmountBN: BigNumber = useMemo(
     () =>
       snxAmountBN
-        .mul(rateForCurrency)
+        .mul(BigNumber.from(rateForCurrencyString))
         .div(ethers.utils.parseUnits("1", snxDecimals)),
-    [snxAmountBN, rateForCurrency, snxDecimals]
+    [snxAmountBN, rateForCurrencyString, snxDecimals]
   );
   const sUSDSNXAmountBN: BigNumber = useMemo(
     () =>
-      rateForCurrency.lte(BigNumber.from("0"))
+      BigNumber.from(rateForCurrencyString).lte(BigNumber.from("0"))
         ? BigNumber.from("0")
         : sUSDAmountBN
             .mul(ethers.utils.parseUnits("1", sUSDDecimals))
-            .div(rateForCurrency),
-    [sUSDAmountBN, rateForCurrency, sUSDDecimals]
+            .div(BigNumber.from(rateForCurrencyString)),
+    [sUSDAmountBN, rateForCurrencyString, sUSDDecimals]
   );
 
   const isSUSDMax: boolean = useMemo(
