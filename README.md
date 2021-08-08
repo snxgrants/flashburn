@@ -17,7 +17,7 @@ Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 | Network | Explorer                                                                                                                    |
 | ------- | --------------------------------------------------------------------------------------------------------------------------- |
 | Mainnet | [0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688](https://etherscan.io/address/0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688)       |
-| Kovan   | [0xE33F708DF2cB0deD9dfc18Ad9a08Ec7C09F6cec3](https://kovan.etherscan.io/address/0xE33F708DF2cB0deD9dfc18Ad9a08Ec7C09F6cec3) |
+| Kovan   | [0x309919Fa6951fdC460EACB6A046916B30a8bc423](https://kovan.etherscan.io/address/0x309919Fa6951fdC460EACB6A046916B30a8bc423) |
 
 ## Installation
 

@@ -30,7 +30,7 @@ export const addresses: {
     multicall: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
     addressResolver: "0x84f87E3636Aa9cC1080c07E6C61aDfDCc23c0db6",
     lendingPoolAddressesProvider: "0x88757f2f99175387ab4c6a4b3067c77a695b0349",
-    snxFlashTool: "0xE33F708DF2cB0deD9dfc18Ad9a08Ec7C09F6cec3",
+    snxFlashTool: "0x309919Fa6951fdC460EACB6A046916B30a8bc423",
   },
 };
 
