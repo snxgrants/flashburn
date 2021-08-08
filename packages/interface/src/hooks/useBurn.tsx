@@ -37,6 +37,7 @@ function useBurn(): Burn {
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
   const [slippage, setSlippage] = useState<string>("0.5");
   const [loading, setLoading] = useState<boolean>(false);
+  const [swapData, setSwapData] = useState<{ to: string; data: string }>();
 
   const snxFlashToolAddress: string = addresses[chainId].snxFlashTool;
 
@@ -118,8 +119,9 @@ function useBurn(): Burn {
               receiveSUSDAmount.lte(BigNumber.from("0"))
             ) {
               searching = false;
-              setLoading(false);
               setSnxAmount("0");
+              setLoading(false);
+              setSwapData(undefined);
             } else {
               if (receiveSUSDAmount.lt(sUSDAmountBN)) {
                 tradeSUSDAmount = tradeSUSDAmount
@@ -129,6 +131,10 @@ function useBurn(): Burn {
                 setSnxAmount(
                   ethers.utils.formatUnits(sendSnxAmount, snxDecimals)
                 );
+                setSwapData({
+                  to: oneInchTrade.tx.to,
+                  data: oneInchTrade.tx.data,
+                });
                 searching = false;
                 setLoading(false);
               }
@@ -141,10 +147,12 @@ function useBurn(): Burn {
         console.log(error.message);
         setSnxAmount("0");
         setLoading(false);
+        setSwapData(undefined);
       }
     } else {
       setSnxAmount("0");
       setLoading(false);
+      setSwapData(undefined);
     }
   }, [
     chainId,
