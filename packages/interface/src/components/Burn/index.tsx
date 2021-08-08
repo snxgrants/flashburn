@@ -60,7 +60,8 @@ function Burn({
   const priceImpact: string = useMemo(
     () =>
       snxUSDAmountBN.gt(BigNumber.from("0")) &&
-      sUSDAmountBN.gt(BigNumber.from("0"))
+      sUSDAmountBN.gt(BigNumber.from("0")) &&
+      !loading
         ? snxUSDAmountBN.gt(sUSDAmountBN)
           ? "-" +
             formatAmount(
@@ -87,8 +88,7 @@ function Burn({
               ).toString()
             )
         : "+0",
-    /* eslint-disable react-hooks/exhaustive-deps */
-    [snxUSDAmountBN]
+    [snxUSDAmountBN, sUSDAmountBN, loading]
   );
 
   return (
