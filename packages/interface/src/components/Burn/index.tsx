@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Box,
   BoxProps,
@@ -20,7 +21,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, SettingsIcon } from "@chakra-ui/icons";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { Burn as BurnInterface } from "../../hooks/useBurn";
 import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
@@ -56,6 +57,38 @@ function Burn({
     snxDecimals,
     debtBalanceOf,
   } = balances;
+  const priceImpact: string = useMemo(
+    () =>
+      snxUSDAmountBN.gt(BigNumber.from("0")) &&
+      sUSDAmountBN.gt(BigNumber.from("0"))
+        ? snxUSDAmountBN.gt(sUSDAmountBN)
+          ? "-" +
+            formatAmount(
+              (
+                BigNumber.from("10000")
+                  .sub(
+                    sUSDAmountBN
+                      .mul(BigNumber.from("10000"))
+                      .div(snxUSDAmountBN)
+                  )
+                  .toNumber() / 100
+              ).toString()
+            )
+          : "+" +
+            formatAmount(
+              (
+                BigNumber.from("10000")
+                  .sub(
+                    snxUSDAmountBN
+                      .mul(BigNumber.from("10000"))
+                      .div(sUSDAmountBN)
+                  )
+                  .toNumber() / 100
+              ).toString()
+            )
+        : "+0",
+    [snxUSDAmountBN]
+  );
 
   return (
     <Box {...props}>
@@ -141,6 +174,7 @@ function Burn({
         isValid={isInputValid}
         usdAmount={ethers.utils.formatUnits(sUSDAmountBN, sUSDDecimals)}
         loading={loading}
+        priceImpact={priceImpact}
         badgeAmount={
           provider !== undefined
             ? formatAmount(

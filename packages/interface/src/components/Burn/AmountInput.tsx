@@ -27,6 +27,7 @@ function AmountInput({
   usdAmount,
   loading,
   isValid,
+  priceImpact,
   props,
 }: {
   src: string;
@@ -41,6 +42,7 @@ function AmountInput({
   usdAmount: string;
   loading?: boolean;
   isValid: boolean;
+  priceImpact?: string;
   props?: BoxProps;
 }): JSX.Element {
   return (
@@ -87,7 +89,9 @@ function AmountInput({
               <Spinner marginTop="1.5" marginRight="1.5" size="xs" />
             )}
             <Text fontSize="sm" marginRight="4" color="#11849e">
-              ${formatAmount(usdAmount)}
+              {priceImpact !== undefined
+                ? `$${formatAmount(usdAmount) + ` (${priceImpact}%)`}`
+                : `$${formatAmount(usdAmount)}`}
             </Text>
           </Flex>
         </Flex>
