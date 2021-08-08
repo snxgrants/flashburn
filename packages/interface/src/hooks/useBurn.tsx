@@ -18,6 +18,7 @@ export interface Burn {
   snxAmountBN: BigNumber;
   sUSDAmountBN: BigNumber;
   snxUSDAmountBN: BigNumber;
+  loading: boolean;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
@@ -35,6 +36,7 @@ function useBurn(): Burn {
   const [snxAmount, setSnxAmount] = useState<string>("0");
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
   const [slippage, setSlippage] = useState<string>("0.5");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const snxFlashToolAddress: string = addresses[chainId].snxFlashTool;
 
@@ -61,7 +63,7 @@ function useBurn(): Burn {
   );
   const sUSDSNXAmountBN: BigNumber = useMemo(
     () =>
-      rateForCurrency.isZero()
+      rateForCurrency.lte(BigNumber.from("0"))
         ? BigNumber.from("0")
         : sUSDAmountBN
             .mul(ethers.utils.parseUnits("1", sUSDDecimals))
@@ -83,6 +85,7 @@ function useBurn(): Burn {
 
   const fetchTrade: () => Promise<void> = useCallback(async () => {
     if (!sUSDSNXAmountBN.lte(BigNumber.from("0"))) {
+      setLoading(true);
       try {
         let searching: boolean = true;
         let tradeSUSDAmount: BigNumber = sUSDSNXAmountBN;
@@ -114,6 +117,7 @@ function useBurn(): Burn {
               receiveSUSDAmount.lte(BigNumber.from("0"))
             ) {
               searching = false;
+              setLoading(false);
               setSnxAmount("0");
             } else {
               if (receiveSUSDAmount.lt(sUSDAmountBN)) {
@@ -125,6 +129,7 @@ function useBurn(): Burn {
                   ethers.utils.formatUnits(sendSnxAmount, snxDecimals)
                 );
                 searching = false;
+                setLoading(false);
               }
             }
           } else {
@@ -134,9 +139,11 @@ function useBurn(): Burn {
       } catch (error) {
         console.log(error.message);
         setSnxAmount("0");
+        setLoading(false);
       }
     } else {
       setSnxAmount("0");
+      setLoading(false);
     }
   }, [
     chainId,
@@ -150,6 +157,7 @@ function useBurn(): Burn {
     slippage,
     cancellableRequest,
     setSnxAmount,
+    setLoading,
   ]);
 
   useEffect(() => {
@@ -163,6 +171,7 @@ function useBurn(): Burn {
     snxAmountBN,
     sUSDAmountBN,
     snxUSDAmountBN,
+    loading,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,

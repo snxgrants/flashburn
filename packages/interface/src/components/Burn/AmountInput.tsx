@@ -10,6 +10,7 @@ import {
   Text,
   InputRightElement,
   Button,
+  Spinner,
 } from "@chakra-ui/react";
 import { formatAmount } from "../../utils";
 
@@ -24,6 +25,7 @@ function AmountInput({
   badgeAmount,
   isSUSDMax,
   usdAmount,
+  loading,
   props,
 }: {
   src: string;
@@ -36,6 +38,7 @@ function AmountInput({
   badgeAmount: string;
   isSUSDMax: boolean;
   usdAmount: string;
+  loading?: boolean;
   props?: BoxProps;
 }): JSX.Element {
   return (
@@ -77,9 +80,14 @@ function AmountInput({
               )}
             </InputGroup>
           </Flex>
-          <Text marginLeft="auto" fontSize="sm" marginRight="4" color="#11849e">
-            ${formatAmount(usdAmount)}
-          </Text>
+          <Flex marginLeft="auto">
+            {loading !== undefined && loading && (
+              <Spinner marginTop="1.5" marginRight="1.5" size="xs" />
+            )}
+            <Text fontSize="sm" marginRight="4" color="#11849e">
+              ${formatAmount(usdAmount)}
+            </Text>
+          </Flex>
         </Flex>
       </Center>
     </Box>

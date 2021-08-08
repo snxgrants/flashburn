@@ -37,6 +37,7 @@ function Burn({
   setSUSDAmount,
   setMaxSUSD,
   isSUSDMax,
+  loading,
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider } = useWeb3React();
@@ -130,6 +131,7 @@ function Burn({
         setAmount={setSUSDAmount}
         isSUSDMax={isSUSDMax}
         usdAmount={ethers.utils.formatUnits(sUSDAmountBN, sUSDDecimals)}
+        loading={loading}
         badgeAmount={
           provider !== undefined
             ? formatAmount(
