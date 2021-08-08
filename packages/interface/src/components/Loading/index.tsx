@@ -12,7 +12,7 @@ function Loading({ children }: { children?: ReactNode }): JSX.Element {
     <Box>
       {chainId in addresses ? (
         error ? (
-          <Text>Failed to load data.</Text>
+          <Text>Failed to load data. Please refresh the page.</Text>
         ) : (
           children
         )

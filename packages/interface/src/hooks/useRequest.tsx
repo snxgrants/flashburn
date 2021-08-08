@@ -15,6 +15,7 @@ export type Request = (
 function useRequest(throwError: boolean = true): {
   request: Request;
   cancellableRequest: Request;
+  cancelAll: () => void;
 } {
   const cancel = useRef<CancelTokenSource>();
   const cache = useRef<{ [url: string]: any }>({});
@@ -94,7 +95,13 @@ function useRequest(throwError: boolean = true): {
     [throwError]
   );
 
-  return { request, cancellableRequest };
+  const cancelAll: () => void = useCallback(() => {
+    if (cancel.current) {
+      cancel.current.cancel();
+    }
+  }, []);
+
+  return { request, cancellableRequest, cancelAll };
 }
 
 export default useRequest;

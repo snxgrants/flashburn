@@ -49,7 +49,7 @@ function useBurn(): Burn {
   const { provider, chainId, address } = useWeb3React();
   const { balances, synthetixAddresses, fetchBalances } = useSynthetix();
   const { sendTransaction } = useTransaction();
-  const { cancellableRequest } = useRequest(false);
+  const { cancellableRequest, cancelAll } = useRequest();
   const {
     snxDecimals,
     sUSDDecimals,
@@ -199,6 +199,7 @@ function useBurn(): Burn {
       setSnxAmount("0");
       setLoading(false);
       setSwapData(undefined);
+      cancelAll();
     }
   }, [
     chainId,
@@ -213,6 +214,7 @@ function useBurn(): Burn {
     cancellableRequest,
     setSnxAmount,
     setLoading,
+    cancelAll,
   ]);
 
   const approveBurn: () => Promise<void> = useCallback(async () => {
