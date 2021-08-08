@@ -41,7 +41,7 @@ describe("unit/SNXFlashLoanTool", () => {
 
     it("should set SNX", async () => {
       const { snxFlashLoanTool, SNX } = await loadFixture(snxFlashLoanToolFixture);
-      const getSNX: string = await snxFlashLoanTool.SNX();
+      const getSNX: string = await snxFlashLoanTool.snx();
       expect(getSNX).to.equal(SNX.address);
     });
 
@@ -80,8 +80,6 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
-      const lock0: boolean = await snxFlashLoanTool.lock();
-      expect(lock0).to.be.false;
 
       const sUSDAmount: BigNumber = BigNumber.from("100000000000000000000");
       const snxAmount: BigNumber = tradeData0.amount;
@@ -101,12 +99,10 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
-      const lock1: boolean = await snxFlashLoanTool.lock();
       expect(snxBalance1).to.be.lt(snxBalance0);
       expect(sUSDBalance1).to.be.gte(sUSDBalance0);
       const delta: BigNumber = ethers.utils.parseUnits("0.0001", sUSDDecimals);
       expect(sUSDDebtBalance0.sub(sUSDDebtBalance1)).to.be.closeTo(sUSDAmount, delta.toNumber());
-      expect(lock1).to.be.false;
     });
 
     it("should burn max sUSD with SNX via 1inch", async () => {
@@ -122,8 +118,6 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
-      const lock0: boolean = await snxFlashLoanTool.lock();
-      expect(lock0).to.be.false;
 
       const sUSDAmount: BigNumber = ethers.constants.MaxUint256;
       const snxAmount: BigNumber = tradeData1.amount;
@@ -143,11 +137,9 @@ describe("unit/SNXFlashLoanTool", () => {
         impersonateAddress,
         ethers.utils.formatBytes32String("sUSD"),
       );
-      const lock1: boolean = await snxFlashLoanTool.lock();
       expect(snxBalance1).to.be.lt(snxBalance0);
       expect(sUSDBalance1).to.be.gte(sUSDBalance0);
       expect(sUSDDebtBalance1).to.equal(BigNumber.from("0"));
-      expect(lock1).to.be.false;
     });
   });
 
@@ -179,31 +171,22 @@ describe("unit/SNXFlashLoanTool", () => {
       ).to.be.revertedWith("SNXFlashLoanTool: Invalid initiator");
     });
 
-    it("should revert if flash loan is reentrant", async () => {
-      const { lendingPool, snxFlashLoanTool, SNX, snxDecimals, sUSD, sUSDDecimals, delegateApprovals } =
+    it("should revert if contract calls unauthorized address", async () => {
+      const { lendingPool, snxFlashLoanTool, SNX, snxDecimals, synthetix, sUSDDecimals, delegateApprovals } =
         await loadFixture(snxFlashLoanToolFixture);
       const snxAmount: BigNumber = ethers.utils.parseUnits("1", snxDecimals);
       const sUSDAmount: BigNumber = ethers.utils.parseUnits("1", sUSDDecimals);
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
       await expect(
-        snxFlashLoanTool
-          .connect(impersonateAddressWallet)
-          .burn(
-            sUSDAmount,
-            snxAmount,
-            lendingPool.address,
-            lendingPool.interface.encodeFunctionData("flashLoan", [
-              snxFlashLoanTool.address,
-              [sUSD.address],
-              [sUSDAmount],
-              [0],
-              snxFlashLoanTool.address,
-              "0x",
-              0,
-            ]),
-          ),
-      ).to.be.revertedWith("SNXFlashLoanTool: Swap failed");
+        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, lendingPool.address, "0x"),
+      ).to.be.revertedWith("SNXFlashLoanTool: Unauthorized address");
+      await expect(
+        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, SNX.address, "0x"),
+      ).to.be.revertedWith("SNXFlashLoanTool: Unauthorized address");
+      await expect(
+        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, synthetix.address, "0x"),
+      ).to.be.revertedWith("SNXFlashLoanTool: Unauthorized address");
     });
   });
 

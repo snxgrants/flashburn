@@ -21,7 +21,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     /// @dev Synthetix address
     ISynthetix public immutable synthetix;
     /// @dev SNX token contract
-    IERC20 public immutable SNX;
+    IERC20 public immutable snx;
     /// @dev sUSD token contract
     IERC20 public immutable sUSD;
     /// @dev Aave LendingPoolAddressesProvider contract
@@ -30,8 +30,6 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     ILendingPool public immutable override LENDING_POOL;
     /// @dev Aave LendingPool referral code
     uint16 public constant referralCode = 185;
-    /// @dev Lock in order to prevent a reentrancy attack
-    bool public lock = false;
 
     /// @dev Constructor
     /// @param _snxResolver Synthetix AddressResolver address
@@ -39,7 +37,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     constructor(address _snxResolver, address _provider) {
         IAddressResolver synthetixResolver = IAddressResolver(_snxResolver);
         synthetix = ISynthetix(synthetixResolver.getAddress("Synthetix"));
-        SNX = IERC20(synthetixResolver.getAddress("ProxyERC20"));
+        snx = IERC20(synthetixResolver.getAddress("ProxyERC20"));
         sUSD = IERC20(synthetixResolver.getAddress("ProxyERC20sUSD"));
         ILendingPoolAddressesProvider provider = ILendingPoolAddressesProvider(_provider);
         ADDRESSES_PROVIDER = provider;
@@ -94,8 +92,6 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     ) external override returns (bool) {
         require(msg.sender == address(LENDING_POOL), "SNXFlashLoanTool: Invalid msg.sender");
         require(initiator == address(this), "SNXFlashLoanTool: Invalid initiator");
-        // Revert if contract is locked, to prevent a reentrancy attack
-        require(!lock, "SNXFlashLoanTool: Must not reenter");
         (uint256 snxAmount, address user, address exchange, bytes memory exchangeData) = abi.decode(
             params,
             (uint256, address, address, bytes)
@@ -105,7 +101,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         // Burn sUSD with flash loaned amount
         synthetix.burnSynthsOnBehalf(user, amounts[0]);
         // Transfer specified SNX amount from user
-        SNX.safeTransferFrom(user, address(this), snxAmount);
+        snx.safeTransferFrom(user, address(this), snxAmount);
         // Swap SNX to sUSD on the specified DEX
         uint256 receivedSUSD = swap(snxAmount, exchange, exchangeData);
         // Approve owed sUSD amount to Aave
@@ -135,13 +131,14 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         address exchange,
         bytes memory data
     ) internal returns (uint256) {
-        SNX.safeApprove(exchange, amount);
-        // Lock contract during external calls to prevent a reentrancy attack
-        lock = true;
+        snx.safeApprove(exchange, amount);
+        // Security check to prevent a reentrancy attack or an attacker pulling approved tokens
+        require(
+            exchange != address(LENDING_POOL) && exchange != address(synthetix) && exchange != address(snx),
+            "SNXFlashLoanTool: Unauthorized address"
+        );
         (bool success, ) = exchange.call(data);
         require(success, "SNXFlashLoanTool: Swap failed");
-        // Unlock once the external call has completed
-        lock = false;
         return sUSD.balanceOf(address(this));
     }
 }
