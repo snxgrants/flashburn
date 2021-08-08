@@ -43,7 +43,6 @@ export interface Burn {
   burn: () => Promise<void>;
 }
 
-const incrementSwapSearch: string = "1005";
 const approveBuffer: string = "1100";
 
 function useBurn(): Burn {
@@ -164,8 +163,15 @@ function useBurn(): Burn {
               setSwapData(undefined);
             } else {
               if (receiveSUSDAmount.lt(sUSDAmountBN)) {
+                const margin: BigNumber = receiveSUSDAmount
+                  .mul(BigNumber.from("100"))
+                  .div(sUSDAmountBN);
+                let incrementAmount: BigNumber = BigNumber.from("1005");
+                if (margin.lt(BigNumber.from("99"))) {
+                  incrementAmount = BigNumber.from("100000").div(margin);
+                }
                 tradeSUSDAmount = tradeSUSDAmount
-                  .mul(incrementSwapSearch)
+                  .mul(incrementAmount)
                   .div(BigNumber.from("1000"));
               } else {
                 setSnxAmount(
