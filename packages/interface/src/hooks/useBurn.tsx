@@ -33,6 +33,7 @@ export interface Burn {
   isBurnApproved: boolean;
   isApproved: boolean;
   isValid: boolean;
+  isInputValid: boolean;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
@@ -113,7 +114,11 @@ function useBurn(): Burn {
     [allowance]
   );
   const isValid: boolean =
-    sUSDAmountBN.gt(BigNumber.from("0")) && snxAmountBN.gt(BigNumber.from("0"));
+    sUSDAmountBN.gt(BigNumber.from("0")) &&
+    snxAmountBN.gt(BigNumber.from("0")) &&
+    sUSDAmountBN.lte(debtBalanceOf);
+  const isInputValid: boolean =
+    sUSDAmountBN.gte(BigNumber.from("0")) && sUSDAmountBN.lte(debtBalanceOf);
 
   const setMaxSUSD: () => void = useCallback(() => {
     const value: string = ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals);
@@ -306,6 +311,7 @@ function useBurn(): Burn {
     isBurnApproved,
     isApproved,
     isValid,
+    isInputValid,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,

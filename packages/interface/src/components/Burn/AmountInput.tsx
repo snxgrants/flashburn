@@ -26,6 +26,7 @@ function AmountInput({
   isSUSDMax,
   usdAmount,
   loading,
+  isValid,
   props,
 }: {
   src: string;
@@ -39,6 +40,7 @@ function AmountInput({
   isSUSDMax: boolean;
   usdAmount: string;
   loading?: boolean;
+  isValid: boolean;
   props?: BoxProps;
 }): JSX.Element {
   return (
@@ -61,9 +63,9 @@ function AmountInput({
                 isReadOnly={disabled}
                 onChange={(e) => setAmount(e.target.value)}
                 value={amount}
-                isInvalid={false}
+                isInvalid={!isValid}
                 errorBorderColor="crimson"
-                focusBorderColor={"#00D1FF"}
+                focusBorderColor={isValid ? "#00D1FF" : "crimson"}
               />
               {!disabled && (
                 <InputRightElement width="4rem">

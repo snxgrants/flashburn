@@ -41,6 +41,7 @@ function Burn({
   isBurnApproved,
   isApproved,
   isValid,
+  isInputValid,
   approveBurn,
   approve,
   burn,
@@ -117,6 +118,7 @@ function Burn({
         amount={snxAmount}
         setAmount={setSnxAmount}
         isSUSDMax={isSUSDMax}
+        isValid={true}
         usdAmount={ethers.utils.formatUnits(snxUSDAmountBN, snxDecimals)}
         badgeAmount={
           provider !== undefined
@@ -136,6 +138,7 @@ function Burn({
         amount={sUSDAmount}
         setAmount={setSUSDAmount}
         isSUSDMax={isSUSDMax}
+        isValid={isInputValid}
         usdAmount={ethers.utils.formatUnits(sUSDAmountBN, sUSDDecimals)}
         loading={loading}
         badgeAmount={
