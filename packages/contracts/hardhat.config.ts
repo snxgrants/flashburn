@@ -44,6 +44,9 @@ const config: HardhatUserConfig = {
 };
 
 if (process.env.INFURA_ID && config.networks) {
+  config.networks.mainnet = {
+    url: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
+  };
   config.networks.kovan = {
     url: `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
   };
