@@ -23,7 +23,7 @@ export const addresses: {
     multicall: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
     lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
-    snxFlashTool: "0x4826533B4897376654Bb4d4AD88B7faFD0C98528",
+    snxFlashTool: "0x231e7959852509E4872C3374554784a46EB8d680",
   },
   42: {
     explorer: "https://kovan.etherscan.io/",

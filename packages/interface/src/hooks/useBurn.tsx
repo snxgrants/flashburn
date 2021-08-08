@@ -130,7 +130,7 @@ function useBurn(): Burn {
           const oneInchTrade: OneInchSwap | undefined =
             await cancellableRequest(
               fetchSwapURL(
-                chainId,
+                chainId === 1337 ? 1 : chainId,
                 snx,
                 sUSD,
                 snxFlashToolAddress,
