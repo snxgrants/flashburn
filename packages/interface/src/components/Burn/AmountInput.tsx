@@ -11,6 +11,7 @@ import {
   InputRightElement,
   Button,
   Spinner,
+  Tooltip,
 } from "@chakra-ui/react";
 import { formatAmount } from "../../utils";
 
@@ -89,9 +90,21 @@ function AmountInput({
               <Spinner marginTop="1.5" marginRight="1.5" size="xs" />
             )}
             <Text fontSize="sm" marginRight="4" color="#11849e">
-              {priceImpact !== undefined
-                ? `$${formatAmount(usdAmount) + ` (${priceImpact}%)`}`
-                : `$${formatAmount(usdAmount)}`}
+              {priceImpact !== undefined ? (
+                <>
+                  <Tooltip
+                    label="Minimum Swap Output"
+                    aria-label="Minimum Swap Output"
+                  >
+                    {`$${formatAmount(usdAmount)}`}
+                  </Tooltip>
+                  <Tooltip label="Price Impact" aria-label="Price Impact">
+                    {` (${priceImpact}%)`}
+                  </Tooltip>
+                </>
+              ) : (
+                `$${formatAmount(usdAmount)}`
+              )}
             </Text>
           </Flex>
         </Flex>

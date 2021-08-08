@@ -87,6 +87,7 @@ function Burn({
               ).toString()
             )
         : "+0",
+    /* eslint-disable react-hooks/exhaustive-deps */
     [snxUSDAmountBN]
   );
 
