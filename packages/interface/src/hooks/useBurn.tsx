@@ -114,6 +114,7 @@ function useBurn(): Burn {
               receiveSUSDAmount.lte(BigNumber.from("0"))
             ) {
               searching = false;
+              setSnxAmount("0");
             } else {
               if (receiveSUSDAmount.lt(sUSDAmountBN)) {
                 tradeSUSDAmount = tradeSUSDAmount
