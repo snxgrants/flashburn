@@ -8,6 +8,8 @@ import {
   ISynthetix__factory,
   Multicall,
   Multicall__factory,
+  IDelegateApprovals,
+  IDelegateApprovals__factory,
   Call,
   ReturnData,
 } from "../types";
@@ -34,6 +36,7 @@ export interface SynthetixBalances {
   snxDecimals: number;
   sUSDDecimals: number;
   sUSDbalanceOf: BigNumber;
+  canBurnFor: boolean;
 }
 
 const snxKey: string = ethers.utils.formatBytes32String("SNX");
@@ -98,6 +101,7 @@ export async function getSynthetixBalances(
     addresses[chainId].multicall,
     provider
   );
+  const snxFlashToolAddress: string = addresses[chainId].snxFlashTool;
 
   const balancesCalls: Call[] = [
     {
@@ -160,7 +164,7 @@ export async function getSynthetixBalances(
       target: synthetixAddresses.snx,
       callData: ERC20__factory.createInterface().encodeFunctionData(
         "allowance",
-        [account, addresses[chainId].snxFlashTool]
+        [account, snxFlashToolAddress]
       ),
     },
     {
@@ -177,6 +181,14 @@ export async function getSynthetixBalances(
         "balanceOf",
         [account]
       ),
+    },
+    {
+      target: synthetixAddresses.delegateApprovals,
+      callData:
+        IDelegateApprovals__factory.createInterface().encodeFunctionData(
+          "canBurnFor",
+          [account, snxFlashToolAddress]
+        ),
     },
   ];
 
@@ -256,6 +268,12 @@ export async function getSynthetixBalances(
           balancesReturnData[11].returnData
         )[0] as BigNumber)
       : BigNumber.from("0"),
+    canBurnFor: balancesReturnData[12].success
+      ? (IDelegateApprovals__factory.createInterface().decodeFunctionResult(
+          "canBurnFor",
+          balancesReturnData[12].returnData
+        )[0] as boolean)
+      : false,
   };
 }
 

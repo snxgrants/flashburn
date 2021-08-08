@@ -69,6 +69,7 @@ const initialState: Omit<State, "fetchBalances"> = {
     snxDecimals: 18,
     sUSDDecimals: 18,
     sUSDbalanceOf: BigNumber.from("0"),
+    canBurnFor: false,
   },
 };
 
