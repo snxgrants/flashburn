@@ -1,13 +1,14 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
+import { addresses } from "@snx-flash-tool/contracts/constants";
 import useSynthetix from "./useSynthetix";
 import useWeb3React from "./useWeb3React";
 import useRequest from "./useRequest";
 import {
   stripInputValue,
   tryParseUnits,
-  fetchQuoteURL,
-  OneInchQuote,
+  fetchSwapURL,
+  OneInchSwap,
 } from "../utils";
 
 export interface Burn {
@@ -22,6 +23,8 @@ export interface Burn {
   setMaxSUSD: () => void;
 }
 
+const incrementSwapSearch: string = "1005";
+
 function useBurn(): Burn {
   const { provider, chainId } = useWeb3React();
   const { balances, synthetixAddresses } = useSynthetix();
@@ -31,6 +34,9 @@ function useBurn(): Burn {
   const { snx, sUSD } = synthetixAddresses;
   const [snxAmount, setSnxAmount] = useState<string>("0");
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
+  const [slippage, setSlippage] = useState<string>("0.5");
+
+  const snxFlashToolAddress: string = addresses[chainId].snxFlashTool;
 
   const snxAmountBN: BigNumber = useMemo(
     () => tryParseUnits(stripInputValue(snxAmount), snxDecimals),
@@ -39,6 +45,11 @@ function useBurn(): Burn {
   const sUSDAmountBN: BigNumber = useMemo(
     () => tryParseUnits(stripInputValue(sUSDAmount), sUSDDecimals),
     [sUSDAmount, sUSDDecimals]
+  );
+
+  const slippageBN: BigNumber = useMemo(
+    () => BigNumber.from((1000 + Number(slippage) * 10).toString()),
+    [slippage]
   );
 
   const snxUSDAmountBN: BigNumber = useMemo(
@@ -71,16 +82,53 @@ function useBurn(): Burn {
   }, [debtBalanceOf, sUSDDecimals, setSUSDAmount]);
 
   const fetchTrade: () => Promise<void> = useCallback(async () => {
-    if (!sUSDSNXAmountBN.isZero()) {
+    if (!sUSDSNXAmountBN.lte(BigNumber.from("0"))) {
       try {
-        const oneInchTrade: OneInchQuote | undefined = await cancellableRequest(
-          fetchQuoteURL(chainId, snx, sUSD, sUSDSNXAmountBN.toString()),
-          false
-        );
-        if (oneInchTrade) {
-          setSnxAmount(
-            ethers.utils.formatUnits(oneInchTrade.fromTokenAmount, snxDecimals)
-          );
+        let searching: boolean = true;
+        let tradeSUSDAmount: BigNumber = sUSDSNXAmountBN;
+        while (searching) {
+          const oneInchTrade: OneInchSwap | undefined =
+            await cancellableRequest(
+              fetchSwapURL(
+                chainId,
+                snx,
+                sUSD,
+                snxFlashToolAddress,
+                tradeSUSDAmount
+                  .mul(slippageBN)
+                  .div(BigNumber.from("1000"))
+                  .toString(),
+                slippage
+              ),
+              false
+            );
+          if (oneInchTrade) {
+            const sendSnxAmount: BigNumber = BigNumber.from(
+              oneInchTrade.fromTokenAmount
+            );
+            const receiveSUSDAmount: BigNumber = BigNumber.from(
+              oneInchTrade.toTokenAmount
+            );
+            if (
+              sendSnxAmount.lte(BigNumber.from("0")) ||
+              receiveSUSDAmount.lte(BigNumber.from("0"))
+            ) {
+              searching = false;
+            } else {
+              if (receiveSUSDAmount.lt(sUSDAmountBN)) {
+                tradeSUSDAmount = tradeSUSDAmount
+                  .mul(incrementSwapSearch)
+                  .div(BigNumber.from("1000"));
+              } else {
+                setSnxAmount(
+                  ethers.utils.formatUnits(sendSnxAmount, snxDecimals)
+                );
+                searching = false;
+              }
+            }
+          } else {
+            searching = false;
+          }
         }
       } catch (error) {
         console.log(error.message);
@@ -91,10 +139,14 @@ function useBurn(): Burn {
     }
   }, [
     chainId,
+    snxFlashToolAddress,
     snx,
     sUSD,
+    sUSDAmountBN,
     sUSDSNXAmountBN,
     snxDecimals,
+    slippageBN,
+    slippage,
     cancellableRequest,
     setSnxAmount,
   ]);
