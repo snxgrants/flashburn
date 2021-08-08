@@ -1,9 +1,20 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { ethers, BigNumber } from "ethers";
+import { ethers, BigNumber, Signer } from "ethers";
 import { addresses } from "@snx-flash-tool/contracts/constants";
+import {
+  SNXFlashLoanTool,
+  SNXFlashLoanTool__factory,
+} from "@snx-flash-tool/contracts/types";
 import useSynthetix from "./useSynthetix";
 import useWeb3React from "./useWeb3React";
+import useTransaction from "./useTransaction";
 import useRequest from "./useRequest";
+import {
+  IDelegateApprovals,
+  IDelegateApprovals__factory,
+  ERC20,
+  ERC20__factory,
+} from "../types";
 import {
   stripInputValue,
   tryParseUnits,
@@ -19,20 +30,35 @@ export interface Burn {
   sUSDAmountBN: BigNumber;
   snxUSDAmountBN: BigNumber;
   loading: boolean;
+  isBurnApproved: boolean;
+  isApproved: boolean;
+  isValid: boolean;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
+  fetchTrade: () => Promise<void>;
+  approveBurn: () => Promise<void>;
+  approve: () => Promise<void>;
+  burn: () => Promise<void>;
 }
 
 const incrementSwapSearch: string = "1005";
+const approveBuffer: string = "1100";
 
 function useBurn(): Burn {
-  const { provider, chainId } = useWeb3React();
-  const { balances, synthetixAddresses } = useSynthetix();
+  const { provider, chainId, address } = useWeb3React();
+  const { balances, synthetixAddresses, fetchBalances } = useSynthetix();
+  const { sendTransaction } = useTransaction();
   const { cancellableRequest } = useRequest(false);
-  const { snxDecimals, sUSDDecimals, debtBalanceOf, rateForCurrency } =
-    balances;
-  const { snx, sUSD } = synthetixAddresses;
+  const {
+    snxDecimals,
+    sUSDDecimals,
+    debtBalanceOf,
+    rateForCurrency,
+    canBurnFor,
+    allowance,
+  } = balances;
+  const { snx, sUSD, delegateApprovals } = synthetixAddresses;
   const [snxAmount, setSnxAmount] = useState<string>("0");
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
   const [slippage, setSlippage] = useState<string>("0.5");
@@ -79,6 +105,15 @@ function useBurn(): Burn {
       sUSDAmount,
     [debtBalanceOf, sUSDDecimals, sUSDAmount]
   );
+
+  const isBurnApproved: boolean = canBurnFor;
+  const isApproved: boolean = useMemo(
+    () =>
+      snxAmountBN.gt(BigNumber.from("0")) ? snxAmountBN.lte(allowance) : false,
+    [allowance]
+  );
+  const isValid: boolean =
+    sUSDAmountBN.gt(BigNumber.from("0")) && snxAmountBN.gt(BigNumber.from("0"));
 
   const setMaxSUSD: () => void = useCallback(() => {
     const value: string = ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals);
@@ -169,6 +204,93 @@ function useBurn(): Burn {
     setLoading,
   ]);
 
+  const approveBurn: () => Promise<void> = useCallback(async () => {
+    if (
+      !isBurnApproved &&
+      provider !== undefined &&
+      delegateApprovals !== ethers.constants.AddressZero &&
+      address !== ethers.constants.AddressZero
+    ) {
+      const signer: Signer = await provider.getUncheckedSigner();
+      const delegateApprovalsContract: IDelegateApprovals =
+        IDelegateApprovals__factory.connect(delegateApprovals, signer);
+      await sendTransaction(
+        delegateApprovalsContract.approveBurnOnBehalf(snxFlashToolAddress)
+      );
+      if (fetchBalances) await fetchBalances();
+    }
+  }, [
+    isBurnApproved,
+    provider,
+    delegateApprovals,
+    address,
+    snxFlashToolAddress,
+    fetchBalances,
+  ]);
+
+  const approve: () => Promise<void> = useCallback(async () => {
+    if (
+      !isApproved &&
+      provider !== undefined &&
+      snx !== ethers.constants.AddressZero &&
+      address !== ethers.constants.AddressZero
+    ) {
+      const signer: Signer = await provider.getUncheckedSigner();
+      const snxContract: ERC20 = ERC20__factory.connect(snx, signer);
+      await sendTransaction(
+        snxContract.approve(
+          snxFlashToolAddress,
+          snxAmountBN.mul(approveBuffer).div(BigNumber.from("1000"))
+        )
+      );
+      if (fetchBalances) await fetchBalances();
+    }
+  }, [
+    isApproved,
+    provider,
+    snx,
+    address,
+    snxFlashToolAddress,
+    snxAmountBN,
+    fetchBalances,
+  ]);
+
+  const burn: () => Promise<void> = useCallback(async () => {
+    if (
+      isBurnApproved &&
+      isApproved &&
+      isValid &&
+      provider !== undefined &&
+      swapData !== undefined &&
+      snxFlashToolAddress !== ethers.constants.AddressZero &&
+      address !== ethers.constants.AddressZero
+    ) {
+      const signer: Signer = await provider.getUncheckedSigner();
+      const snxFlashToolContract: SNXFlashLoanTool =
+        SNXFlashLoanTool__factory.connect(snxFlashToolAddress, signer);
+      await sendTransaction(
+        snxFlashToolContract.burn(
+          isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
+          snxAmountBN,
+          swapData.to,
+          swapData.data
+        )
+      );
+      if (fetchBalances) await fetchBalances();
+    }
+  }, [
+    isBurnApproved,
+    isApproved,
+    isValid,
+    provider,
+    swapData,
+    address,
+    snxFlashToolAddress,
+    sUSDAmountBN,
+    snxAmountBN,
+    fetchBalances,
+  ]);
+
   useEffect(() => {
     fetchTrade();
   }, [fetchTrade]);
@@ -181,9 +303,16 @@ function useBurn(): Burn {
     sUSDAmountBN,
     snxUSDAmountBN,
     loading,
+    isBurnApproved,
+    isApproved,
+    isValid,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,
+    fetchTrade,
+    approveBurn,
+    approve,
+    burn,
   };
 }
 

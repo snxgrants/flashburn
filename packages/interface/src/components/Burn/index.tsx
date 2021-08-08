@@ -38,6 +38,12 @@ function Burn({
   setMaxSUSD,
   isSUSDMax,
   loading,
+  isBurnApproved,
+  isApproved,
+  isValid,
+  approveBurn,
+  approve,
+  burn,
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider } = useWeb3React();
@@ -144,9 +150,31 @@ function Burn({
       />
       <Center marginTop="2">
         {provider !== undefined ? (
-          <Button color="black" disabled>
-            Burn
-          </Button>
+          <Flex>
+            <Button
+              marginRight="1"
+              color="black"
+              disabled={!(!isBurnApproved && isValid)}
+              onClick={approveBurn}
+            >
+              Approve Burn
+            </Button>
+            <Button
+              marginRight="1"
+              color="black"
+              disabled={!(isBurnApproved && !isApproved && isValid)}
+              onClick={approve}
+            >
+              Approve SNX
+            </Button>
+            <Button
+              color="black"
+              disabled={!(isBurnApproved && isApproved && isValid)}
+              onClick={burn}
+            >
+              Burn
+            </Button>
+          </Flex>
         ) : (
           <WalletButton />
         )}
