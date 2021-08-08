@@ -1,33 +1,20 @@
 import { ReactNode } from "react";
-import { Box, Text, Center, Spinner } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { addresses } from "@snx-flash-tool/contracts/constants";
 import useWeb3React from "../../hooks/useWeb3React";
+import useSynthetix from "../../hooks/useSynthetix";
 
 function Loading({ children }: { children?: ReactNode }): JSX.Element {
-  const { provider, chainId } = useWeb3React();
+  const { chainId } = useWeb3React();
+  const { error } = useSynthetix();
 
   return (
     <Box>
       {chainId in addresses ? (
-        /* eslint-disable  no-constant-condition */
-        true ? (
-          /* eslint-disable  no-constant-condition */
-          false ? (
-            <Text>Failed to load data.</Text>
-          ) : (
-            children
-          )
-        ) : /* eslint-disable  no-constant-condition */
-        false ? (
-          provider !== undefined ? (
-            <Text>Failed to load data.</Text>
-          ) : (
-            <Text>Please connect your wallet.</Text>
-          )
+        error ? (
+          <Text>Failed to load data.</Text>
         ) : (
-          <Center marginTop={2}>
-            <Spinner size={"lg"} />
-          </Center>
+          children
         )
       ) : (
         <Text>
