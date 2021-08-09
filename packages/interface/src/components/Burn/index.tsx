@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import Image from "next/image";
 import {
   Box,
@@ -23,7 +22,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, SettingsIcon, RepeatIcon } from "@chakra-ui/icons";
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 import { Burn as BurnInterface } from "../../hooks/useBurn";
 import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
@@ -49,6 +48,7 @@ function Burn({
   approve,
   burn,
   fetchTrade,
+  priceImpact,
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider, chainId } = useWeb3React();
@@ -60,39 +60,6 @@ function Burn({
     snxDecimals,
     debtBalanceOf,
   } = balances;
-  const priceImpact: string = useMemo(
-    () =>
-      snxUSDAmountBN.gt(BigNumber.from("0")) &&
-      sUSDAmountBN.gt(BigNumber.from("0")) &&
-      !loading
-        ? snxUSDAmountBN.gt(sUSDAmountBN)
-          ? "-" +
-            formatAmount(
-              (
-                BigNumber.from("10000")
-                  .sub(
-                    sUSDAmountBN
-                      .mul(BigNumber.from("10000"))
-                      .div(snxUSDAmountBN)
-                  )
-                  .toNumber() / 100
-              ).toString()
-            )
-          : "+" +
-            formatAmount(
-              (
-                BigNumber.from("10000")
-                  .sub(
-                    snxUSDAmountBN
-                      .mul(BigNumber.from("10000"))
-                      .div(sUSDAmountBN)
-                  )
-                  .toNumber() / 100
-              ).toString()
-            )
-        : "+0",
-    [snxUSDAmountBN, sUSDAmountBN, loading]
-  );
 
   return (
     <Box {...props}>

@@ -20,6 +20,7 @@ import {
   tryParseUnits,
   fetchSwapURL,
   OneInchSwap,
+  formatAmount,
 } from "../utils";
 
 export interface Burn {
@@ -34,6 +35,7 @@ export interface Burn {
   isApproved: boolean;
   isValid: boolean;
   isInputValid: boolean;
+  priceImpact: string;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
@@ -118,6 +120,40 @@ function useBurn(): Burn {
     sUSDAmountBN.lte(debtBalanceOf);
   const isInputValid: boolean =
     sUSDAmountBN.gte(BigNumber.from("0")) && sUSDAmountBN.lte(debtBalanceOf);
+
+  const priceImpact: string = useMemo(
+    () =>
+      snxUSDAmountBN.gt(BigNumber.from("0")) &&
+      sUSDAmountBN.gt(BigNumber.from("0")) &&
+      !loading
+        ? snxUSDAmountBN.gt(sUSDAmountBN)
+          ? "-" +
+            formatAmount(
+              (
+                BigNumber.from("10000")
+                  .sub(
+                    sUSDAmountBN
+                      .mul(BigNumber.from("10000"))
+                      .div(snxUSDAmountBN)
+                  )
+                  .toNumber() / 100
+              ).toString()
+            )
+          : "+" +
+            formatAmount(
+              (
+                BigNumber.from("10000")
+                  .sub(
+                    snxUSDAmountBN
+                      .mul(BigNumber.from("10000"))
+                      .div(sUSDAmountBN)
+                  )
+                  .toNumber() / 100
+              ).toString()
+            )
+        : "+0",
+    [snxUSDAmountBN, sUSDAmountBN, loading]
+  );
 
   const setMaxSUSD: () => void = useCallback(() => {
     const value: string = ethers.utils.formatUnits(debtBalanceOf, sUSDDecimals);
@@ -321,6 +357,7 @@ function useBurn(): Burn {
     isApproved,
     isValid,
     isInputValid,
+    priceImpact,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,
