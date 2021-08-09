@@ -61,6 +61,7 @@ function useBurn(): Burn {
     rateForCurrency,
     canBurnFor,
     allowance,
+    balanceOf,
   } = balances;
   const { snx, sUSD, delegateApprovals } = synthetixAddresses;
   const [snxAmount, setSnxAmount] = useState<string>("0");
@@ -122,7 +123,8 @@ function useBurn(): Burn {
   const isValid: boolean =
     sUSDAmountBN.gt(BigNumber.from("0")) &&
     snxAmountBN.gt(BigNumber.from("0")) &&
-    sUSDAmountBN.lte(debtBalanceOf);
+    sUSDAmountBN.lte(debtBalanceOf) &&
+    snxAmountBN.lte(balanceOf);
   const isInputValid: boolean =
     sUSDAmountBN.gte(BigNumber.from("0")) &&
     sUSDAmountBN.lte(debtBalanceOf) &&
