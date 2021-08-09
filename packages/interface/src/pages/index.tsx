@@ -29,32 +29,33 @@ function Home(): JSX.Element {
       </Head>
       <Box p={2}>
         <Header>Burn sUSD Debt with Staked SNX</Header>
-        <Loading>
-          <Info />
-          <Box
-            display={{ base: "none", md: "flex" }}
-            marginRight="10"
-            marginLeft="10"
-            marginTop="5"
-          >
-            <Grid width="full" templateColumns="repeat(3, 1fr)">
-              <GridItem colSpan={2}>
-                <Burn props={{ marginRight: 10 }} {...burn} />
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Data />
-              </GridItem>
-            </Grid>
-          </Box>
-          <Box display={{ base: "flex-col", md: "none" }} margin="2">
-            <Center>
-              <Burn {...burn} />
-            </Center>
-            <Center>
-              <Data props={{ justifyContent: "center", marginTop: "5" }} />
-            </Center>
-          </Box>
-        </Loading>
+        <Center>
+          <Loading props={{ marginBottom: "2" }} />
+        </Center>
+        <Info />
+        <Box
+          display={{ base: "none", md: "flex" }}
+          marginRight="10"
+          marginLeft="10"
+          marginTop="5"
+        >
+          <Grid width="full" templateColumns="repeat(3, 1fr)">
+            <GridItem colSpan={2}>
+              <Burn props={{ marginRight: 10 }} {...burn} />
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Data />
+            </GridItem>
+          </Grid>
+        </Box>
+        <Box display={{ base: "flex-col", md: "none" }} margin="2">
+          <Center>
+            <Burn {...burn} />
+          </Center>
+          <Center>
+            <Data props={{ justifyContent: "center", marginTop: "5" }} />
+          </Center>
+        </Box>
       </Box>
     </Layout>
   );

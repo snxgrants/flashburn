@@ -1,26 +1,31 @@
-import { ReactNode } from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { Box, Text, Link, BoxProps } from "@chakra-ui/react";
 import { addresses } from "@snx-flash-tool/contracts/constants";
 import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
 
-function Loading({ children }: { children?: ReactNode }): JSX.Element {
+function Loading({ props }: { props?: BoxProps }): JSX.Element | null {
+  const router = useRouter();
   const { chainId } = useWeb3React();
   const { error } = useSynthetix();
 
-  return (
-    <Box>
-      {chainId in addresses ? (
-        error ? (
-          <Text>Failed to load data. Please refresh the page.</Text>
-        ) : (
-          children
-        )
-      ) : (
-        <Text>
-          You are connected to the wrong chain. Please switch to mainnet.
+  return chainId in addresses ? (
+    error ? (
+      <Box {...props}>
+        <Text fontWeight="bold" textColor="crimson">
+          Failed to load data. Please{" "}
+          <Link textDecoration="underline" onClick={() => router.reload()}>
+            reload
+          </Link>{" "}
+          and try again.
         </Text>
-      )}
+      </Box>
+    ) : null
+  ) : (
+    <Box {...props}>
+      <Text fontWeight="bold" textColor="crimson">
+        You are connected to the wrong network. Please switch to mainnet.
+      </Text>
     </Box>
   );
 }
