@@ -38,8 +38,10 @@ export interface Burn {
   priceImpact: string;
   oneInchError: boolean;
   amountError: boolean;
+  slippage: string;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
+  setSlippage: (value: string) => void;
   setMaxSUSD: () => void;
   fetchTrade: () => Promise<void>;
   approveBurn: () => Promise<void>;
@@ -379,9 +381,11 @@ function useBurn(): Burn {
     priceImpact,
     oneInchError,
     amountError,
+    slippage,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,
+    setSlippage,
     fetchTrade,
     approveBurn,
     approve,

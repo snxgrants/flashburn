@@ -17,8 +17,8 @@ import {
   PopoverBody,
   PopoverArrow,
   PopoverCloseButton,
-  Input,
   Text,
+  Select,
   Link,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, SettingsIcon, RepeatIcon } from "@chakra-ui/icons";
@@ -38,6 +38,7 @@ function Burn({
   setSnxAmount,
   setSUSDAmount,
   setMaxSUSD,
+  setSlippage,
   isSUSDMax,
   loading,
   isBurnApproved,
@@ -50,6 +51,7 @@ function Burn({
   burn,
   fetchTrade,
   priceImpact,
+  slippage,
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider, chainId } = useWeb3React();
@@ -62,6 +64,8 @@ function Burn({
     debtBalanceOf,
   } = balances;
   const isRefreshDisabled: boolean = loading || sUSDAmountBN.toString() === "0";
+
+  const options: string[] = ["0.1", "0.5", "1", "3"];
 
   return (
     <Box {...props}>
@@ -119,18 +123,21 @@ function Burn({
           </PopoverTrigger>
           <PopoverContent maxWidth="60" bg="#06061B">
             <PopoverArrow />
-            <PopoverCloseButton />
+            <PopoverCloseButton marginTop="1" />
             <PopoverHeader>Settings</PopoverHeader>
             <PopoverBody>
               <Flex justifyContent="space-between">
-                <Text marginTop="1">Slippage (%)</Text>
-                <Input
-                  disabled
-                  width="20"
+                <Text marginTop="1">Slippage</Text>
+                <Select
+                  width="25"
                   height="8"
-                  type="number"
-                  value={0.5}
-                />
+                  value={slippage}
+                  onChange={(e) => setSlippage(e.target.value)}
+                >
+                  {options.map((value) => (
+                    <option key={value} value={value}>{`${value}%`}</option>
+                  ))}
+                </Select>
               </Flex>
             </PopoverBody>
           </PopoverContent>
