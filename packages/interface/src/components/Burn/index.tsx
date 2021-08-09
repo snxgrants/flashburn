@@ -45,6 +45,7 @@ function Burn({
   isValid,
   isInputValid,
   oneInchError,
+  amountError,
   approveBurn,
   approve,
   burn,
@@ -229,6 +230,13 @@ function Burn({
               try again
             </Link>
             .
+          </Text>
+        </Center>
+      )}
+      {amountError && (
+        <Center marginTop="1">
+          <Text fontWeight="bold" textColor="crimson">
+            Invalid amount. Please enter a valid amount.
           </Text>
         </Center>
       )}

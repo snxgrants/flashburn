@@ -37,6 +37,7 @@ export interface Burn {
   isInputValid: boolean;
   priceImpact: string;
   oneInchError: boolean;
+  amountError: boolean;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
@@ -66,6 +67,7 @@ function useBurn(): Burn {
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
   const [slippage, setSlippage] = useState<string>("0.5");
   const [loading, setLoading] = useState<boolean>(false);
+  const [amountError, setAmountError] = useState<boolean>(false);
   const [oneInchError, setOneInchError] = useState<boolean>(false);
   const [swapData, setSwapData] = useState<{ to: string; data: string }>();
 
@@ -76,8 +78,9 @@ function useBurn(): Burn {
     [snxAmount, snxDecimals]
   );
   const sUSDAmountBN: BigNumber = useMemo(
-    () => tryParseUnits(stripInputValue(sUSDAmount), sUSDDecimals),
-    [sUSDAmount, sUSDDecimals]
+    () =>
+      tryParseUnits(stripInputValue(sUSDAmount), sUSDDecimals, setAmountError),
+    [sUSDAmount, sUSDDecimals, setAmountError]
   );
 
   const slippageBN: BigNumber = useMemo(
@@ -121,7 +124,9 @@ function useBurn(): Burn {
     snxAmountBN.gt(BigNumber.from("0")) &&
     sUSDAmountBN.lte(debtBalanceOf);
   const isInputValid: boolean =
-    sUSDAmountBN.gte(BigNumber.from("0")) && sUSDAmountBN.lte(debtBalanceOf);
+    sUSDAmountBN.gte(BigNumber.from("0")) &&
+    sUSDAmountBN.lte(debtBalanceOf) &&
+    !amountError;
 
   const priceImpact: string = useMemo(
     () =>
@@ -366,6 +371,7 @@ function useBurn(): Burn {
     isInputValid,
     priceImpact,
     oneInchError,
+    amountError,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,
