@@ -121,8 +121,8 @@ function Burn({
           marginTop="2"
           marginRight="1"
           border="2px"
-          aria-label="Search database"
-          disabled={loading}
+          aria-label="Reload prices"
+          disabled={loading || sUSDAmountBN.toString() === "0"}
           onClick={fetchTrade}
           icon={
             loading ? (
