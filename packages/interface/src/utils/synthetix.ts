@@ -55,12 +55,12 @@ export async function getSynthetixAddresses(
   chainId: number
 ): Promise<SynthetixAddresses> {
   const multicall: Multicall = Multicall__factory.connect(
-    addresses[chainId].multicall,
+    addresses[chainId in addresses ? chainId : 1].multicall,
     provider
   );
 
   const getAddressesCalls: Call[] = addressKeys.map((addressKey: string) => ({
-    target: addresses[chainId].addressResolver,
+    target: addresses[chainId in addresses ? chainId : 1].addressResolver,
     callData: IAddressResolver__factory.createInterface().encodeFunctionData(
       "getAddress",
       [addressKey]
@@ -98,10 +98,11 @@ export async function getSynthetixBalances(
   synthetixAddresses: SynthetixAddresses
 ): Promise<SynthetixBalances> {
   const multicall: Multicall = Multicall__factory.connect(
-    addresses[chainId].multicall,
+    addresses[chainId in addresses ? chainId : 1].multicall,
     provider
   );
-  const snxFlashToolAddress: string = addresses[chainId].snxFlashTool;
+  const snxFlashToolAddress: string =
+    addresses[chainId in addresses ? chainId : 1].snxFlashTool;
 
   const balancesCalls: Call[] = [
     {

@@ -10,7 +10,7 @@ function useTransaction(): {
   const toast = useToast();
   const { chainId } = useWeb3React();
   const explorer: string =
-    chainId in addresses ? addresses[chainId].explorer : addresses[1].explorer;
+    addresses[chainId in addresses ? chainId : 1].explorer;
 
   const sendTransaction = useCallback(
     async (transaction: Promise<ContractTransaction>) => {

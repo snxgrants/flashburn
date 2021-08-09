@@ -30,7 +30,7 @@ function WalletModal({
     useClipboard(address);
   const { chainId } = useWeb3React();
   const explorer: string =
-    chainId in addresses ? addresses[chainId].explorer : addresses[1].explorer;
+    addresses[chainId in addresses ? chainId : 1].explorer;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

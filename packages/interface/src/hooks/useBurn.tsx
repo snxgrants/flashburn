@@ -74,7 +74,8 @@ function useBurn(): Burn {
   const [oneInchError, setOneInchError] = useState<boolean>(false);
   const [swapData, setSwapData] = useState<{ to: string; data: string }>();
 
-  const snxFlashToolAddress: string = addresses[chainId].snxFlashTool;
+  const snxFlashToolAddress: string =
+    addresses[chainId in addresses ? chainId : 1].snxFlashTool;
 
   const snxAmountBN: BigNumber = useMemo(
     () => tryParseUnits(stripInputValue(snxAmount), snxDecimals),
