@@ -228,8 +228,8 @@ function Burn({
             1inch failed. Please{" "}
             <Link textDecoration="underline" onClick={() => fetchTrade()}>
               try again
-            </Link>
-            .
+            </Link>{" "}
+            or enter a valid amount.
           </Text>
         </Center>
       )}

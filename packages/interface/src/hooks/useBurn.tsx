@@ -173,8 +173,12 @@ function useBurn(): Burn {
       setOneInchError(false);
       try {
         let searching: boolean = true;
+        let searchCount: number = 0;
         let tradeSUSDAmount: BigNumber = sUSDSNXAmountBN;
         while (searching) {
+          if (searchCount > 15) {
+            throw new Error("Search exceeded allowed iterations.");
+          }
           const oneInchTrade: OneInchSwap | undefined =
             await cancellableRequest(
               fetchSwapURL(
@@ -235,6 +239,7 @@ function useBurn(): Burn {
           } else {
             searching = false;
           }
+          searchCount += 1;
         }
       } catch (error) {
         console.log(error.message);
