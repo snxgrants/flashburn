@@ -8,6 +8,7 @@ import {
   Context,
   ReactNode,
 } from "react";
+import { useRouter } from "next/router";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { INFURA_ID } from "../constants";
@@ -70,6 +71,7 @@ export function Web3ReactProvider({
 }: {
   children: ReactNode;
 }): JSX.Element {
+  const router = useRouter();
   const [state, dispatch] = useReducer<(state: State, action: Action) => State>(
     reducer,
     initialState
@@ -124,10 +126,10 @@ export function Web3ReactProvider({
     async function () {
       if (web3Modal) {
         await web3Modal.clearCachedProvider();
-        window.location.reload();
+        router.reload();
       }
     },
-    [web3Modal]
+    [web3Modal, router]
   );
 
   useEffect(() => {
@@ -159,7 +161,7 @@ export function Web3ReactProvider({
       newNetwork: ethers.providers.Networkish,
       oldNetwork: ethers.providers.Networkish
     ) => {
-      if (oldNetwork) window.location.reload();
+      if (oldNetwork) router.reload();
     };
     if (provider !== undefined) provider.on("network", listener);
     return () => {
@@ -168,12 +170,12 @@ export function Web3ReactProvider({
   }, [provider]);
 
   useEffect(() => {
-    const accountsListener = () => window.location.reload();
+    const accountsListener = () => router.reload();
     const disconnectListener = () => {
       (async () => {
         if (web3Modal) {
           await web3Modal.clearCachedProvider();
-          window.location.reload();
+          router.reload();
         }
       })();
     };
