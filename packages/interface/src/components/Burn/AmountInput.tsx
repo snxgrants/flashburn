@@ -13,6 +13,7 @@ import {
   Spinner,
   Tooltip,
 } from "@chakra-ui/react";
+// import { InfoOutlineIcon } from "@chakra-ui/icons";
 import { formatAmount } from "../../utils";
 
 function AmountInput({
@@ -92,15 +93,21 @@ function AmountInput({
             <Text fontSize="sm" marginRight="4" color="#11849e">
               {priceImpact !== undefined ? (
                 <>
-                  <Tooltip
-                    label="Minimum Swap Output"
-                    aria-label="Minimum Swap Output"
-                  >
+                  <Tooltip label="Minimum Swap Output" aria-label="Swap Output">
                     {`$${formatAmount(usdAmount)}`}
                   </Tooltip>
-                  <Tooltip label="Price Impact" aria-label="Price Impact">
-                    {` (${priceImpact}%)`}
+                  <Tooltip
+                    label="Maximum Price Impact"
+                    aria-label="Price Impact"
+                  >
+                    {` (${priceImpact}%) `}
                   </Tooltip>
+                  {/* <Tooltip
+                    label="Any excess sUSD will be automatically sent back to you during the swap"
+                    aria-label="Info"
+                  >
+                    <InfoOutlineIcon marginBottom="0.5" size="xs" />
+                  </Tooltip> */}
                 </>
               ) : (
                 `$${formatAmount(usdAmount)}`

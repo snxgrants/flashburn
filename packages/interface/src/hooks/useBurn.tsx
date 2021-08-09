@@ -138,10 +138,7 @@ function useBurn(): Burn {
                 snx,
                 sUSD,
                 snxFlashToolAddress,
-                tradeSUSDAmount
-                  .mul(slippageBN)
-                  .div(BigNumber.from("1000"))
-                  .toString(),
+                tradeSUSDAmount.toString(),
                 slippage
               ),
               false
@@ -162,7 +159,11 @@ function useBurn(): Burn {
               setLoading(false);
               setSwapData(undefined);
             } else {
-              if (receiveSUSDAmount.lt(sUSDAmountBN)) {
+              if (
+                receiveSUSDAmount.lt(
+                  sUSDAmountBN.mul(slippageBN).div(BigNumber.from("1000"))
+                )
+              ) {
                 const margin: BigNumber = receiveSUSDAmount
                   .mul(BigNumber.from("100"))
                   .div(sUSDAmountBN);
