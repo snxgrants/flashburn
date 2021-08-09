@@ -217,7 +217,7 @@ function Burn({
       <Center marginTop="3">
         <Flex fontWeight="bold">
           Powered by{" "}
-          <Box marginTop="0.5" marginLeft="1">
+          <Box marginTop="0.5" marginLeft="1.5">
             <Link
               href={`https://app.1inch.io/#/${
                 chainId === 1337 ? 1 : chainId
