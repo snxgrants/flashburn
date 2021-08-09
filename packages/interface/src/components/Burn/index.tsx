@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import Image from "next/image";
 import {
   Box,
   BoxProps,
@@ -19,6 +20,7 @@ import {
   PopoverCloseButton,
   Input,
   Text,
+  Link,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, SettingsIcon, RepeatIcon } from "@chakra-ui/icons";
 import { ethers, BigNumber } from "ethers";
@@ -49,7 +51,7 @@ function Burn({
   fetchTrade,
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
-  const { provider } = useWeb3React();
+  const { provider, chainId } = useWeb3React();
   const { balances, loaded } = useSynthetix();
   const {
     rateForCurrency,
@@ -235,6 +237,21 @@ function Burn({
         ) : (
           <WalletButton />
         )}
+      </Center>
+      <Center marginTop="3">
+        <Flex fontWeight="bold">
+          Powered by{" "}
+          <Box marginTop="0.5" marginLeft="1">
+            <Link
+              href={`https://app.1inch.io/#/${
+                chainId === 1337 ? 1 : chainId
+              }/swap/SNX/sUSD`}
+              isExternal
+            >
+              <Image src={"/1inch.svg"} alt={"1inch"} width={20} height={20} />
+            </Link>
+          </Box>
+        </Flex>
       </Center>
     </Box>
   );
