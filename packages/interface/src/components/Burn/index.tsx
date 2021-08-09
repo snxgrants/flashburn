@@ -20,7 +20,7 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import { ArrowDownIcon, SettingsIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, SettingsIcon, RepeatIcon } from "@chakra-ui/icons";
 import { ethers, BigNumber } from "ethers";
 import { Burn as BurnInterface } from "../../hooks/useBurn";
 import useWeb3React from "../../hooks/useWeb3React";
@@ -46,6 +46,7 @@ function Burn({
   approveBurn,
   approve,
   burn,
+  fetchTrade,
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider } = useWeb3React();
@@ -113,6 +114,25 @@ function Burn({
             )}
           </StatNumber>
         </Stat>
+        <IconButton
+          bg="#06061B"
+          marginTop="2"
+          marginRight="1"
+          border="2px"
+          aria-label="Search database"
+          disabled={loading}
+          onClick={fetchTrade}
+          icon={
+            loading ? (
+              <Spinner w={6} h={6} />
+            ) : (
+              <RepeatIcon color="#00D1FF" w={6} h={6} />
+            )
+          }
+          _hover={{
+            bg: loading ? "#06061B" : "white",
+          }}
+        />
         <Popover id={"popover"}>
           <PopoverTrigger>
             <IconButton
@@ -174,7 +194,6 @@ function Burn({
         isSUSDMax={isSUSDMax}
         isValid={isInputValid}
         usdAmount={ethers.utils.formatUnits(sUSDAmountBN, sUSDDecimals)}
-        loading={loading}
         priceImpact={priceImpact}
         badgeAmount={
           provider !== undefined
@@ -200,14 +219,14 @@ function Burn({
             <Button
               marginRight="1"
               color="black"
-              disabled={!(isBurnApproved && !isApproved && isValid)}
+              disabled={!(isBurnApproved && !isApproved && isValid && !loading)}
               onClick={approve}
             >
               Approve SNX
             </Button>
             <Button
               color="black"
-              disabled={!(isBurnApproved && isApproved && isValid)}
+              disabled={!(isBurnApproved && isApproved && isValid && !loading)}
               onClick={burn}
             >
               Burn

@@ -10,7 +10,6 @@ import {
   Text,
   InputRightElement,
   Button,
-  Spinner,
   Tooltip,
 } from "@chakra-ui/react";
 // import { InfoOutlineIcon } from "@chakra-ui/icons";
@@ -27,7 +26,6 @@ function AmountInput({
   badgeAmount,
   isSUSDMax,
   usdAmount,
-  loading,
   isValid,
   priceImpact,
   props,
@@ -42,7 +40,6 @@ function AmountInput({
   badgeAmount: string;
   isSUSDMax: boolean;
   usdAmount: string;
-  loading?: boolean;
   isValid: boolean;
   priceImpact?: string;
   props?: BoxProps;
@@ -87,9 +84,6 @@ function AmountInput({
             </InputGroup>
           </Flex>
           <Flex marginLeft="auto">
-            {loading !== undefined && loading && (
-              <Spinner marginTop="1.5" marginRight="1.5" size="xs" />
-            )}
             <Text fontSize="sm" marginRight="4" color="#11849e">
               {priceImpact !== undefined ? (
                 <>
