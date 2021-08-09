@@ -36,6 +36,7 @@ export interface Burn {
   isValid: boolean;
   isInputValid: boolean;
   priceImpact: string;
+  oneInchError: boolean;
   setSnxAmount: (value: string) => void;
   setSUSDAmount: (value: string) => void;
   setMaxSUSD: () => void;
@@ -65,6 +66,7 @@ function useBurn(): Burn {
   const [sUSDAmount, setSUSDAmount] = useState<string>("0");
   const [slippage, setSlippage] = useState<string>("0.5");
   const [loading, setLoading] = useState<boolean>(false);
+  const [oneInchError, setOneInchError] = useState<boolean>(false);
   const [swapData, setSwapData] = useState<{ to: string; data: string }>();
 
   const snxFlashToolAddress: string = addresses[chainId].snxFlashTool;
@@ -163,6 +165,7 @@ function useBurn(): Burn {
   const fetchTrade: () => Promise<void> = useCallback(async () => {
     if (sUSDSNXAmountBN.gt(BigNumber.from("0"))) {
       setLoading(true);
+      setOneInchError(false);
       try {
         let searching: boolean = true;
         let tradeSUSDAmount: BigNumber = sUSDSNXAmountBN;
@@ -193,6 +196,7 @@ function useBurn(): Burn {
               searching = false;
               setSnxAmount("0");
               setLoading(false);
+              setOneInchError(false);
               setSwapData(undefined);
             } else {
               if (
@@ -220,6 +224,7 @@ function useBurn(): Burn {
                 });
                 searching = false;
                 setLoading(false);
+                setOneInchError(false);
               }
             }
           } else {
@@ -231,11 +236,13 @@ function useBurn(): Burn {
         setSnxAmount("0");
         setLoading(false);
         setSwapData(undefined);
+        setOneInchError(true);
       }
     } else {
       setSnxAmount("0");
       setLoading(false);
       setSwapData(undefined);
+      setOneInchError(false);
       cancelAll();
     }
   }, [
@@ -358,6 +365,7 @@ function useBurn(): Burn {
     isValid,
     isInputValid,
     priceImpact,
+    oneInchError,
     setSnxAmount,
     setSUSDAmount,
     setMaxSUSD,

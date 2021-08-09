@@ -44,6 +44,7 @@ function Burn({
   isApproved,
   isValid,
   isInputValid,
+  oneInchError,
   approveBurn,
   approve,
   burn,
@@ -220,6 +221,17 @@ function Burn({
           </Box>
         </Flex>
       </Center>
+      {oneInchError && (
+        <Center marginTop="1">
+          <Text fontWeight="bold" textColor="crimson">
+            1inch failed. Please{" "}
+            <Link textDecoration="underline" onClick={() => fetchTrade()}>
+              try again
+            </Link>
+            .
+          </Text>
+        </Center>
+      )}
     </Box>
   );
 }
