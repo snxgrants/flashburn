@@ -61,6 +61,7 @@ function Burn({
     snxDecimals,
     debtBalanceOf,
   } = balances;
+  const isRefreshDisabled: boolean = loading || sUSDAmountBN.toString() === "0";
 
   return (
     <Box {...props}>
@@ -90,7 +91,7 @@ function Burn({
           marginRight="1"
           border="2px"
           aria-label="Reload prices"
-          disabled={loading || sUSDAmountBN.toString() === "0"}
+          disabled={isRefreshDisabled}
           onClick={fetchTrade}
           icon={
             loading ? (
@@ -100,7 +101,7 @@ function Burn({
             )
           }
           _hover={{
-            bg: loading ? "#06061B" : "white",
+            bg: isRefreshDisabled ? "#06061B" : "white",
           }}
         />
         <Popover id={"popover"}>
