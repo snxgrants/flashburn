@@ -53,7 +53,7 @@ function Burn({
   props,
 }: BurnInterface & { props?: BoxProps }): JSX.Element {
   const { provider, chainId } = useWeb3React();
-  const { balances, loaded } = useSynthetix();
+  const { balances, loaded, error } = useSynthetix();
   const {
     rateForCurrency,
     sUSDDecimals,
@@ -69,7 +69,7 @@ function Burn({
         <Stat>
           <StatLabel>SNX Price</StatLabel>
           <StatNumber>
-            {provider !== undefined ? (
+            {provider !== undefined && !error ? (
               loaded ? (
                 `$${formatAmount(
                   ethers.utils.formatUnits(rateForCurrency, sUSDDecimals)
