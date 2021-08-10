@@ -298,6 +298,7 @@ function useBurn(): Burn {
     address,
     snxFlashToolAddress,
     fetchBalances,
+    sendTransaction,
   ]);
 
   const approve: () => Promise<void> = useCallback(async () => {
@@ -325,6 +326,7 @@ function useBurn(): Burn {
     snxFlashToolAddress,
     snxAmountBN,
     fetchBalances,
+    sendTransaction,
   ]);
 
   const burn: () => Promise<void> = useCallback(async () => {
@@ -361,6 +363,7 @@ function useBurn(): Burn {
     sUSDAmountBN,
     snxAmountBN,
     fetchBalances,
+    sendTransaction,
   ]);
 
   useEffect(() => {
