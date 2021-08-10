@@ -23,6 +23,12 @@ import {
   formatAmount,
 } from "../utils";
 
+export interface SwapData {
+  to: string;
+  data: string;
+  snxAmount: BigNumber;
+}
+
 export interface Burn {
   snxAmount: string;
   sUSDAmount: string;
@@ -46,10 +52,11 @@ export interface Burn {
   setSUSDAmount: (value: string) => void;
   setSlippage: (value: string) => void;
   setMaxSUSD: () => void;
-  fetchTrade: () => Promise<void>;
+  fetchTrade: () => Promise<SwapData | undefined>;
   approveBurn: () => Promise<void>;
   approve: () => Promise<void>;
-  burn: () => Promise<void>;
+  burn: (swapData: SwapData | undefined) => Promise<void>;
+  burnButton: () => Promise<void>;
 }
 
 const approveBuffer: string = "1100";
@@ -78,7 +85,6 @@ function useBurn(): Burn {
   const [loadingBurn, setLoadingBurn] = useState<boolean>(false);
   const [amountError, setAmountError] = useState<boolean>(false);
   const [oneInchError, setOneInchError] = useState<boolean>(false);
-  const [swapData, setSwapData] = useState<{ to: string; data: string }>();
 
   const snxFlashToolAddress: string =
     addresses[chainId in addresses ? chainId : 1].snxFlashTool;
@@ -178,109 +184,112 @@ function useBurn(): Burn {
     setSUSDAmount(value);
   }, [debtBalanceOf, sUSDDecimals, setSUSDAmount]);
 
-  const fetchTrade: () => Promise<void> = useCallback(async () => {
-    if (sUSDSNXAmountBN.gt(BigNumber.from("0"))) {
-      setLoading(true);
-      setOneInchError(false);
-      try {
-        let searching: boolean = true;
-        let searchCount: number = 0;
-        let tradeSUSDAmount: BigNumber = sUSDSNXAmountBN;
-        while (searching) {
-          if (searchCount > 15) {
-            throw new Error("Search exceeded allowed iterations.");
-          }
-          const oneInchTrade: OneInchSwap | undefined =
-            await cancellableRequest(
-              fetchSwapURL(
-                chainId === 1337 ? 1 : chainId,
-                snx,
-                sUSD,
-                snxFlashToolAddress,
-                tradeSUSDAmount.toString(),
-                slippage
-              ),
-              false
-            );
-          if (oneInchTrade) {
-            const sendSnxAmount: BigNumber = BigNumber.from(
-              oneInchTrade.fromTokenAmount
-            );
-            const receiveSUSDAmount: BigNumber = BigNumber.from(
-              oneInchTrade.toTokenAmount
-            );
-            if (
-              sendSnxAmount.lte(BigNumber.from("0")) ||
-              receiveSUSDAmount.lte(BigNumber.from("0"))
-            ) {
-              searching = false;
-              setSnxAmount("0");
-              setLoading(false);
-              setOneInchError(false);
-              setSwapData(undefined);
-            } else {
+  const fetchTrade: () => Promise<SwapData | undefined> =
+    useCallback(async () => {
+      let swapData:
+        | { to: string; data: string; snxAmount: BigNumber }
+        | undefined = undefined;
+      if (sUSDSNXAmountBN.gt(BigNumber.from("0"))) {
+        setLoading(true);
+        setOneInchError(false);
+        try {
+          let searching: boolean = true;
+          let searchCount: number = 0;
+          let tradeSUSDAmount: BigNumber = sUSDSNXAmountBN;
+          while (searching) {
+            if (searchCount > 15) {
+              throw new Error("Search exceeded allowed iterations.");
+            }
+            const oneInchTrade: OneInchSwap | undefined =
+              await cancellableRequest(
+                fetchSwapURL(
+                  chainId === 1337 ? 1 : chainId,
+                  snx,
+                  sUSD,
+                  snxFlashToolAddress,
+                  tradeSUSDAmount.toString(),
+                  slippage
+                ),
+                false
+              );
+            if (oneInchTrade) {
+              const sendSnxAmount: BigNumber = BigNumber.from(
+                oneInchTrade.fromTokenAmount
+              );
+              const receiveSUSDAmount: BigNumber = BigNumber.from(
+                oneInchTrade.toTokenAmount
+              );
               if (
-                receiveSUSDAmount.lt(
-                  sUSDAmountBN.mul(slippageBN).div(BigNumber.from("1000"))
-                )
+                sendSnxAmount.lte(BigNumber.from("0")) ||
+                receiveSUSDAmount.lte(BigNumber.from("0"))
               ) {
-                const margin: BigNumber = receiveSUSDAmount
-                  .mul(BigNumber.from("100"))
-                  .div(sUSDAmountBN);
-                let incrementAmount: BigNumber = BigNumber.from("1005");
-                if (margin.lt(BigNumber.from("99"))) {
-                  incrementAmount = BigNumber.from("100000").div(margin);
-                }
-                tradeSUSDAmount = tradeSUSDAmount
-                  .mul(incrementAmount)
-                  .div(BigNumber.from("1000"));
-              } else {
-                setSnxAmount(
-                  ethers.utils.formatUnits(sendSnxAmount, snxDecimals)
-                );
-                setSwapData({
-                  to: oneInchTrade.tx.to,
-                  data: oneInchTrade.tx.data,
-                });
                 searching = false;
+                setSnxAmount("0");
                 setLoading(false);
                 setOneInchError(false);
+              } else {
+                if (
+                  receiveSUSDAmount.lt(
+                    sUSDAmountBN.mul(slippageBN).div(BigNumber.from("1000"))
+                  )
+                ) {
+                  const margin: BigNumber = receiveSUSDAmount
+                    .mul(BigNumber.from("100"))
+                    .div(sUSDAmountBN);
+                  let incrementAmount: BigNumber = BigNumber.from("1005");
+                  if (margin.lt(BigNumber.from("99"))) {
+                    incrementAmount = BigNumber.from("100000").div(margin);
+                  }
+                  tradeSUSDAmount = tradeSUSDAmount
+                    .mul(incrementAmount)
+                    .div(BigNumber.from("1000"));
+                } else {
+                  setSnxAmount(
+                    ethers.utils.formatUnits(sendSnxAmount, snxDecimals)
+                  );
+                  searching = false;
+                  setLoading(false);
+                  setOneInchError(false);
+                  swapData = {
+                    to: oneInchTrade.tx.to,
+                    data: oneInchTrade.tx.data,
+                    snxAmount: sendSnxAmount,
+                  };
+                }
               }
+            } else {
+              searching = false;
             }
-          } else {
-            searching = false;
+            searchCount += 1;
           }
-          searchCount += 1;
+        } catch (error) {
+          console.log(error.message);
+          setSnxAmount("0");
+          setLoading(false);
+          setOneInchError(true);
         }
-      } catch (error) {
-        console.log(error.message);
+      } else {
         setSnxAmount("0");
         setLoading(false);
-        setSwapData(undefined);
-        setOneInchError(true);
+        setOneInchError(false);
+        cancelAll();
       }
-    } else {
-      setSnxAmount("0");
-      setLoading(false);
-      setSwapData(undefined);
-      setOneInchError(false);
-      cancelAll();
-    }
-  }, [
-    chainId,
-    snxFlashToolAddress,
-    snx,
-    sUSD,
-    sUSDAmountBN,
-    sUSDSNXAmountBN,
-    snxDecimals,
-    slippageBN,
-    slippage,
-    cancellableRequest,
-    setSnxAmount,
-    setLoading,
-    cancelAll,
-  ]);
+      return swapData;
+    }, [
+      chainId,
+      snxFlashToolAddress,
+      snx,
+      sUSD,
+      sUSDAmountBN,
+      sUSDSNXAmountBN,
+      snxDecimals,
+      slippageBN,
+      slippage,
+      cancellableRequest,
+      setSnxAmount,
+      setLoading,
+      cancelAll,
+    ]);
 
   const approveBurn: () => Promise<void> = useCallback(async () => {
     if (
@@ -298,6 +307,8 @@ function useBurn(): Burn {
         () => setLoadingApproveBurn(false)
       );
       if (fetchBalances) await fetchBalances();
+    } else {
+      setLoadingApproveBurn(false);
     }
   }, [
     isBurnApproved,
@@ -328,6 +339,8 @@ function useBurn(): Burn {
         () => setLoadingApprove(false)
       );
       if (fetchBalances) await fetchBalances();
+    } else {
+      setLoadingApprove(false);
     }
   }, [
     isApproved,
@@ -341,45 +354,63 @@ function useBurn(): Burn {
     setLoadingApprove,
   ]);
 
-  const burn: () => Promise<void> = useCallback(async () => {
+  const burn: (swapData: SwapData | undefined) => Promise<void> = useCallback(
+    async (swapData: SwapData | undefined) => {
+      if (
+        isBurnApproved &&
+        isApproved &&
+        isValid &&
+        provider !== undefined &&
+        swapData !== undefined &&
+        snxFlashToolAddress !== ethers.constants.AddressZero &&
+        address !== ethers.constants.AddressZero
+      ) {
+        setLoadingBurn(true);
+        const signer: Signer = await provider.getUncheckedSigner();
+        const snxFlashToolContract: SNXFlashLoanTool =
+          SNXFlashLoanTool__factory.connect(snxFlashToolAddress, signer);
+        await sendTransaction(
+          snxFlashToolContract.burn(
+            isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
+            snxAmountBN,
+            swapData.to,
+            swapData.data
+          ),
+          () => setLoadingBurn(false)
+        );
+        if (fetchBalances) await fetchBalances();
+      } else {
+        setLoadingBurn(false);
+      }
+    },
+    [
+      isBurnApproved,
+      isApproved,
+      isValid,
+      provider,
+      address,
+      snxFlashToolAddress,
+      sUSDAmountBN,
+      snxAmountBN,
+      fetchBalances,
+      sendTransaction,
+      setLoadingBurn,
+    ]
+  );
+
+  const burnButton: () => Promise<void> = useCallback(async () => {
+    setLoadingBurn(true);
+    const swapData: SwapData | undefined = await fetchTrade();
     if (
-      isBurnApproved &&
-      isApproved &&
-      isValid &&
-      provider !== undefined &&
       swapData !== undefined &&
-      snxFlashToolAddress !== ethers.constants.AddressZero &&
-      address !== ethers.constants.AddressZero
+      swapData.snxAmount.gt(BigNumber.from("0")) &&
+      swapData.snxAmount.lte(allowance)
     ) {
-      setLoadingBurn(true);
-      const signer: Signer = await provider.getUncheckedSigner();
-      const snxFlashToolContract: SNXFlashLoanTool =
-        SNXFlashLoanTool__factory.connect(snxFlashToolAddress, signer);
-      await sendTransaction(
-        snxFlashToolContract.burn(
-          isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
-          snxAmountBN,
-          swapData.to,
-          swapData.data
-        ),
-        () => setLoadingBurn(false)
-      );
-      if (fetchBalances) await fetchBalances();
+      await burn(swapData);
+    } else {
+      setLoadingBurn(false);
     }
-  }, [
-    isBurnApproved,
-    isApproved,
-    isValid,
-    provider,
-    swapData,
-    address,
-    snxFlashToolAddress,
-    sUSDAmountBN,
-    snxAmountBN,
-    fetchBalances,
-    sendTransaction,
-    setLoadingBurn,
-  ]);
+  }, [setLoadingBurn, fetchTrade, allowance, burn]);
 
   useEffect(() => {
     fetchTrade();
@@ -412,6 +443,7 @@ function useBurn(): Burn {
     approveBurn,
     approve,
     burn,
+    burnButton,
   };
 }
 

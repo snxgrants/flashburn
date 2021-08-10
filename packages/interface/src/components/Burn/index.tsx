@@ -51,7 +51,7 @@ function Burn({
   loadingBurn,
   approveBurn,
   approve,
-  burn,
+  burnButton,
   fetchTrade,
   priceImpact,
   slippage,
@@ -228,8 +228,9 @@ function Burn({
                   !loadingBurn
                 )
               }
-              onClick={burn}
+              onClick={burnButton}
               isLoading={loadingBurn}
+              loadingText="Burn"
             >
               Burn
             </Button>
