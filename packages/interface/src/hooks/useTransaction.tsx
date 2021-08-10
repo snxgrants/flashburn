@@ -5,7 +5,10 @@ import { addresses } from "@snx-flash-tool/contracts/constants";
 import useWeb3React from "./useWeb3React";
 
 function useTransaction(): {
-  sendTransaction: (transaction: Promise<ContractTransaction>) => Promise<void>;
+  sendTransaction: (
+    transaction: Promise<ContractTransaction>,
+    loaded?: () => void
+  ) => Promise<void>;
 } {
   const toast = useToast();
   const { chainId } = useWeb3React();
@@ -13,7 +16,7 @@ function useTransaction(): {
     addresses[chainId in addresses ? chainId : 1].explorer;
 
   const sendTransaction = useCallback(
-    async (transaction: Promise<ContractTransaction>) => {
+    async (transaction: Promise<ContractTransaction>, loaded?: () => void) => {
       let toastId: ToastId | undefined;
       try {
         toastId = toast({
@@ -26,6 +29,9 @@ function useTransaction(): {
           duration: null,
         });
         const tx = await transaction;
+        if (loaded) {
+          loaded();
+        }
         if (toastId) {
           toast.update(toastId, {
             description: (
@@ -75,6 +81,9 @@ function useTransaction(): {
         }
       } catch (err) {
         console.log(err);
+        if (loaded) {
+          loaded();
+        }
         if (toastId) {
           toast.update(toastId, {
             description: (

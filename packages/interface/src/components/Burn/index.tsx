@@ -46,6 +46,9 @@ function Burn({
   isValid,
   isInputValid,
   oneInchError,
+  loadingApproveBurn,
+  loadingApprove,
+  loadingBurn,
   approveBurn,
   approve,
   burn,
@@ -189,7 +192,9 @@ function Burn({
             <Button
               marginRight="1"
               color="black"
-              disabled={!(!isBurnApproved && isValid)}
+              disabled={!(!isBurnApproved && isValid && !loadingApproveBurn)}
+              isLoading={loadingApproveBurn}
+              loadingText="Approve Burn"
               onClick={approveBurn}
             >
               Approve Burn
@@ -197,15 +202,34 @@ function Burn({
             <Button
               marginRight="1"
               color="black"
-              disabled={!(isBurnApproved && !isApproved && isValid && !loading)}
+              disabled={
+                !(
+                  isBurnApproved &&
+                  !isApproved &&
+                  isValid &&
+                  !loading &&
+                  !loadingApprove
+                )
+              }
               onClick={approve}
+              isLoading={loadingApprove}
+              loadingText="Approve SNX"
             >
               Approve SNX
             </Button>
             <Button
               color="black"
-              disabled={!(isBurnApproved && isApproved && isValid && !loading)}
+              disabled={
+                !(
+                  isBurnApproved &&
+                  isApproved &&
+                  isValid &&
+                  !loading &&
+                  !loadingBurn
+                )
+              }
               onClick={burn}
+              isLoading={loadingBurn}
             >
               Burn
             </Button>
