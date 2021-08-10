@@ -1,4 +1,4 @@
-# [SNX Flash Tool](https://snx-flash-tool.vercel.app/) - Burn sUSD Debt with Staked SNX
+# [SNX Flash Tool](https://snx.gcubed.io/) - Burn sUSD Debt with Staked SNX
 
 ![CI](https://github.com/gg2001/snx-flash-tool/workflows/CI/badge.svg)
 
