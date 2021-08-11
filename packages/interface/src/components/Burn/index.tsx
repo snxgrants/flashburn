@@ -18,7 +18,6 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   Text,
-  Select,
   Link,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, SettingsIcon, RepeatIcon } from "@chakra-ui/icons";
@@ -28,6 +27,7 @@ import useWeb3React from "../../hooks/useWeb3React";
 import useSynthetix from "../../hooks/useSynthetix";
 import WalletButton from "../NavBar/WalletButton";
 import AmountInput from "./AmountInput";
+import SlippageTolerance from "./SlippageTolerance";
 import { formatAmount } from "../../utils";
 
 function Burn({
@@ -67,8 +67,6 @@ function Burn({
     debtBalanceOf,
   } = balances;
   const isRefreshDisabled: boolean = loading || sUSDAmountBN.toString() === "0";
-
-  const slippageOptions: string[] = ["0.1", "0.5", "1", "3"];
 
   return (
     <Box {...props}>
@@ -130,28 +128,10 @@ function Burn({
             <PopoverHeader>Settings</PopoverHeader>
             <PopoverBody>
               <Text marginBottom="2">Slippage tolerance</Text>
-              <Flex>
-                <Select
-                  width="28"
-                  height="8"
-                  marginRight="1"
-                  value={slippage}
-                  onChange={(e) => setSlippage(e.target.value)}
-                >
-                  {slippageOptions.map((value: string) => (
-                    <option key={value} value={value}>{`${value}%`}</option>
-                  ))}
-                </Select>
-                <Button
-                  bg="#06061B"
-                  border="1px"
-                  borderColor="white"
-                  size="sm"
-                  onClick={() => setSlippage("0.5")}
-                >
-                  Auto
-                </Button>
-              </Flex>
+              <SlippageTolerance
+                slippage={slippage}
+                setSlippage={setSlippage}
+              />
             </PopoverBody>
           </PopoverContent>
         </Popover>
