@@ -149,7 +149,7 @@ function Burn({
             ? formatAmount(ethers.utils.formatUnits(balanceOf, snxDecimals))
             : "-"
         }
-        src={"snx.svg"}
+        src={"/snx.svg"}
         alt="snx"
       />
       <Center marginBottom="2" marginTop={-3}>
@@ -172,7 +172,7 @@ function Burn({
               )
             : "-"
         }
-        src={"sUSD.svg"}
+        src={"/sUSD.svg"}
         alt="sUSD"
       />
       <Center marginTop="2">
@@ -239,7 +239,7 @@ function Burn({
               isExternal
             >
               {/* eslint-disable @next/next/no-img-element */}
-              <img src={"oneInch.svg"} alt={"1inch"} width={20} height={20} />
+              <img src={"/oneInch.svg"} alt={"1inch"} width={20} height={20} />
             </Link>
           </Box>
         </Flex>
