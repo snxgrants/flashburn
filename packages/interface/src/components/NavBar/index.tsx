@@ -84,7 +84,7 @@ function NavBar(): JSX.Element {
                 <HStack spacing={4} alignItems={"center"}>
                   {/* eslint-disable @next/next/no-img-element */}
                   <img
-                    src={"/logo.svg"}
+                    src={"logo.svg"}
                     alt="Synthetix Logo"
                     width={48}
                     height={48}
