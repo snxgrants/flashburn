@@ -25,7 +25,8 @@
     "lint:contracts": "yarn workspace @snx-flash-tool/contracts lint",
     "lint:interface": "yarn workspace @snx-flash-tool/interface lint",
     "evm:contracts": "yarn workspace @snx-flash-tool/contracts evm",
-    "migrate:contracts": "yarn workspace @snx-flash-tool/contracts migrate"
+    "migrate:contracts": "yarn workspace @snx-flash-tool/contracts migrate",
+    "export:interface": "yarn workspace @snx-flash-tool/interface export"
   },
   "workspaces": {
     "packages": [

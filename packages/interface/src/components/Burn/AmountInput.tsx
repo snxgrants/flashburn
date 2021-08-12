@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   InputGroup,
   Input,
@@ -55,7 +54,8 @@ function AmountInput({
       <Center>
         <Flex flexDirection="column">
           <Flex>
-            <Image src={src} alt={alt} width={40} height={40} />
+            {/* eslint-disable @next/next/no-img-element */}
+            <img src={src} alt={alt} width={40} height={40} />
             <InputGroup marginLeft="2">
               <Input
                 disabled={disabled}

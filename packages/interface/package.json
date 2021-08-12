@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "export": "next export",
     "build": "yarn run typechain && next build",
     "start": "next start",
     "lint": "next lint --ignore-path ./.eslintignore",

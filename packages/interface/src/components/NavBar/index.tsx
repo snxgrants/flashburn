@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import Image from "next/image";
 import NextLink from "next/link";
 import NavLink from "./NavLink";
 import WalletButton from "./WalletButton";
@@ -83,8 +82,9 @@ function NavBar(): JSX.Element {
             <NextLink href={"/"} passHref>
               <Link marginLeft={{ base: "1", md: "0" }}>
                 <HStack spacing={4} alignItems={"center"}>
-                  <Image
-                    src="/logo.svg"
+                  {/* eslint-disable @next/next/no-img-element */}
+                  <img
+                    src={"/logo.svg"}
                     alt="Synthetix Logo"
                     width={48}
                     height={48}
