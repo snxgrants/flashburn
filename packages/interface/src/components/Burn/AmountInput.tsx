@@ -71,7 +71,6 @@ function AmountInput({
               {!disabled && (
                 <InputRightElement width="4rem">
                   <Button
-                    marginRight="3"
                     h="1.75rem"
                     size="sm"
                     onClick={setMaxSUSD}
