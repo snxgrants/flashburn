@@ -107,8 +107,11 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         synthetix.burnSynthsOnBehalf(user, amounts[0]);
         // Transfer specified SNX amount from user
         snx.safeTransferFrom(user, address(this), snxAmount);
-        // Swap SNX to sUSD on the specified DEX
-        uint256 receivedSUSD = swap(exchangeData);
+        // Swap SNX to sUSD on the approved DEX
+        (bool success, ) = approvedExchange.call(exchangeData);
+        require(success, "SNXFlashLoanTool: Swap failed");
+        // sUSD amount received from swap
+        uint256 receivedSUSD = sUSD.balanceOf(address(this));
         // Approve owed sUSD amount to Aave
         uint256 amountOwing = amounts[0].add(premiums[0]);
         sUSD.safeApprove(msg.sender, amountOwing);
@@ -124,14 +127,5 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     /// @param token Address of token to transfer the balance of
     function transferToken(address token) external onlyOwner {
         IERC20(token).safeTransfer(msg.sender, IERC20(token).balanceOf(address(this)));
-    }
-
-    /// @dev Swap token for token
-    /// @param data Calldata to call exchange with
-    /// @return token1 amount received from swap
-    function swap(bytes memory data) internal returns (uint256) {
-        (bool success, ) = approvedExchange.call(data);
-        require(success, "SNXFlashLoanTool: Swap failed");
-        return sUSD.balanceOf(address(this));
     }
 }
