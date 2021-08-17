@@ -46,12 +46,12 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         synthetix = ISynthetix(synthetixResolver.getAddress("Synthetix"));
         IERC20 _snx = IERC20(synthetixResolver.getAddress("ProxyERC20"));
         snx = _snx;
-        _snx.safeApprove(_approvedExchange, type(uint256).max);
         sUSD = IERC20(synthetixResolver.getAddress("ProxyERC20sUSD"));
         ILendingPoolAddressesProvider provider = ILendingPoolAddressesProvider(_provider);
         ADDRESSES_PROVIDER = provider;
         LENDING_POOL = ILendingPool(provider.getLendingPool());
         approvedExchange = _approvedExchange;
+        _snx.safeApprove(_approvedExchange, type(uint256).max);
     }
 
     /// @notice Burn sUSD debt with SNX using a flash loan
