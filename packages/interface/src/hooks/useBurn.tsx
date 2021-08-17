@@ -373,7 +373,6 @@ function useBurn(): Burn {
           snxFlashToolContract.burn(
             isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
             snxAmountBN,
-            swapData.to,
             swapData.data
           ),
           () => setLoadingBurn(false)

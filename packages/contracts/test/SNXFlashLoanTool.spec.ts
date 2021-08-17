@@ -85,11 +85,7 @@ describe("unit/SNXFlashLoanTool", () => {
       const snxAmount: BigNumber = tradeData0.amount;
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
-      await expect(
-        snxFlashLoanTool
-          .connect(impersonateAddressWallet)
-          .burn(sUSDAmount, snxAmount, tradeData0.address, tradeData0.data),
-      )
+      await expect(snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, tradeData0.data))
         .to.emit(snxFlashLoanTool, "Burn")
         .withArgs(impersonateAddress, sUSDAmount, snxAmount);
 
@@ -123,11 +119,7 @@ describe("unit/SNXFlashLoanTool", () => {
       const snxAmount: BigNumber = tradeData1.amount;
       await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
       await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
-      await expect(
-        snxFlashLoanTool
-          .connect(impersonateAddressWallet)
-          .burn(sUSDAmount, snxAmount, tradeData1.address, tradeData1.data),
-      )
+      await expect(snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, tradeData1.data))
         .to.emit(snxFlashLoanTool, "Burn")
         .withArgs(impersonateAddress, sUSDDebtBalance0, snxAmount);
 
@@ -169,24 +161,6 @@ describe("unit/SNXFlashLoanTool", () => {
             0,
           ),
       ).to.be.revertedWith("SNXFlashLoanTool: Invalid initiator");
-    });
-
-    it("should revert if contract calls unauthorized address", async () => {
-      const { lendingPool, snxFlashLoanTool, SNX, snxDecimals, synthetix, sUSDDecimals, delegateApprovals } =
-        await loadFixture(snxFlashLoanToolFixture);
-      const snxAmount: BigNumber = ethers.utils.parseUnits("1", snxDecimals);
-      const sUSDAmount: BigNumber = ethers.utils.parseUnits("1", sUSDDecimals);
-      await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
-      await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
-      await expect(
-        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, lendingPool.address, "0x"),
-      ).to.be.revertedWith("SNXFlashLoanTool: Unauthorized address");
-      await expect(
-        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, SNX.address, "0x"),
-      ).to.be.revertedWith("SNXFlashLoanTool: Unauthorized address");
-      await expect(
-        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, synthetix.address, "0x"),
-      ).to.be.revertedWith("SNXFlashLoanTool: Unauthorized address");
     });
   });
 

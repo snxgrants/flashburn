@@ -28,32 +28,40 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     ILendingPoolAddressesProvider public immutable override ADDRESSES_PROVIDER;
     /// @dev Aave LendingPool contract
     ILendingPool public immutable override LENDING_POOL;
+    /// @dev Approved DEX address
+    address public immutable approvedExchange;
     /// @dev Aave LendingPool referral code
     uint16 public constant referralCode = 185;
 
     /// @dev Constructor
     /// @param _snxResolver Synthetix AddressResolver address
     /// @param _provider Aave LendingPoolAddressesProvider address
-    constructor(address _snxResolver, address _provider) {
+    /// @param _approvedExchange Approved DEX address to swap on
+    constructor(
+        address _snxResolver,
+        address _provider,
+        address _approvedExchange
+    ) {
         IAddressResolver synthetixResolver = IAddressResolver(_snxResolver);
         synthetix = ISynthetix(synthetixResolver.getAddress("Synthetix"));
-        snx = IERC20(synthetixResolver.getAddress("ProxyERC20"));
+        IERC20 _snx = IERC20(synthetixResolver.getAddress("ProxyERC20"));
+        snx = _snx;
+        _snx.safeApprove(_approvedExchange, type(uint256).max);
         sUSD = IERC20(synthetixResolver.getAddress("ProxyERC20sUSD"));
         ILendingPoolAddressesProvider provider = ILendingPoolAddressesProvider(_provider);
         ADDRESSES_PROVIDER = provider;
         LENDING_POOL = ILendingPool(provider.getLendingPool());
+        approvedExchange = _approvedExchange;
     }
 
     /// @notice Burn sUSD debt with SNX using a flash loan
     /// @dev To burn all sUSD debt, pass in type(uint256).max for sUSDAmount
     /// @param sUSDAmount Amount of sUSD debt to burn (set to type(uint256).max to burn all debt)
     /// @param snxAmount Amount of SNX to sell in order to burn sUSD debt
-    /// @param exchange Exchange address to swap on
     /// @param exchangeData Calldata to call exchange with
     function burn(
         uint256 sUSDAmount,
         uint256 snxAmount,
-        address exchange,
         bytes calldata exchangeData
     ) external override {
         address[] memory assets = new address[](1);
@@ -71,7 +79,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
             amounts,
             modes,
             address(this),
-            abi.encode(snxAmount, msg.sender, exchange, exchangeData),
+            abi.encode(snxAmount, msg.sender, exchangeData),
             referralCode
         );
         emit Burn(msg.sender, amounts[0], snxAmount);
@@ -92,10 +100,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     ) external override returns (bool) {
         require(msg.sender == address(LENDING_POOL), "SNXFlashLoanTool: Invalid msg.sender");
         require(initiator == address(this), "SNXFlashLoanTool: Invalid initiator");
-        (uint256 snxAmount, address user, address exchange, bytes memory exchangeData) = abi.decode(
-            params,
-            (uint256, address, address, bytes)
-        );
+        (uint256 snxAmount, address user, bytes memory exchangeData) = abi.decode(params, (uint256, address, bytes));
         // Send sUSD to user to burn
         sUSD.transfer(user, amounts[0]);
         // Burn sUSD with flash loaned amount
@@ -103,7 +108,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         // Transfer specified SNX amount from user
         snx.safeTransferFrom(user, address(this), snxAmount);
         // Swap SNX to sUSD on the specified DEX
-        uint256 receivedSUSD = swap(snxAmount, exchange, exchangeData);
+        uint256 receivedSUSD = swap(exchangeData);
         // Approve owed sUSD amount to Aave
         uint256 amountOwing = amounts[0].add(premiums[0]);
         sUSD.safeApprove(msg.sender, amountOwing);
@@ -122,22 +127,10 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     }
 
     /// @dev Swap token for token
-    /// @param amount Amount of token0 to swap
-    /// @param exchange Exchange address to swap on
     /// @param data Calldata to call exchange with
-    /// @return token1 received from swap
-    function swap(
-        uint256 amount,
-        address exchange,
-        bytes memory data
-    ) internal returns (uint256) {
-        snx.safeApprove(exchange, amount);
-        // Security check to prevent a reentrancy attack or an attacker pulling approved tokens
-        require(
-            exchange != address(LENDING_POOL) && exchange != address(synthetix) && exchange != address(snx),
-            "SNXFlashLoanTool: Unauthorized address"
-        );
-        (bool success, ) = exchange.call(data);
+    /// @return token1 amount received from swap
+    function swap(bytes memory data) internal returns (uint256) {
+        (bool success, ) = approvedExchange.call(data);
         require(success, "SNXFlashLoanTool: Swap failed");
         return sUSD.balanceOf(address(this));
     }

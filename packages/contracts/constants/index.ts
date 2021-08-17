@@ -1,7 +1,5 @@
 import { BigNumber } from "ethers";
 
-export const etherscanURL: string = "https://etherscan.io/";
-
 export const addresses: {
   [chainId: number]: {
     explorer: string;
@@ -9,21 +7,24 @@ export const addresses: {
     addressResolver: string;
     lendingPoolAddressesProvider: string;
     snxFlashTool: string;
+    oneInch: string;
   };
 } = {
   1: {
-    explorer: etherscanURL,
+    explorer: "https://etherscan.io/",
     multicall: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
     lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
     snxFlashTool: "0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688",
+    oneInch: "0x11111112542D85B3EF69AE05771c2dCCff4fAa26",
   },
   1337: {
-    explorer: etherscanURL,
+    explorer: "https://etherscan.io/",
     multicall: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
     lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
     snxFlashTool: "0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688",
+    oneInch: "0x11111112542D85B3EF69AE05771c2dCCff4fAa26",
   },
   42: {
     explorer: "https://kovan.etherscan.io/",
@@ -31,6 +32,7 @@ export const addresses: {
     addressResolver: "0x84f87E3636Aa9cC1080c07E6C61aDfDCc23c0db6",
     lendingPoolAddressesProvider: "0x88757f2f99175387ab4c6a4b3067c77a695b0349",
     snxFlashTool: "0x309919Fa6951fdC460EACB6A046916B30a8bc423",
+    oneInch: "0x11111112542D85B3EF69AE05771c2dCCff4fAa26",
   },
 };
 

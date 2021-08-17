@@ -10,7 +10,11 @@ export async function migrate(owner: Wallet, chainId: number): Promise<SNXFlashL
   )) as SNXFlashLoanTool__factory;
   const snxFlashLoanTool: SNXFlashLoanTool = await snxFlashLoanToolFactory
     .connect(owner)
-    .deploy(addresses[chainId].addressResolver, addresses[chainId].lendingPoolAddressesProvider);
+    .deploy(
+      addresses[chainId].addressResolver,
+      addresses[chainId].lendingPoolAddressesProvider,
+      addresses[chainId].oneInch,
+    );
   return snxFlashLoanTool;
 }
 
