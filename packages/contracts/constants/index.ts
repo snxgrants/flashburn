@@ -16,7 +16,7 @@ export const addresses: {
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
     lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
     oneInch: "0x11111112542D85B3EF69AE05771c2dCCff4fAa26",
-    snxFlashTool: "0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688",
+    snxFlashTool: "0x8A2BCd334f557f4654855A8da34142f271C0021C",
   },
   1337: {
     explorer: "https://etherscan.io/",
@@ -24,7 +24,7 @@ export const addresses: {
     addressResolver: "0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83",
     lendingPoolAddressesProvider: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5",
     oneInch: "0x11111112542D85B3EF69AE05771c2dCCff4fAa26",
-    snxFlashTool: "0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688",
+    snxFlashTool: "0x8A2BCd334f557f4654855A8da34142f271C0021C",
   },
   42: {
     explorer: "https://kovan.etherscan.io/",
@@ -32,7 +32,7 @@ export const addresses: {
     addressResolver: "0x84f87E3636Aa9cC1080c07E6C61aDfDCc23c0db6",
     lendingPoolAddressesProvider: "0x88757f2f99175387ab4c6a4b3067c77a695b0349",
     oneInch: "0x11111112542D85B3EF69AE05771c2dCCff4fAa26",
-    snxFlashTool: "0x309919Fa6951fdC460EACB6A046916B30a8bc423",
+    snxFlashTool: "0x231e7959852509E4872C3374554784a46EB8d680",
   },
 };
 

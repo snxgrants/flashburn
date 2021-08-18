@@ -16,8 +16,8 @@ Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 
 | Network | Explorer                                                                                                                    |
 | ------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Mainnet | [0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688](https://etherscan.io/address/0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688)       |
-| Kovan   | [0x309919Fa6951fdC460EACB6A046916B30a8bc423](https://kovan.etherscan.io/address/0x309919Fa6951fdC460EACB6A046916B30a8bc423) |
+| Mainnet | [0x8A2BCd334f557f4654855A8da34142f271C0021C](https://etherscan.io/address/0x8A2BCd334f557f4654855A8da34142f271C0021C)       |
+| Kovan   | [0x231e7959852509E4872C3374554784a46EB8d680](https://kovan.etherscan.io/address/0x231e7959852509E4872C3374554784a46EB8d680) |
 
 ## Installation
 
@@ -81,7 +81,7 @@ const bytecode = SNXFlashLoanTool.bytecode;
 - [Contract](./packages/contracts/contracts/SNXFlashLoanTool.sol)
 - [Interface](./packages/contracts/contracts/interfaces/ISNXFlashLoanTool.sol)
 
-The `burn` function allows SNX to be swapped for sUSD on an approved DEX. The mainnet deployment has approved the [1inch AggregationRouterV3 contract address](https://etherscan.io/address/0x11111112542d85b3ef69ae05771c2dccff4faa26). A swap is done by passing the `exchangeData` (calldata to call contract with, for swap) parameter to the `burn` function. Before calling the `burn` function you can fetch the [swap data from the 1inch API](https://docs.1inch.io/api/quote-swap#swap): [`https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688&slippage=1`](https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x9f32BaFb9C04eBeF25AE36Cd702E664aca695688&slippage=1) (swap 11.9 SNX to sUSD with a slippage of 1%). This will return an object `data` containing the swap data. You can then call `burn` with `data.tx.data` for `exchangeData`.
+The `burn` function allows SNX to be swapped for sUSD on an approved DEX. The mainnet deployment has approved the [1inch AggregationRouterV3 contract address](https://etherscan.io/address/0x11111112542d85b3ef69ae05771c2dccff4faa26). A swap is done by passing the `exchangeData` (calldata to call contract with, for swap) parameter to the `burn` function. Before calling the `burn` function you can fetch the [swap data from the 1inch API](https://docs.1inch.io/api/quote-swap#swap): [`https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x8A2BCd334f557f4654855A8da34142f271C0021C&slippage=1`](https://api.1inch.exchange/v3.0/1/swap?fromTokenAddress=0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F&toTokenAddress=0x57Ab1ec28D129707052df4dF418D58a2D46d5f51&amount=11980809705297140381&disableEstimate=true&fromAddress=0x8A2BCd334f557f4654855A8da34142f271C0021C&slippage=1) (swap 11.9 SNX to sUSD with a slippage of 1%). This will return an object `data` containing the swap data. You can then call `burn` with `data.tx.data` for `exchangeData`.
 
 To burn all sUSD debt, call `burn` with the `sUSDAmount` parameter set to the maximum value representable by the `uint256` type. In Solidity this is `type(uint256).max`, in ethers.js this is `ethers.constants.MaxUint256`.
 
