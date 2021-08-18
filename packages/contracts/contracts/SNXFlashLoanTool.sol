@@ -29,7 +29,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     /// @dev Aave LendingPool contract
     ILendingPool public immutable override LENDING_POOL;
     /// @dev Approved DEX address
-    address public immutable approvedExchange;
+    address public immutable override approvedExchange;
     /// @dev Aave LendingPool referral code
     uint16 public constant referralCode = 185;
 

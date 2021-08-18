@@ -10,6 +10,9 @@ interface ISNXFlashLoanTool {
     /// @param snxAmount Amount of SNX to sell in order to burn sUSD debt
     event Burn(address sender, uint256 sUSDAmount, uint256 snxAmount);
 
+    /// @dev Approved DEX address
+    function approvedExchange() external view returns (address);
+
     /// @notice Burn sUSD debt with SNX using a flash loan
     /// @dev To burn all sUSD debt, pass in type(uint256).max for sUSDAmount
     /// @param sUSDAmount Amount of sUSD debt to burn (set to type(uint256).max to burn all debt)
