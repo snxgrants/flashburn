@@ -27,7 +27,11 @@ async function main() {
     try {
       await run("verify:verify", {
         address: snxFlashLoanTool.address,
-        constructorArguments: [addresses[chainId].addressResolver, addresses[chainId].lendingPoolAddressesProvider],
+        constructorArguments: [
+          addresses[chainId].addressResolver,
+          addresses[chainId].lendingPoolAddressesProvider,
+          addresses[chainId].oneInch,
+        ],
       });
     } catch (error) {
       console.log(error);
