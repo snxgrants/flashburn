@@ -133,6 +133,18 @@ describe("unit/SNXFlashLoanTool", () => {
       expect(sUSDBalance1).to.be.gte(sUSDBalance0);
       expect(sUSDDebtBalance1).to.equal(BigNumber.from("0"));
     });
+
+    it("should revert if swap fails", async () => {
+      const { snxFlashLoanTool, SNX, delegateApprovals } = await loadFixture(snxFlashLoanToolFixture);
+
+      const sUSDAmount: BigNumber = BigNumber.from("100000000000000000000");
+      const snxAmount: BigNumber = tradeData0.amount;
+      await SNX.connect(impersonateAddressWallet).approve(snxFlashLoanTool.address, snxAmount);
+      await delegateApprovals.connect(impersonateAddressWallet).approveBurnOnBehalf(snxFlashLoanTool.address);
+      await expect(
+        snxFlashLoanTool.connect(impersonateAddressWallet).burn(sUSDAmount, snxAmount, tradeData1.data),
+      ).to.be.revertedWith("SNXFlashLoanTool: Swap failed");
+    });
   });
 
   describe("executeOperation", async () => {
