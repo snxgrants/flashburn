@@ -12,7 +12,7 @@ The smart contract works by taking a sUSD flash loan from Aave V2 to burn a spec
 
 ## Contract Addresses
 
-Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol) deployment at tag [v1.0.7](https://github.com/gg2001/snx-flash-tool/releases/tag/v1.0.7):
+Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol) deployment at tag [v1.0.8](https://github.com/gg2001/snx-flash-tool/releases/tag/v1.0.8):
 
 | Network | Explorer                                                                                                                    |
 | ------- | --------------------------------------------------------------------------------------------------------------------------- |
