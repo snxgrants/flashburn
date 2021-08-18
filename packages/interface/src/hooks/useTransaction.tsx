@@ -88,7 +88,9 @@ function useTransaction(): {
           toast.update(toastId, {
             description: (
               <Box>
-                <Text fontWeight={"bold"}>{`Transaction rejected`}</Text>
+                <Text
+                  fontWeight={"bold"}
+                >{`Transaction rejected. Please try again.`}</Text>
               </Box>
             ),
             status: "error",
