@@ -1,12 +1,12 @@
-# [SNX Flash Tool](https://snx.gcubed.io/) - Burn sUSD Debt with Staked SNX
+# [FlashBurn](https://snx.gcubed.io/) - Burn sUSD Debt with Staked SNX
 
 ![CI](https://github.com/gg2001/snx-flash-tool/workflows/CI/badge.svg)
 
-This monorepo contains the smart contracts and interface for the SNX Flash Tool.
+This monorepo contains the smart contracts and interface for FlashBurn.
 
 ## Description
 
-SNX Flash Tool allows you to burn your sUSD debt using staked SNX. Stakers who are low on liquidity or unable to acquire sUSD can use this tool to sell off their SNX and pay off their sUSD debt in 1 transaction.
+FlashBurn allows you to burn your sUSD debt using staked SNX. Stakers who are low on liquidity or unable to acquire sUSD can use this tool to sell off their SNX and pay off their sUSD debt in 1 transaction.
 
 The smart contract works by taking a sUSD flash loan from Aave V2 to burn a specified amount of the users sUSD debt. In doing so, the users SNX unstakes and becomes transferrable. The contract transfers the SNX from the user, then sells it on an approved DEX (e.g. 1inch) for sUSD to pay back the flash loan.
 

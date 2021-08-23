@@ -4,7 +4,7 @@ import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import { siteURL } from "../constants";
 
-const pageTitle: string = "SNX Flash Tool - 404 Page Not Found";
+const pageTitle: string = "FlashBurn - 404 Page Not Found";
 const pageDescription: string = "404 Page Not Found";
 const pageURL: string = siteURL;
 

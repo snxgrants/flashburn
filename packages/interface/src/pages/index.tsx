@@ -8,7 +8,7 @@ import Loading from "../components/Loading";
 import { Info, Data } from "../components/Balances";
 import Burn from "../components/Burn";
 
-const pageTitle: string = "SNX Flash Tool - Burn sUSD Debt with Staked SNX";
+const pageTitle: string = "FlashBurn - Burn sUSD Debt with Staked SNX";
 const pageDescription: string = "Burn sUSD Debt with Staked SNX";
 const pageURL: string = siteURL;
 

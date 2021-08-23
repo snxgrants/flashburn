@@ -95,7 +95,7 @@ function NavBar(): JSX.Element {
                       fontSize={{ base: "14px", lg: "16px" }}
                       paddingRight="1"
                     >
-                      SNX Flash Tool
+                      FlashBurn
                     </Text>
                   </Box>
                 </HStack>

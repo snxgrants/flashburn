@@ -4,7 +4,7 @@ import { Header } from "../components/Header";
 import Layout from "../components/layout";
 import { siteURL } from "../constants";
 
-const pageTitle: string = "SNX Flash Tool - 500 Server-side error occurred";
+const pageTitle: string = "FlashBurn - 500 Server-side error occurred";
 const pageDescription: string = "500 Server-side error occurred";
 const pageURL: string = siteURL;
 
