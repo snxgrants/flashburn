@@ -154,7 +154,7 @@ Clone the repository, open it, and install Node.js packages with `yarn`:
 
 ```bash
 git clone https://github.com/gg2001/flashburn.git
-cd snx-flash-tool
+cd flashburn
 yarn install
 ```
 
