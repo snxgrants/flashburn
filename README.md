@@ -1,4 +1,4 @@
-# [FlashBurn](https://snx.gcubed.io/) - Burn sUSD Debt with Staked SNX
+# [FlashBurn](https://flashburn.gcubed.io/) - Burn sUSD Debt with Staked SNX
 
 ![CI](https://github.com/gg2001/snx-flash-tool/workflows/CI/badge.svg)
 
