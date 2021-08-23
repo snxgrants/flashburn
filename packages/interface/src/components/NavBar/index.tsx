@@ -24,7 +24,7 @@ const Links: {
   { link: "Home", url: "/", external: false, isRoute: true },
   {
     link: "Docs ↗",
-    url: "https://github.com/gg2001/snx-flash-tool",
+    url: "https://github.com/gg2001/flashburn",
     external: true,
     isRoute: false,
   },

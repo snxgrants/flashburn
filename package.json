@@ -6,7 +6,7 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gg2001/snx-flash-tool.git"
+    "url": "https://github.com/gg2001/flashburn.git"
   },
   "scripts": {
     "clean": "yarn workspaces run clean",
