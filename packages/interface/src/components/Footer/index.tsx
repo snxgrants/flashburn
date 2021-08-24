@@ -14,13 +14,18 @@ function Footer(): JSX.Element {
       as={Stack}
       maxW={"6xl"}
       paddingBottom={4}
-      paddingTop={{ base: 0, md: 4 }}
+      paddingTop={{ base: 4, md: 4 }}
       direction={{ base: "column", md: "row" }}
       spacing={4}
       justify={{ base: "center", md: "space-between" }}
       align={{ base: "center", md: "center" }}
     >
-      <Box></Box>
+      <Box>
+        Sponsored by{" "}
+        <Link href="https://twitter.com/snxgrants" isExternal>
+          <Text as="u">grantsDAO</Text>
+        </Link>
+      </Box>
       <Box>
         <Link href="https://github.com/gg2001/flashburn" isExternal>
           <Text as="u">GitHub</Text>
