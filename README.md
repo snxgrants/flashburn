@@ -1,6 +1,6 @@
 # [FlashBurn](https://flashburn.gcubed.io/) - Burn sUSD Debt with Staked SNX
 
-![CI](https://github.com/gg2001/flashburn/workflows/CI/badge.svg)
+![CI](https://github.com/snxgrants/flashburn/workflows/CI/badge.svg)
 
 This monorepo contains the smart contracts and interface for FlashBurn.
 
@@ -12,7 +12,7 @@ The smart contract works by taking a sUSD flash loan from Aave V2 to burn a spec
 
 ## Contract Addresses
 
-Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol) deployment at tag [v1.0.8](https://github.com/gg2001/flashburn/releases/tag/v1.0.8):
+Latest [`SNXFlashLoanTool`](./packages/contracts/contracts/SNXFlashLoanTool.sol) deployment at tag [v1.0.8](https://github.com/snxgrants/flashburn/releases/tag/v1.0.8):
 
 | Network | Explorer                                                                                                                    |
 | ------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -153,7 +153,7 @@ Optional environment variables:
 Clone the repository, open it, and install Node.js packages with `yarn`:
 
 ```bash
-git clone https://github.com/gg2001/flashburn.git
+git clone https://github.com/snxgrants/flashburn.git
 cd flashburn
 yarn install
 ```

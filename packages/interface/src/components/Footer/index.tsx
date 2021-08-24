@@ -27,7 +27,7 @@ function Footer(): JSX.Element {
         </Link>
       </Box>
       <Box>
-        <Link href="https://github.com/gg2001/flashburn" isExternal>
+        <Link href="https://github.com/snxgrants/flashburn" isExternal>
           <Text as="u">GitHub</Text>
         </Link>{" "}
         •{" "}

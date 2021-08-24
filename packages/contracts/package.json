@@ -4,10 +4,10 @@
   "author": "Gautham Ganesh Elango <gautham.gg@gmail.com> (https://github.com/gg2001)",
   "license": "GPL-3.0",
   "homepage": "https://flashburn.gcubed.io/",
-  "bugs": "https://github.com/gg2001/flashburn/issues",
+  "bugs": "https://github.com/snxgrants/flashburn/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gg2001/flashburn.git"
+    "url": "https://github.com/snxgrants/flashburn.git"
   },
   "files": [
     "README.md",
