@@ -90,7 +90,7 @@ function AmountInput({
               {priceImpact !== undefined ? (
                 <>
                   <Tooltip
-                    label="Minimum sUSD Burnt"
+                    label="Minimum sUSD Received"
                     aria-label="Minimum Received"
                   >
                     {`$${formatAmount(usdAmount)}`}
