@@ -139,14 +139,14 @@ The environment variable `ALCHEMY_API_KEY` must be set to an [Alchemy](https://w
 export ALCHEMY_API_KEY=En1...
 ```
 
-Optionally, to enable non-mainnet deployments of the contracts and Alchemy/Infura support on the interface, set `INFURA_ID` and `NEXT_PUBLIC_INFURA_ID`. `INFURA_ID` is for the contracts, `NEXT_PUBLIC_INFURA_ID` is for the interface. `INFURA_ID` and `NEXT_PUBLIC_INFURA_ID` can use the same value.
+Optionally, to enable non-mainnet deployments of the contracts and Infura support on the interface, set `INFURA_ID` and `NEXT_PUBLIC_INFURA_ID`. `INFURA_ID` is for the contracts, `NEXT_PUBLIC_INFURA_ID` is for the interface. `INFURA_ID` and `NEXT_PUBLIC_INFURA_ID` can use the same value.
 
 Optional environment variables:
 
 - `PRIVATE_KEY` Private key (with the `0x` in the beginning removed) to deploy contracts
 - `COINMARKETCAP` [CoinMarketCap](https://coinmarketcap.com/api/) API key to view gas costs in USD
 - `ETHERSCAN` [Etherscan](https://etherscan.io/apis) API key to verify deployed contracts on Etherscan
-- `GA_TRACKING_ID` to enable Google Analytics on the interface.
+- `NEXT_PUBLIC_SITE_URL` For improving HTML metadata
 
 ### Setup
 
@@ -238,4 +238,4 @@ Before deploying contracts to mainnet you must set the `ALCHEMY_API_KEY` and `PR
 yarn migrate:contracts --network mainnet
 ```
 
-To deploy the interface you must use `yarn build` as the build command, and the output directory will be `packages/interface/.next`. The environment variables `ALCHEMY_API_KEY`, `NEXT_PUBLIC_INFURA_ID` and `GA_TRACKING_ID` can be set for enabling support for things like WalletConnect and Google Analytics.
+To deploy the interface you must use `yarn build` as the build command, and the output directory will be `packages/interface/.next`. The environment variable `NEXT_PUBLIC_INFURA_ID` can be set for enabling WalletConnect support, and `NEXT_PUBLIC_SITE_URL` can be set for improving metadata in the HTML head.
