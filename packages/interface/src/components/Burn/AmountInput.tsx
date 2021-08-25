@@ -90,7 +90,7 @@ function AmountInput({
               {priceImpact !== undefined ? (
                 <>
                   <Tooltip
-                    label="Minimum sUSD Received"
+                    label="Minimum sUSD Burnt"
                     aria-label="Minimum Received"
                   >
                     {`$${formatAmount(usdAmount)}`}
@@ -102,7 +102,7 @@ function AmountInput({
                     {` (${priceImpact}%) `}
                   </Tooltip>
                   <Tooltip
-                    label="Any extra sUSD received will be automatically sent back to you after the swap"
+                    label="Any extra sUSD received will be automatically sent back to you after burning"
                     aria-label="Info"
                   >
                     <InfoOutlineIcon marginBottom="0.5" size="xs" />
