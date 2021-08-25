@@ -136,26 +136,6 @@ function Burn({
         </Popover>
       </Flex>
       <AmountInput
-        badgeText="SNX Balance"
-        disabled={true}
-        setMaxSUSD={setMaxSUSD}
-        amount={snxAmount}
-        setAmount={setSnxAmount}
-        isSUSDMax={isSUSDMax}
-        isValid={true}
-        usdAmount={ethers.utils.formatUnits(snxUSDAmountBN, snxDecimals)}
-        badgeAmount={
-          provider !== undefined
-            ? formatAmount(ethers.utils.formatUnits(balanceOf, snxDecimals))
-            : "-"
-        }
-        src={"/snx.svg"}
-        alt="snx"
-      />
-      <Center marginBottom="2" marginTop={-3}>
-        <ArrowDownIcon w={5} h={5} border="1px" rounded="sm" />
-      </Center>
-      <AmountInput
         badgeText="sUSD Debt"
         disabled={false}
         setMaxSUSD={setMaxSUSD}
@@ -174,6 +154,26 @@ function Burn({
         }
         src={"/sUSD.svg"}
         alt="sUSD"
+      />
+      <Center marginBottom="2" marginTop={1}>
+        <ArrowDownIcon w={5} h={5} border="1px" rounded="sm" />
+      </Center>
+      <AmountInput
+        badgeText="SNX Balance"
+        disabled={true}
+        setMaxSUSD={setMaxSUSD}
+        amount={snxAmount}
+        setAmount={setSnxAmount}
+        isSUSDMax={isSUSDMax}
+        isValid={true}
+        usdAmount={ethers.utils.formatUnits(snxUSDAmountBN, snxDecimals)}
+        badgeAmount={
+          provider !== undefined
+            ? formatAmount(ethers.utils.formatUnits(balanceOf, snxDecimals))
+            : "-"
+        }
+        src={"/snx.svg"}
+        alt="snx"
       />
       <Center marginTop="2">
         {provider !== undefined ? (
