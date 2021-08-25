@@ -239,7 +239,7 @@ function Burn({
               isExternal
             >
               {/* eslint-disable @next/next/no-img-element */}
-              <img src={"/oneInch.svg"} alt={"1inch"} width={20} height={20} />
+              <img src={"/oneInch.svg"} alt={"1inch"} width={18} height={18} />
             </Link>
           </Box>
         </Flex>

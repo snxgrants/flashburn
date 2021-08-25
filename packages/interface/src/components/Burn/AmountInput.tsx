@@ -11,7 +11,7 @@ import {
   Button,
   Tooltip,
 } from "@chakra-ui/react";
-// import { InfoOutlineIcon } from "@chakra-ui/icons";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
 import { formatAmount } from "../../utils";
 
 function AmountInput({
@@ -61,6 +61,7 @@ function AmountInput({
                 disabled={disabled}
                 width="56"
                 type="number"
+                size="lg"
                 isReadOnly={disabled}
                 onChange={(e) => setAmount(e.target.value)}
                 value={amount}
@@ -72,6 +73,8 @@ function AmountInput({
                 <InputRightElement width="4rem">
                   <Button
                     h="1.75rem"
+                    marginTop="2"
+                    marginRight="1"
                     size="sm"
                     onClick={setMaxSUSD}
                     color={isSUSDMax ? "#00D1FF" : "#06061B"}
@@ -83,10 +86,13 @@ function AmountInput({
             </InputGroup>
           </Flex>
           <Flex marginLeft="auto">
-            <Text fontSize="sm" marginRight="4" color="#11849e">
+            <Text fontSize="sm" marginRight="2" color="#11849e">
               {priceImpact !== undefined ? (
                 <>
-                  <Tooltip label="Minimum Swap Output" aria-label="Swap Output">
+                  <Tooltip
+                    label="Minimum sUSD Received"
+                    aria-label="Minimum Received"
+                  >
                     {`$${formatAmount(usdAmount)}`}
                   </Tooltip>
                   <Tooltip
@@ -95,12 +101,12 @@ function AmountInput({
                   >
                     {` (${priceImpact}%) `}
                   </Tooltip>
-                  {/* <Tooltip
-                    label="Any excess sUSD will be automatically sent back to you during the swap"
+                  <Tooltip
+                    label="Any extra sUSD received will be automatically sent back to you after the swap"
                     aria-label="Info"
                   >
                     <InfoOutlineIcon marginBottom="0.5" size="xs" />
-                  </Tooltip> */}
+                  </Tooltip>
                 </>
               ) : (
                 `$${formatAmount(usdAmount)}`
