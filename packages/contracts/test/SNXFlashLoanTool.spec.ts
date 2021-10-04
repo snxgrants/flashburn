@@ -34,9 +34,9 @@ describe("unit/SNXFlashLoanTool", () => {
 
   describe("constructor", async () => {
     it("should set synthetix", async () => {
-      const { snxFlashLoanTool, synthetix } = await loadFixture(snxFlashLoanToolFixture);
-      const getSynthetix: string = await snxFlashLoanTool.synthetix();
-      expect(getSynthetix).to.equal(synthetix.address);
+      const { snxFlashLoanTool, synthetixResolver } = await loadFixture(snxFlashLoanToolFixture);
+      const getAddressResolver: string = await snxFlashLoanTool.addressResolver();
+      expect(getAddressResolver).to.equal(synthetixResolver.address);
     });
 
     it("should set SNX", async () => {

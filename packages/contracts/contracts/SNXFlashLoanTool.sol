@@ -18,8 +18,8 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    /// @dev Synthetix address
-    ISynthetix public immutable synthetix;
+    /// @dev Synthetix address resolver
+    IAddressResolver public immutable addressResolver;
     /// @dev SNX token contract
     IERC20 public immutable snx;
     /// @dev sUSD token contract
@@ -43,7 +43,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         address _approvedExchange
     ) {
         IAddressResolver synthetixResolver = IAddressResolver(_snxResolver);
-        synthetix = ISynthetix(synthetixResolver.getAddress("Synthetix"));
+        addressResolver = synthetixResolver;
         IERC20 _snx = IERC20(synthetixResolver.getAddress("ProxyERC20"));
         snx = _snx;
         sUSD = IERC20(synthetixResolver.getAddress("ProxyERC20sUSD"));
@@ -68,7 +68,9 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         assets[0] = address(sUSD);
         uint256[] memory amounts = new uint256[](1);
         // If sUSDAmount is max, get the sUSD debt of the user, otherwise just use sUSDAmount
-        amounts[0] = sUSDAmount == type(uint256).max ? synthetix.debtBalanceOf(msg.sender, "sUSD") : sUSDAmount;
+        amounts[0] = sUSDAmount == type(uint256).max
+            ? ISynthetix(addressResolver.getAddress("Synthetix")).debtBalanceOf(msg.sender, "sUSD")
+            : sUSDAmount;
         uint256[] memory modes = new uint256[](1);
         // Mode is set to 0 so the flash loan doesn't incur any debt
         modes[0] = 0;
@@ -104,7 +106,7 @@ contract SNXFlashLoanTool is ISNXFlashLoanTool, IFlashLoanReceiver, Ownable {
         // Send sUSD to user to burn
         sUSD.transfer(user, amounts[0]);
         // Burn sUSD with flash loaned amount
-        synthetix.burnSynthsOnBehalf(user, amounts[0]);
+        ISynthetix(addressResolver.getAddress("Synthetix")).burnSynthsOnBehalf(user, amounts[0]);
         // Transfer specified SNX amount from user
         snx.safeTransferFrom(user, address(this), snxAmount);
         // Swap SNX to sUSD on the approved DEX
