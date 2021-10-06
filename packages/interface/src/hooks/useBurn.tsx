@@ -372,7 +372,7 @@ function useBurn(): Burn {
         await sendTransaction(
           snxFlashToolContract.burn(
             isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
-            snxAmountBN,
+            swapData.snxAmount,
             swapData.data
           ),
           () => setLoadingBurn(false)
@@ -390,7 +390,6 @@ function useBurn(): Burn {
       address,
       snxFlashToolAddress,
       sUSDAmountBN,
-      snxAmountBN,
       fetchBalances,
       sendTransaction,
       setLoadingBurn,
