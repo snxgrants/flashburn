@@ -5,6 +5,7 @@ import {
   SNXFlashLoanTool,
   SNXFlashLoanTool__factory,
 } from "@snx-flash-tool/contracts/types";
+import { useToast, Box, Text } from "@chakra-ui/react";
 import useSynthetix from "./useSynthetix";
 import useWeb3React from "./useWeb3React";
 import useTransaction from "./useTransaction";
@@ -62,6 +63,7 @@ export interface Burn {
 const approveBuffer: string = "1100";
 
 function useBurn(): Burn {
+  const toast = useToast();
   const { provider, chainId, address } = useWeb3React();
   const { balances, synthetixAddresses, fetchBalances } = useSynthetix();
   const { sendTransaction } = useTransaction();
@@ -369,23 +371,43 @@ function useBurn(): Burn {
         const signer: Signer = await provider.getUncheckedSigner();
         const snxFlashToolContract: SNXFlashLoanTool =
           SNXFlashLoanTool__factory.connect(snxFlashToolAddress, signer);
-        const gasEstimate: BigNumber =
-          await snxFlashToolContract.estimateGas.burn(
+        let gasEstimate: BigNumber | undefined;
+        try {
+          gasEstimate = await snxFlashToolContract.estimateGas.burn(
             isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
             swapData.snxAmount,
             swapData.data
           );
-        await sendTransaction(
-          snxFlashToolContract.burn(
-            isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
-            swapData.snxAmount,
-            swapData.data,
-            {
-              gasLimit: gasEstimate.mul("120").div("100"),
-            }
-          ),
-          () => setLoadingBurn(false)
-        );
+        } catch (error) {
+          console.log(error);
+          toast({
+            description: (
+              <Box>
+                <Text fontWeight={"bold"}>{`${
+                  (error as Error) && (error as Error).message
+                    ? (error as Error).message
+                    : "Transaction rejected"
+                }. Please try again.`}</Text>
+              </Box>
+            ),
+            status: "error",
+          });
+        }
+        if (gasEstimate) {
+          await sendTransaction(
+            snxFlashToolContract.burn(
+              isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
+              swapData.snxAmount,
+              swapData.data,
+              {
+                gasLimit: gasEstimate.mul("120").div("100"),
+              }
+            ),
+            () => setLoadingBurn(false)
+          );
+        } else {
+          setLoadingBurn(false);
+        }
         if (fetchBalances) await fetchBalances();
       } else {
         setLoadingBurn(false);

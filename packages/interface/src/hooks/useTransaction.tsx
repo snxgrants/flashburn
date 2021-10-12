@@ -79,8 +79,8 @@ function useTransaction(): {
             status: "error",
           });
         }
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
         if (loaded) {
           loaded();
         }
@@ -88,9 +88,11 @@ function useTransaction(): {
           toast.update(toastId, {
             description: (
               <Box>
-                <Text
-                  fontWeight={"bold"}
-                >{`Transaction rejected. Please try again.`}</Text>
+                <Text fontWeight={"bold"}>{`${
+                  (error as Error) && (error as Error).message
+                    ? (error as Error).message
+                    : "Transaction rejected"
+                }. Please try again.`}</Text>
               </Box>
             ),
             status: "error",
