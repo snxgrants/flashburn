@@ -369,11 +369,20 @@ function useBurn(): Burn {
         const signer: Signer = await provider.getUncheckedSigner();
         const snxFlashToolContract: SNXFlashLoanTool =
           SNXFlashLoanTool__factory.connect(snxFlashToolAddress, signer);
+        const gasEstimate: BigNumber =
+          await snxFlashToolContract.estimateGas.burn(
+            isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
+            swapData.snxAmount,
+            swapData.data
+          );
         await sendTransaction(
           snxFlashToolContract.burn(
             isSUSDMax ? ethers.constants.MaxUint256 : sUSDAmountBN,
             swapData.snxAmount,
-            swapData.data
+            swapData.data,
+            {
+              gasLimit: gasEstimate.mul("120").div("100"),
+            }
           ),
           () => setLoadingBurn(false)
         );
@@ -389,6 +398,7 @@ function useBurn(): Burn {
       provider,
       address,
       snxFlashToolAddress,
+      isSUSDMax,
       sUSDAmountBN,
       fetchBalances,
       sendTransaction,
